@@ -72,60 +72,88 @@ $("save").onclick=async()=>{
   $("save").textContent="Updating Password…";
 
   try{
+    $("msg").textContent="Step 1 of 3 · Checking your admin session…";
+    $("msg").className="msg";
+
     const {data,error:sessionError}=await sbClient.auth.getSession();
 
     if(sessionError||!data.session){
-      $("msg").textContent=
-        "Your temporary login session has expired. Please sign in again.";
-      $("msg").className="msg error";
-      setTimeout(()=>location.href="../",1400);
-      return;
+      throw new Error(
+        "Your temporary login session has expired. Return to Admin Login and sign in again."
+      );
     }
 
-    const r=await fetch(CHANGE_PASSWORD_API,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "apikey":KEY,
-        "Authorization":"Bearer "+data.session.access_token
-      },
-      body:JSON.stringify({new_password:a})
-    });
+    $("msg").textContent="Step 2 of 3 · Updating password securely…";
+
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),15000);
+
+    let r;
+
+    try{
+      r=await fetch(CHANGE_PASSWORD_API,{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "apikey":KEY,
+          "Authorization":"Bearer "+data.session.access_token
+        },
+        body:JSON.stringify({new_password:a}),
+        signal:controller.signal
+      });
+    }catch(e){
+      if(e?.name==="AbortError"){
+        throw new Error(
+          "The password service did not respond within 15 seconds. Check that the admin-change-password Edge Function is deployed."
+        );
+      }
+
+      throw new Error(
+        "Could not reach the password service. Check the Edge Function deployment and CORS settings."
+      );
+    }finally{
+      clearTimeout(timeout);
+    }
 
     let j={};
+
     try{
       j=await r.json();
-    }catch{}
+    }catch{
+      throw new Error(
+        `Password service returned an invalid response (HTTP ${r.status}).`
+      );
+    }
 
     if(!r.ok||!j.ok){
       throw new Error(
         j.error||
-        `Password update failed (${r.status}).`
+        `Password update failed (HTTP ${r.status}).`
       );
     }
+
+    $("msg").textContent="Step 3 of 3 · Password updated successfully.";
+    $("msg").className="msg ok";
 
     $("p1").value="";
     $("p2").value="";
 
-    $("msg").textContent=
-      "Password updated successfully. Please sign in again with your Player ID and new password.";
-    $("msg").className="msg ok";
-
-    // A password change can affect the current Supabase session.
-    // Clear only this browser's cached session and return to login.
+    // Clear only the cached browser session.
     try{
-      await sbClient.auth.signOut({scope:"local"});
-    }catch{
-      // Even if sign-out reports an error, continue back to login.
-    }
+      await Promise.race([
+        sbClient.auth.signOut({scope:"local"}),
+        new Promise(resolve=>setTimeout(resolve,1500))
+      ]);
+    }catch{}
 
     setTimeout(()=>{
       location.href="../?password_changed=1";
-    },1200);
+    },900);
 
   }catch(e){
     $("msg").textContent=
-      e?.message||"Password could not be changed. Please try again.";
+      e?.message||
+      "Password could not be changed. Please try again.";
     $("msg").className="msg error";
   }finally{
     $("save").disabled=false;
