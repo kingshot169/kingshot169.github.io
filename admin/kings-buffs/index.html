@@ -407,6 +407,20 @@ input,select{
   }
 }
 
+
+.copy-id-btn{
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:.66rem;
+  font-weight:850;
+  background:#334155;
+  color:#e5e7eb;
+  border:0;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.copy-id-btn:active{transform:translateY(1px)}
+
 </style>
 </head>
 <body>
@@ -756,7 +770,7 @@ function renderRequests(){
                 <div class="meta">
                   ${esc(r.alliance_abbr||"")} ${esc(r.alliance_name||"")}
                   ${r.power?` · ${power(r.power)}`:""}<br>
-                  ID ${esc(r.player_id)}
+                  ID ${esc(r.player_id)} <button class="copy-id-btn" data-copy-id="${esc(r.player_id)}">Copy ID</button>
                   ${r.town_center_level!=null?` · TC ${esc(r.town_center_level)}`:""}
                 </div>
               </div>
@@ -883,6 +897,20 @@ function renderRequests(){
     };
   });
 
+  document.querySelectorAll("[data-copy-id]").forEach(b=>{
+    b.onclick=async()=>{
+      const id=b.dataset.copyId;
+      try{
+        await navigator.clipboard.writeText(id);
+        $("msg").textContent=`Copied Player ID ${id}.`;
+        $("msg").className="msg ok";
+      }catch{
+        $("msg").textContent=`Player ID: ${id}`;
+        $("msg").className="msg";
+      }
+    };
+  });
+
   document.querySelectorAll("[data-delete]").forEach(b=>{
     b.onclick=async()=>{
       if(!confirm(`Delete King's Buff request for ${b.dataset.name}?`))return;
@@ -947,7 +975,7 @@ function dayScheduleText(day){
     "",
     ...(rows.length
       ? rows.map(r=>
-          `${r.assigned_time}  ${r.player_name}${r.alliance_abbr?` [${r.alliance_abbr}]`:""}`
+          `${r.assigned_time}  ${r.player_name}${r.alliance_abbr?` [${r.alliance_abbr}]`:""} · ID ${r.player_id}`
         )
       : ["No appointments assigned"])
   ].join("\n");
@@ -956,7 +984,7 @@ function dayScheduleText(day){
 async function copyText(text){
   try{
     await navigator.clipboard.writeText(text);
-    $("msg").textContent="Copied.";
+    $("msg").textContent="Copied schedule with Player IDs.";
     $("msg").className="msg ok";
   }catch{
     $("msg").textContent=text;
