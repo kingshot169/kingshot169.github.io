@@ -1,242 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1220">
-  <title>Transfer to State 169 · 169 KS Tools</title>
-  <style>
-    :root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:rgba(148,163,184,.28);--gold:#facc15;--green:#22c55e}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;padding:1rem;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,rgba(59,130,246,.08),transparent 32%),var(--bg);color:var(--text)}
-    .wrap{width:min(820px,100%);margin:0 auto}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-bottom:1rem}
-    .back{color:var(--muted);text-decoration:none;font-size:.86rem}.back:hover{color:var(--text)}
-    .state-tag{color:var(--gold);font-size:.76rem;font-weight:850;text-transform:uppercase;letter-spacing:.12em}
-    header{text-align:center;margin:1rem 0 1.2rem}.icon{font-size:2.5rem;line-height:1;margin-bottom:.5rem}
-    h1{margin:0;font-size:clamp(2rem,6vw,3.4rem);line-height:1.05}
-    .subtitle{max-width:660px;margin:.7rem auto 0;color:var(--muted);line-height:1.5;font-size:.95rem}
-    .card{background:rgba(15,23,42,.97);border:1px solid var(--line);border-radius:1rem;padding:1rem;box-shadow:0 18px 40px rgba(0,0,0,.28);margin-bottom:1rem}
-    .step{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:1rem}.step-num{display:grid;place-items:center;width:2rem;height:2rem;flex:0 0 2rem;border-radius:50%;background:#1e293b;color:var(--gold);font-weight:900;border:1px solid var(--line)}
-    .step h2{margin:0;font-size:1.05rem}.step p{margin:.25rem 0 0;color:var(--muted);font-size:.84rem;line-height:1.4}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}.full{grid-column:1/-1}
-    label{display:grid;gap:.35rem;color:#cbd5e1;font-size:.82rem;font-weight:650}.optional{color:var(--muted);font-weight:500}
-    input,select,textarea{width:100%;min-height:2.55rem;padding:.55rem .65rem;border:1px solid rgba(148,163,184,.5);border-radius:.6rem;background:var(--panel2);color:var(--text);font:inherit}
-    textarea{resize:vertical;min-height:110px;line-height:1.45}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
-    .id-panel{display:grid;grid-template-columns:1fr auto;gap:.6rem;align-items:end}
-    button{min-height:2.55rem;padding:.55rem 1rem;border:0;border-radius:999px;background:#2563eb;color:white;font:inherit;font-weight:800;cursor:pointer}
-    button.secondary{background:#334155}button.submit{background:#16a34a}button:disabled{opacity:.5;cursor:default}
-    .hint{color:var(--muted);font-size:.76rem;line-height:1.4;margin-top:.35rem}
-    .message{min-height:1.2rem;margin-top:.65rem;font-size:.84rem}.message.error{color:#fca5a5}.message.ok{color:#86efac}.message.warn{color:#fdba74}
-    #applicationSection{display:none}
-    .player-chip{display:none;align-items:center;justify-content:space-between;gap:.75rem;padding:.7rem .8rem;margin-top:.8rem;border-radius:.7rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3)}
-    .player-chip strong{color:#bbf7d0}
-    .consent{display:flex;gap:.6rem;align-items:flex-start;margin-top:.25rem;padding:.7rem;border-radius:.65rem;background:rgba(2,6,23,.45);border:1px solid rgba(148,163,184,.16);color:var(--muted);font-size:.79rem;line-height:1.45}
-    .consent input{width:auto;min-height:auto;margin-top:.15rem}
-    .submit-row{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
-    .status-box{display:none;margin-top:1rem;padding:.9rem;border-radius:.75rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3)}
-    .status-box h3{margin:0 0 .35rem;color:#bbf7d0;font-size:1rem}.status-box p{margin:0;color:#cbd5e1;font-size:.86rem;line-height:1.45}
-    footer{text-align:center;color:var(--muted);font-size:.76rem;padding:1rem 0 .5rem}footer strong{color:var(--gold)}
-    @media(max-width:650px){body{padding:.7rem}.grid{grid-template-columns:1fr}.full{grid-column:auto}.id-panel{grid-template-columns:1fr}.id-panel button{width:100%}.submit-row button{width:100%}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>Transfer to State 169</title>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--green:#22c55e}
+*{box-sizing:border-box}body{margin:0;padding:16px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:820px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center}.top a{color:var(--muted);text-decoration:none}
+header{text-align:center;padding:18px 0}h1{margin:4px 0;color:var(--gold);font-size:clamp(2rem,6vw,3.2rem)}header p{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+h2{margin-top:0;font-size:1.1rem}.lookup{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+label{display:grid;gap:6px;font-size:.84rem;color:#cbd5e1}input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:var(--panel2);color:var(--text);font:inherit}
+textarea{min-height:110px;resize:vertical}button{border:0;border-radius:999px;padding:11px 16px;background:#2563eb;color:white;font:inherit;font-weight:800;cursor:pointer}
+button.secondary{background:#334155}button.submit{background:#16a34a}button:disabled{opacity:.55}
+.msg{min-height:20px;margin-top:10px;font-size:.85rem}.warn{color:#fdba74}.error{color:#fca5a5}.ok{color:#86efac}
+#playerCard,#application,#successCard{display:none}.player{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;padding:14px;border:1px solid rgba(34,197,94,.4);border-radius:12px;background:rgba(34,197,94,.08)}
+.avatar{width:72px;height:72px;border-radius:12px;display:grid;place-items:center;background:#020617;font-size:2rem}.name{font-size:1.35rem;font-weight:900;color:#bbf7d0}.meta{color:#cbd5e1;line-height:1.45;font-size:.9rem}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
+.consent{display:flex;gap:8px;align-items:flex-start;color:var(--muted);font-size:.8rem}.consent input{width:auto}
+.success{padding:16px;border:1px solid rgba(34,197,94,.4);border-radius:12px;background:rgba(34,197,94,.08)}
+.success h2{color:#bbf7d0}.ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;color:#cbd5e1}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:10px}
+@media(max-width:650px){.lookup,.grid{grid-template-columns:1fr}.full{grid-column:auto}.lookup button{width:100%}}
+</style>
 </head>
 <body>
-  <main class="wrap">
-    <div class="topbar"><a class="back" href="../">← 169 KS Tools</a><div class="state-tag">State 169</div></div>
-    <header>
-      <div class="icon">🔄</div>
-      <h1>Transfer Application</h1>
-      <p class="subtitle">Interested in joining State 169? Enter your Kingshot Player ID, then complete the short application below.</p>
-    </header>
+<main>
+<div class="top"><a href="../">← 169 KS Tools</a><strong>STATE 169</strong></div>
+<header><div style="font-size:2.4rem">🔄</div><h1>Transfer Application</h1><p>Verify your Kingshot profile, then complete the short application.</p></header>
 
-    <section class="card">
-      <div class="step"><div class="step-num">1</div><div><h2>Enter your Kingshot Player ID</h2><p>Your Player ID identifies the application. It is not treated as a password.</p></div></div>
-      <div class="id-panel">
-        <label>Kingshot Player ID<input id="playerId" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter Player ID"></label>
-        <button id="continueBtn" type="button">Continue</button>
-      </div>
-      <div class="hint">Use the numeric Player ID shown in your Kingshot profile.</div>
-      <div id="idMessage" class="message"></div>
-      <div id="playerChip" class="player-chip"><div>Player ID: <strong id="confirmedId"></strong></div><button id="changeIdBtn" type="button" class="secondary">Change</button></div>
-    </section>
+<section class="card">
+<h2>1. Find your Kingshot profile</h2>
+<div class="lookup">
+<label>Kingshot Player ID<input id="fid" inputmode="numeric" placeholder="e.g. 24649596"></label>
+<button id="find">Find Player</button>
+</div>
+<div id="lookupMsg" class="msg"></div>
 
-    <section id="applicationSection" class="card">
-      <div class="step"><div class="step-num">2</div><div><h2>Tell us about your account</h2><p>State 169 leadership can review the application from the secure admin area.</p></div></div>
+<div id="playerCard">
+<div class="player">
+<div class="avatar">👤</div>
+<div><div id="pName" class="name"></div><div id="pMeta" class="meta"></div></div>
+</div>
+<div class="actions"><button id="continue">Continue Application</button><button id="change" class="secondary">Different Player</button></div>
+</div>
+</section>
 
-      <form id="transferForm">
-        <div class="grid">
-          <label>Player Name<input name="playerName" type="text" maxlength="40" required placeholder="Your in-game name"></label>
-          <label>Current State<input name="currentState" type="text" inputmode="numeric" maxlength="8" required placeholder="e.g. 245"></label>
-          <label>Current Alliance<input name="currentAlliance" type="text" maxlength="20" required placeholder="Alliance tag or name"></label>
-          <label>Power<input name="power" type="text" maxlength="30" required placeholder="e.g. 1.8B"></label>
-          <label>True Gold Level<input name="tgLevel" type="text" maxlength="30" required placeholder="e.g. TG5"></label>
-          <label>Transfer Passes<input name="transferPasses" type="text" maxlength="20" required placeholder="How many do you currently have?"></label>
+<section id="application" class="card">
+<h2>2. Transfer details</h2>
+<form id="form">
+<div class="grid">
+<label>Transfer Passes<input name="passes" required placeholder="How many do you currently have?"></label>
+<label>Preferred 169 Alliance
+<select name="preferred"><option value="">No preference</option><option>KRZ</option><option>GRD</option><option>Other / discuss with leadership</option></select>
+</label>
+<label class="full">Referred by / Friends in 169<input name="friends" placeholder="Optional"></label>
+<label class="full">Why would you like to transfer to State 169?<textarea name="reason" required></textarea></label>
+<label class="full">Anything else we should know?<textarea name="notes" placeholder="Optional"></textarea></label>
+<div class="full consent"><input id="consent" type="checkbox" required><label for="consent">I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.</label></div>
+</div>
+<div class="actions"><button id="submitBtn" class="submit" type="submit">Submit Application</button></div>
+<div id="submitMsg" class="msg"></div>
+</form>
+</section>
 
-          <label>Preferred 169 Alliance <span class="optional">(optional)</span>
-            <select name="preferredAlliance">
-              <option value="">No preference</option>
-              <option value="KRZ">KRZ</option>
-              <option value="GRD">GRD</option>
-              <option value="Other">Other / discuss with leadership</option>
-            </select>
-          </label>
+<section id="successCard" class="card">
+<div class="success">
+<h2>Application received</h2>
+<p>Thanks <strong id="successName"></strong>. Your transfer application has been submitted to State 169 leadership.</p>
+<p>Reference:</p>
+<div id="successRef" class="ref"></div>
+<div class="actions"><a href="../" style="text-decoration:none"><button type="button" class="secondary">Back to 169 KS Tools</button></a></div>
+</div>
+</section>
 
-          <label>Referred by / Friends in 169 <span class="optional">(optional)</span>
-            <input name="referrer" type="text" maxlength="80" placeholder="Names of people you know in 169">
-          </label>
+<footer>169 Kingshot community tools · Saint Uber</footer>
+</main>
 
-          <label class="full">Why would you like to transfer to State 169?
-            <textarea name="reason" maxlength="1200" required placeholder="Tell us a little about what you're looking for in your next state."></textarea>
-          </label>
+<script>
+const LOOKUP_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup";
+const SUBMIT_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/submit-transfer";
 
-          <label class="full">Anything else we should know? <span class="optional">(optional)</span>
-            <textarea name="notes" maxlength="1200" placeholder="Activity, KVK participation, preferred transfer group, special circumstances, etc."></textarea>
-          </label>
+// Replace this with your Supabase publishable key.
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
 
-          <div class="full consent">
-            <input id="consent" type="checkbox" required>
-            <label for="consent" style="display:block">I understand this information will be shared with authorised State 169 leadership for the purpose of reviewing my transfer application.</label>
-          </div>
-        </div>
+let verified=null;
+const $=id=>document.getElementById(id);
 
-        <div class="submit-row">
-          <div class="hint">The secure submission service will be connected to this page next.</div>
-          <button id="submitBtn" type="submit" class="submit">Submit Application</button>
-        </div>
-        <div id="submitMessage" class="message"></div>
-      </form>
+const authHeaders=()=>({
+  "Content-Type":"application/json",
+  "apikey":SUPABASE_PUBLISHABLE_KEY,
+  "Authorization":"Bearer "+SUPABASE_PUBLISHABLE_KEY
+});
 
-      <div id="statusBox" class="status-box">
-        <h3>Application received</h3>
-        <p id="statusText"></p>
-      </div>
-    </section>
+const power=n=>{
+  n=Number(n);
+  if(!Number.isFinite(n))return"Unknown";
+  if(n>=1e9)return(n/1e9).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"B";
+  if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,"")+"M";
+  return n.toLocaleString();
+};
 
-    <footer>169 Kingshot community tools · <strong>Saint Uber</strong></footer>
-  </main>
+async function findPlayer(){
+ const fid=$("fid").value.replace(/\s/g,"");
+ $("lookupMsg").textContent="";
+ $("lookupMsg").className="msg";
 
-  <script>
-    // Set this later to a secure HTTPS endpoint. Never put an admin/service-role secret in this file.
-    const SUBMIT_ENDPOINT = "";
+ if(!/^\d{4,20}$/.test(fid)){
+   $("lookupMsg").textContent="Enter a valid numeric Player ID.";
+   $("lookupMsg").className="msg warn";
+   return;
+ }
 
-    const playerIdInput = document.getElementById('playerId');
-    const continueBtn = document.getElementById('continueBtn');
-    const changeIdBtn = document.getElementById('changeIdBtn');
-    const idMessage = document.getElementById('idMessage');
-    const playerChip = document.getElementById('playerChip');
-    const confirmedId = document.getElementById('confirmedId');
-    const applicationSection = document.getElementById('applicationSection');
-    const transferForm = document.getElementById('transferForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const submitMessage = document.getElementById('submitMessage');
-    const statusBox = document.getElementById('statusBox');
-    const statusText = document.getElementById('statusText');
+ if(SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")){
+   $("lookupMsg").textContent="Add your Supabase publishable key to this file first.";
+   $("lookupMsg").className="msg warn";
+   return;
+ }
 
-    let activePlayerId = "";
+ $("find").disabled=true;
+ $("find").textContent="Finding…";
 
-    function cleanPlayerId(value){return String(value||'').replace(/\s+/g,'').trim()}
-    function validPlayerId(value){return /^\d{4,20}$/.test(value)}
+ try{
+  const r=await fetch(LOOKUP_URL,{
+    method:"POST",
+    headers:authHeaders(),
+    body:JSON.stringify({player_id:fid})
+  });
 
-    function confirmPlayerId(){
-      const id = cleanPlayerId(playerIdInput.value);
-      idMessage.textContent='';
-      idMessage.className='message';
-      if(!validPlayerId(id)){
-        idMessage.textContent='Please enter a valid numeric Kingshot Player ID.';
-        idMessage.className='message warn';
-        return;
-      }
-      activePlayerId=id;
-      confirmedId.textContent=id;
-      playerIdInput.disabled=true;
-      continueBtn.style.display='none';
-      playerChip.style.display='flex';
-      applicationSection.style.display='block';
-      setTimeout(()=>applicationSection.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  const j=await r.json();
+
+  if(!r.ok||!j.ok||!j.player){
+    throw new Error(j.error||"Player lookup failed");
+  }
+
+  verified=j.player;
+  $("pName").textContent=verified.name||("Player "+verified.player_id);
+
+  const alliance=[verified.alliance_abbr,verified.alliance_name].filter(Boolean).join(" · ");
+  $("pMeta").innerHTML=
+    `State ${verified.kingdom ?? "?"}<br>`+
+    `${alliance||"No alliance returned"}<br>`+
+    `Power ${power(verified.power)}<br>`+
+    `Town Center ${verified.town_center_level ?? "?"}<br>`+
+    `Player ID ${verified.player_id}`;
+
+  $("playerCard").style.display="block";
+  $("fid").disabled=true;
+
+  const playerState=Number(verified.kingdom);
+
+  if(playerState===169){
+    $("continue").style.display="none";
+    $("application").style.display="none";
+    $("lookupMsg").textContent=
+      "This account is already in State 169, so it cannot apply to transfer into State 169.";
+    $("lookupMsg").className="msg warn";
+    return;
+  }
+
+  $("continue").style.display="";
+  $("lookupMsg").textContent="✓ Player verified and eligible to apply.";
+  $("lookupMsg").className="msg ok";
+ }catch(e){
+  $("lookupMsg").textContent=e.message;
+  $("lookupMsg").className="msg error";
+  $("playerCard").style.display="none";
+ }finally{
+  $("find").disabled=false;
+  $("find").textContent="Find Player";
+ }
+}
+
+$("find").onclick=findPlayer;
+$("fid").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();findPlayer()}};
+
+$("continue").onclick=()=>{
+  $("application").style.display="block";
+  $("application").scrollIntoView({behavior:"smooth"});
+};
+
+$("change").onclick=()=>{
+  verified=null;
+  $("playerCard").style.display="none";
+  $("application").style.display="none";
+  $("successCard").style.display="none";
+  $("fid").disabled=false;
+  $("continue").style.display="";
+  $("lookupMsg").textContent="";
+  $("lookupMsg").className="msg";
+  $("fid").value="";
+  $("fid").focus();
+};
+
+$("form").onsubmit=async e=>{
+  e.preventDefault();
+  if(!verified)return;
+
+  if(Number(verified.kingdom)===169){
+    $("submitMsg").textContent=
+      "This account is already in State 169 and cannot submit a transfer application.";
+    $("submitMsg").className="msg error";
+    return;
+  }
+
+  if(!$("form").reportValidity())return;
+
+  const data=new FormData(e.target);
+  const payload={
+    player_id:String(verified.player_id),
+    transfer_passes:String(data.get("passes")||"").trim(),
+    preferred_alliance:String(data.get("preferred")||"").trim(),
+    referrer_or_friends:String(data.get("friends")||"").trim(),
+    reason:String(data.get("reason")||"").trim(),
+    notes:String(data.get("notes")||"").trim()
+  };
+
+  $("submitBtn").disabled=true;
+  $("submitBtn").textContent="Submitting…";
+  $("submitMsg").textContent="";
+  $("submitMsg").className="msg";
+
+  try{
+    const r=await fetch(SUBMIT_URL,{
+      method:"POST",
+      headers:authHeaders(),
+      body:JSON.stringify(payload)
+    });
+
+    let j={};
+    try{j=await r.json()}catch{}
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Application submission failed");
     }
 
-    function changePlayerId(){
-      activePlayerId='';
-      playerIdInput.disabled=false;
-      continueBtn.style.display='';
-      playerChip.style.display='none';
-      applicationSection.style.display='none';
-      statusBox.style.display='none';
-      submitMessage.textContent='';
-      playerIdInput.focus();
-    }
+    $("application").style.display="none";
+    $("successName").textContent=verified.name||"";
+    $("successRef").textContent=j.reference||"";
+    $("successCard").style.display="block";
+    $("successCard").scrollIntoView({behavior:"smooth"});
 
-    function getPayload(){
-      const data=new FormData(transferForm);
-      return {
-        player_id:activePlayerId,
-        player_name:String(data.get('playerName')||'').trim(),
-        current_state:String(data.get('currentState')||'').trim(),
-        current_alliance:String(data.get('currentAlliance')||'').trim(),
-        power:String(data.get('power')||'').trim(),
-        true_gold_level:String(data.get('tgLevel')||'').trim(),
-        transfer_passes:String(data.get('transferPasses')||'').trim(),
-        preferred_alliance:String(data.get('preferredAlliance')||'').trim(),
-        referrer_or_friends:String(data.get('referrer')||'').trim(),
-        reason:String(data.get('reason')||'').trim(),
-        notes:String(data.get('notes')||'').trim(),
-        submitted_at:new Date().toISOString(),
-        source:'169-KS-TOOLS-transfer'
-      };
-    }
-
-    async function submitApplication(event){
-      event.preventDefault();
-      submitMessage.textContent='';
-      submitMessage.className='message';
-      statusBox.style.display='none';
-
-      if(!activePlayerId){
-        submitMessage.textContent='Please confirm your Kingshot Player ID first.';
-        submitMessage.className='message warn';
-        return;
-      }
-      if(!transferForm.reportValidity()) return;
-
-      const payload=getPayload();
-
-      if(!SUBMIT_ENDPOINT){
-        submitMessage.textContent='The page is ready, but the secure submission backend has not been connected yet.';
-        submitMessage.className='message warn';
-        console.log('Transfer application preview payload:',payload);
-        return;
-      }
-
-      submitBtn.disabled=true;
-      submitBtn.textContent='Submitting…';
-
-      try{
-        const response=await fetch(SUBMIT_ENDPOINT,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
-        if(!response.ok) throw new Error(`Submission failed (${response.status})`);
-        let result={}; try{result=await response.json()}catch{}
-        transferForm.style.display='none';
-        statusBox.style.display='block';
-        const reference=result.reference?` Reference: ${result.reference}.`:'';
-        statusText.textContent=`Thanks ${payload.player_name}. Your State 169 transfer application has been submitted.${reference}`;
-      }catch(error){
-        submitMessage.textContent='Your application could not be submitted. Please try again or contact State 169 leadership.';
-        submitMessage.className='message error';
-        console.error(error);
-      }finally{
-        submitBtn.disabled=false;
-        submitBtn.textContent='Submit Application';
-      }
-    }
-
-    continueBtn.addEventListener('click',confirmPlayerId);
-    changeIdBtn.addEventListener('click',changePlayerId);
-    transferForm.addEventListener('submit',submitApplication);
-    playerIdInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();confirmPlayerId()}});
-  </script>
+  }catch(err){
+    $("submitMsg").textContent=err.message||"Application submission failed.";
+    $("submitMsg").className="msg error";
+  }finally{
+    $("submitBtn").disabled=false;
+    $("submitBtn").textContent="Submit Application";
+  }
+};
+</script>
 </body>
 </html>
