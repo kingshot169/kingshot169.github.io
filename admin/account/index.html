@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Set Password · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:470px;margin:5vh auto}
+a{color:var(--muted);text-decoration:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+h1{color:var(--gold);margin-bottom:6px}
+.note{color:var(--muted);font-size:.8rem;line-height:1.45}
+.required{display:none;margin:10px 0;padding:9px;border-radius:9px;border:1px solid rgba(250,204,21,.45);background:rgba(250,204,21,.08);color:#fde68a;font-size:.78rem}
+label{display:grid;gap:6px;margin-top:10px;color:#cbd5e1;font-size:.8rem}
+input{padding:10px;border-radius:9px;border:1px solid #475569;background:#020617;color:white;font:inherit}
+button{width:100%;margin-top:13px;padding:10px;border:0;border-radius:999px;background:#2563eb;color:white;font:inherit;font-weight:850}
+.msg{margin-top:9px;font-size:.8rem}.ok{color:#86efac}.error{color:#fca5a5}
+</style>
+</head>
+<body>
+<main>
+<div class="card">
+<a href="../">← Admin Dashboard</a>
+<h1>Choose Your Password</h1>
+<div class="note">Your password is private to you. Use at least 12 characters.</div>
+<div id="required" class="required">Your temporary password must be changed before you can use the admin tools.</div>
+
+<label>New password<input id="p1" type="password" autocomplete="new-password"></label>
+<label>Confirm password<input id="p2" type="password" autocomplete="new-password"></label>
+
+<button id="save">Update Password</button>
+<div id="msg" class="msg"></div>
+</div>
+</main>
+
+<script>
+const URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const CHANGE_PASSWORD_API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-change-password";
+const sbClient=window.supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+
+if(new URLSearchParams(location.search).get("required")==="1"){
+  $("required").style.display="block";
+}
+
+$("save").onclick=async()=>{
+  const a=$("p1").value;
+  const b=$("p2").value;
+  $("msg").textContent="";
+
+  if(a.length<12){
+    $("msg").textContent="Use at least 12 characters.";
+    $("msg").className="msg error";
+    return;
+  }
+
+  if(a!==b){
+    $("msg").textContent="Passwords do not match.";
+    $("msg").className="msg error";
+    return;
+  }
+
+  const {data}=await sbClient.auth.getSession();
+  if(!data.session){
+    location.href="../";
+    return;
+  }
+
+  const r=await fetch(CHANGE_PASSWORD_API,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":KEY,
+      "Authorization":"Bearer "+data.session.access_token
+    },
+    body:JSON.stringify({new_password:a})
+  });
+
+  const j=await r.json();
+
+  if(!r.ok||!j.ok){
+    $("msg").textContent=j.error||"Password could not be changed.";
+    $("msg").className="msg error";
+    return;
+  }
+
+  $("msg").textContent="Password updated. Opening Admin Dashboard…";
+  $("msg").className="msg ok";
+  $("p1").value="";
+  $("p2").value="";
+
+  setTimeout(()=>location.href="../",700);
+};
+</script>
+</body>
+</html>

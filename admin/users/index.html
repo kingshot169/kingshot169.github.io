@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Admin Users · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;padding:10px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1050px;margin:auto}
+a{color:var(--muted);text-decoration:none}
+h1{color:var(--gold);margin:8px 0 4px;font-size:clamp(1.7rem,6vw,2.4rem)}
+h2{margin:0 0 10px;font-size:1rem}
+.sub,.muted{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+button{border:0;border-radius:999px;padding:9px 12px;background:#334155;color:white;font:inherit;font-weight:850;cursor:pointer}
+button.primary{background:var(--blue)}button.success{background:var(--green)}button.danger{background:var(--red)}button:disabled{opacity:.5}
+input{width:100%;padding:10px;border-radius:9px;border:1px solid #475569;background:var(--panel2);color:var(--text);font:inherit}
+label{display:grid;gap:5px;font-size:.76rem;color:#cbd5e1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.preset{font-size:.7rem}
+.perms{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.perm{display:flex;align-items:center;gap:7px;padding:9px;border:1px solid rgba(148,163,184,.18);border-radius:10px;background:#020617;font-size:.72rem}
+.perm input{width:auto}
+.msg{min-height:18px;margin-top:7px;font-size:.78rem}.error{color:#fca5a5}.ok{color:#86efac}
+.admin{border:1px solid rgba(148,163,184,.18);border-radius:12px;background:#020617;padding:10px;margin:8px 0}
+.admin-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.admin-name{font-weight:900}.meta{font-size:.7rem;color:var(--muted);line-height:1.4;margin-top:2px}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.badge{font-size:.62rem;padding:.2rem .42rem;border-radius:999px;background:#1e293b;color:#cbd5e1}
+.badge.on{background:rgba(37,99,235,.18);color:#bfdbfe}
+.badge.off{opacity:.42}
+.actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.temp{padding:10px;border-radius:10px;border:1px solid rgba(250,204,21,.45);background:rgba(250,204,21,.08);margin-top:9px}
+.temp code{display:block;margin-top:6px;font-size:.86rem;word-break:break-all}
+@media(max-width:700px){.grid,.perms{grid-template-columns:1fr}.card{padding:10px}}
+</style>
+</head>
+<body>
+<main>
+<a href="../">← Admin Dashboard</a>
+<h1>Admin Users</h1>
+<div class="sub">Create State 169 admin accounts and give each person only the tools they need.</div>
+
+<section class="card">
+  <h2>Add Admin</h2>
+
+  <div class="grid">
+    <label>Kingshot Player ID
+      <input id="playerId" inputmode="numeric" placeholder="State 169 Player ID">
+    </label>
+    <div class="muted" style="align-self:end;font-size:.75rem;padding-bottom:10px">
+      Login will use this Player ID. No personal email is required.
+    </div>
+  </div>
+
+  <div class="presets">
+    <button class="preset" data-preset="r4">R4 / Player Search</button>
+    <button class="preset" data-preset="moj">MoJ / King's Buffs</button>
+    <button class="preset" data-preset="transfer">Transfer Manager</button>
+    <button class="preset" data-preset="full">Full Operational Admin</button>
+    <button class="preset" data-preset="clear">Clear</button>
+  </div>
+
+  <div class="perms">
+    <label class="perm"><input id="pSearch" type="checkbox"> Player Search</label>
+    <label class="perm"><input id="pBuffs" type="checkbox"> King's Buffs</label>
+    <label class="perm"><input id="pTransfers" type="checkbox"> Transfers</label>
+    <label class="perm"><input id="pUsers" type="checkbox"> Manage Admins</label>
+  </div>
+
+  <div style="margin-top:10px">
+    <button id="create" class="primary">Verify State 169 & Create Admin</button>
+  </div>
+
+  <div id="createMsg" class="msg"></div>
+  <div id="tempBox" class="temp" style="display:none">
+    <strong>Temporary password — shown once</strong>
+    <div class="muted" style="font-size:.7rem;margin-top:3px">Send this securely. They will be forced to choose a new password at first login.</div>
+    <code id="tempPassword"></code>
+    <button id="copyTemp" style="margin-top:7px">Copy Password</button>
+  </div>
+</section>
+
+<section class="card">
+  <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap">
+    <h2 style="margin:0">Current Admins</h2>
+    <button id="refresh">Refresh</button>
+  </div>
+  <div id="listMsg" class="msg"></div>
+  <div id="admins"></div>
+</section>
+</main>
+
+<script>
+const SUPABASE_URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-users";
+const sbClient=window.supabase.createClient(SUPABASE_URL,KEY);
+const $=id=>document.getElementById(id);
+let admins=[];
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+async function session(){
+  const {data}=await sbClient.auth.getSession();
+  if(!data.session){location.href="../";return null}
+  return data.session;
+}
+
+async function api(method,body){
+  const s=await session(); if(!s)return;
+  const r=await fetch(API,{
+    method,
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":KEY,
+      "Authorization":"Bearer "+s.access_token
+    },
+    body:body?JSON.stringify(body):undefined
+  });
+  let j={};try{j=await r.json()}catch{}
+  if(!r.ok)throw new Error(j.error||"Request failed");
+  return j;
+}
+
+function setPreset(name){
+  const values={
+    r4:[true,false,false,false],
+    moj:[false,true,false,false],
+    transfer:[false,false,true,false],
+    full:[true,true,true,false],
+    clear:[false,false,false,false]
+  }[name]||[false,false,false,false];
+
+  [$("pSearch"),$("pBuffs"),$("pTransfers"),$("pUsers")]
+    .forEach((el,i)=>el.checked=values[i]);
+}
+
+document.querySelectorAll("[data-preset]").forEach(b=>{
+  b.onclick=()=>setPreset(b.dataset.preset);
+});
+
+function badge(label,on){
+  return `<span class="badge ${on?"on":"off"}">${esc(label)}</span>`;
+}
+
+function render(){
+  $("admins").innerHTML=admins.length?admins.map(a=>`
+    <div class="admin">
+      <div class="admin-head">
+        <div>
+          <div class="admin-name">${esc(a.display_name||a.player_name||a.username)}</div>
+          <div class="meta">
+            ${a.login_mode==="player_id"
+              ? `Login: Player ID ${esc(a.player_id||"—")}`
+              : `Legacy login: ${esc(a.legacy_email||"email account")}`}<br>
+            Player ID ${esc(a.player_id||"Not linked")}
+            ${a.alliance_abbr?` · [${esc(a.alliance_abbr)}]`:""}
+            · ${a.is_active?"Active":"Disabled"}
+          </div>
+        </div>
+      </div>
+
+      <div class="badges">
+        ${badge("Player Search",a.can_search_players)}
+        ${badge("King's Buffs",a.can_manage_buffs)}
+        ${badge("Transfers",a.can_manage_transfers)}
+        ${badge("Manage Admins",a.can_manage_users)}
+      </div>
+
+      <div class="actions">
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|search" ${a.can_search_players?"checked":""}> Search</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|buffs" ${a.can_manage_buffs?"checked":""}> Buffs</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|transfers" ${a.can_manage_transfers?"checked":""}> Transfers</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|users" ${a.can_manage_users?"checked":""}> Admins</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|active" ${a.is_active?"checked":""}> Active</label>
+
+        ${a.login_mode==="legacy_email"
+          ? `<input
+               data-link-player="${a.user_id}"
+               inputmode="numeric"
+               placeholder="${a.player_id?`Player ID ${esc(a.player_id)}`:"State 169 Player ID"}"
+               value="${esc(a.player_id||"")}"
+               style="max-width:180px"
+             >
+             <button data-convert="${a.user_id}" class="primary">Convert to Player ID Login</button>`
+          : ""}
+
+        <button data-save="${a.user_id}" class="success">Save</button>
+        <button data-reset="${a.user_id}">Reset Password</button>
+        <button data-delete="${a.user_id}" data-name="${esc(a.display_name||a.username)}" class="danger">Delete</button>
+      </div>
+    </div>
+  `).join(""):`<div class="muted">No admins found.</div>`;
+
+  document.querySelectorAll("[data-save]").forEach(b=>{
+    b.onclick=()=>saveAdmin(b.dataset.save);
+  });
+
+  document.querySelectorAll("[data-reset]").forEach(b=>{
+    b.onclick=()=>resetPassword(b.dataset.reset);
+  });
+
+  document.querySelectorAll("[data-convert]").forEach(b=>{
+    b.onclick=()=>convertLogin(b.dataset.convert);
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(b=>{
+    b.onclick=()=>deleteAdmin(b.dataset.delete,b.dataset.name);
+  });
+}
+
+function permState(userId,key){
+  const el=document.querySelector(`[data-perm="${userId}|${key}"]`);
+  return !!el?.checked;
+}
+
+async function saveAdmin(userId){
+  try{
+    await api("POST",{
+      action:"update",
+      user_id:userId,
+      can_search_players:permState(userId,"search"),
+      can_manage_buffs:permState(userId,"buffs"),
+      can_manage_transfers:permState(userId,"transfers"),
+      can_manage_users:permState(userId,"users"),
+      is_active:permState(userId,"active")
+    });
+    $("listMsg").textContent="Permissions updated.";
+    $("listMsg").className="msg ok";
+    await load();
+  }catch(e){
+    $("listMsg").textContent=e.message;
+    $("listMsg").className="msg error";
+  }
+}
+
+async function convertLogin(userId){
+  const input=document.querySelector(`[data-link-player="${userId}"]`);
+  const playerId=String(input?.value||"").trim();
+
+  if(!/^\d{4,20}$/.test(playerId)){
+    $("listMsg").textContent="Enter the State 169 Player ID first.";
+    $("listMsg").className="msg error";
+    return;
+  }
+
+  if(!confirm(
+    `Convert this legacy admin to Player ID ${playerId} login?\n\n`+
+    `Their existing password will stay the same.`
+  ))return;
+
+  try{
+    const j=await api("POST",{
+      action:"convert_login",
+      user_id:userId,
+      player_id:playerId
+    });
+
+    $("listMsg").textContent=j.message||"Login converted.";
+    $("listMsg").className="msg ok";
+    await load();
+  }catch(e){
+    $("listMsg").textContent=e.message;
+    $("listMsg").className="msg error";
+  }
+}
+
+async function resetPassword(userId){
+  if(!confirm("Create a new temporary password for this admin?"))return;
+  try{
+    const j=await api("POST",{action:"reset_password",user_id:userId});
+    $("tempPassword").textContent=j.temporary_password;
+    $("tempBox").style.display="block";
+    $("tempBox").scrollIntoView({behavior:"smooth"});
+  }catch(e){
+    $("listMsg").textContent=e.message;
+    $("listMsg").className="msg error";
+  }
+}
+
+async function deleteAdmin(userId,name){
+  if(!confirm(`Permanently delete admin account for ${name}?`))return;
+  try{
+    await api("DELETE",{user_id:userId});
+    await load();
+  }catch(e){
+    $("listMsg").textContent=e.message;
+    $("listMsg").className="msg error";
+  }
+}
+
+async function load(){
+  $("listMsg").textContent="Loading…";
+  try{
+    const j=await api("GET");
+    admins=j.admins||[];
+    $("listMsg").textContent="";
+    render();
+  }catch(e){
+    $("listMsg").textContent=e.message;
+    $("listMsg").className="msg error";
+  }
+}
+
+$("create").onclick=async()=>{
+  $("createMsg").textContent="";
+  $("tempBox").style.display="none";
+
+  try{
+    const j=await api("POST",{
+      action:"create",
+      player_id:$("playerId").value.trim(),
+      can_search_players:$("pSearch").checked,
+      can_manage_buffs:$("pBuffs").checked,
+      can_manage_transfers:$("pTransfers").checked,
+      can_manage_users:$("pUsers").checked
+    });
+
+    $("createMsg").textContent=
+      `Created ${j.admin.display_name||j.admin.player_name||"admin"} · login ID ${j.admin.login_id} · State 169 verified.`;
+    $("createMsg").className="msg ok";
+
+    $("tempPassword").textContent=j.temporary_password;
+    $("tempBox").style.display="block";
+
+    $("playerId").value="";
+    setPreset("clear");
+    await load();
+  }catch(e){
+    $("createMsg").textContent=e.message;
+    $("createMsg").className="msg error";
+  }
+};
+
+$("copyTemp").onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText($("tempPassword").textContent);
+    $("createMsg").textContent="Temporary password copied.";
+    $("createMsg").className="msg ok";
+  }catch{}
+};
+
+$("refresh").onclick=load;
+load();
+</script>
+</body>
+</html>

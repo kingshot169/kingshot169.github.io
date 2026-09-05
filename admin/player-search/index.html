@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Player Search · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#0f172a;
+  --panel2:#020617;
+  --panel3:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#334155;
+  --gold:#facc15;
+  --green:#22c55e;
+  --blue:#3b82f6;
+  --purple:#a855f7;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:16px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+main{max-width:1180px;margin:auto}
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.toplinks{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+a{
+  color:var(--muted);
+  text-decoration:none;
+}
+h1{color:var(--gold);margin:14px 0}
+h2{margin:0}
+h3{margin:0}
+button{
+  border:0;
+  border-radius:999px;
+  padding:10px 14px;
+  background:#334155;
+  color:white;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+button.primary{background:#2563eb}
+button:disabled{opacity:.55;cursor:not-allowed}
+input{
+  width:100%;
+  padding:11px;
+  border-radius:9px;
+  border:1px solid #475569;
+  background:var(--panel2);
+  color:var(--text);
+  font:inherit;
+}
+.searchbar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:end;
+}
+label{
+  display:grid;
+  gap:6px;
+  font-size:.84rem;
+  color:#cbd5e1;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+}
+.msg{min-height:20px;margin-top:10px}
+.error{color:#fca5a5}
+.ok{color:#86efac}
+.muted{color:var(--muted)}
+
+.profile{
+  display:grid;
+  grid-template-columns:96px 1fr;
+  gap:16px;
+  align-items:center;
+}
+.avatar{
+  width:96px;
+  height:96px;
+  border-radius:18px;
+  object-fit:cover;
+  background:#020617;
+  border:2px solid var(--gold);
+}
+.name{
+  font-size:1.65rem;
+  font-weight:900;
+  color:#fff;
+}
+.subline{
+  color:#cbd5e1;
+  margin-top:4px;
+  line-height:1.45;
+}
+.statgrid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.kv{
+  background:#020617;
+  border-radius:10px;
+  padding:10px;
+}
+.k{
+  font-size:.7rem;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.v{
+  margin-top:4px;
+  font-weight:700;
+  word-break:break-word;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.badge{
+  display:inline-block;
+  padding:.2rem .55rem;
+  border-radius:999px;
+  background:#1e293b;
+  color:#cbd5e1;
+  font-size:.72rem;
+  font-weight:800;
+}
+.hidden-note{
+  padding:14px;
+  border-radius:10px;
+  background:#020617;
+  color:var(--muted);
+}
+
+/* Governor gear */
+.gov-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.gov-item{
+  background:#020617;
+  border:1px solid rgba(148,163,184,.2);
+  border-radius:12px;
+  padding:12px;
+}
+.gov-head{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.gov-icon{
+  width:64px;
+  height:64px;
+  border-radius:10px;
+  object-fit:cover;
+  background:#111827;
+  flex:0 0 auto;
+}
+.gov-name{
+  font-weight:900;
+  line-height:1.25;
+}
+.gov-sub{
+  color:var(--muted);
+  font-size:.8rem;
+  margin-top:3px;
+}
+.gov-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.mini{
+  background:#111827;
+  border-radius:8px;
+  padding:8px;
+}
+.gems{
+  margin-top:10px;
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.gem{
+  padding:.2rem .45rem;
+  border-radius:999px;
+  background:#1e293b;
+  color:#cbd5e1;
+  font-size:.72rem;
+  font-weight:700;
+}
+
+/* Heroes */
+.hero-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.hero{
+  background:#020617;
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:14px;
+  padding:12px;
+}
+.hero-head{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.hero-icon{
+  width:58px;
+  height:58px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#111827;
+  flex:0 0 auto;
+}
+.hero-name{
+  font-weight:900;
+  font-size:1.05rem;
+}
+.hero-meta{
+  color:var(--muted);
+  font-size:.8rem;
+  margin-top:2px;
+  line-height:1.35;
+}
+.hero-topstats{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:9px;
+}
+.hero-pill{
+  padding:.28rem .5rem;
+  border-radius:999px;
+  background:#111827;
+  color:#cbd5e1;
+  font-size:.72rem;
+  font-weight:700;
+}
+.hero-gear-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.hero-gear{
+  --gear-accent:#64748b;
+  --gear-bg:rgba(100,116,139,.12);
+  border:1px solid var(--gear-accent);
+  background:linear-gradient(145deg,var(--gear-bg),#111827 68%);
+  border-radius:10px;
+  padding:8px;
+  min-width:0;
+}
+.hero-gear.quality-grey{
+  --gear-accent:#94a3b8;
+  --gear-bg:rgba(148,163,184,.12);
+}
+.hero-gear.quality-green{
+  --gear-accent:#22c55e;
+  --gear-bg:rgba(34,197,94,.14);
+}
+.hero-gear.quality-blue{
+  --gear-accent:#3b82f6;
+  --gear-bg:rgba(59,130,246,.15);
+}
+.hero-gear.quality-purple{
+  --gear-accent:#a855f7;
+  --gear-bg:rgba(168,85,247,.16);
+}
+.hero-gear.quality-gold{
+  --gear-accent:#f59e0b;
+  --gear-bg:rgba(245,158,11,.16);
+}
+.hero-gear.quality-red{
+  --gear-accent:#ef4444;
+  --gear-bg:rgba(239,68,68,.17);
+}
+.gear-tile{
+  display:grid;
+  grid-template-columns:46px 1fr;
+  gap:8px;
+  align-items:center;
+}
+.gear-art-wrap{
+  position:relative;
+  width:46px;
+  height:46px;
+  flex:0 0 auto;
+}
+.hero-gear-art,
+.hero-gear-placeholder{
+  width:46px;
+  height:46px;
+  border-radius:9px;
+  display:block;
+}
+.hero-gear-art{
+  object-fit:cover;
+  background:#111827;
+  box-shadow:0 0 0 1px var(--gear-accent);
+}
+.hero-gear-placeholder{
+  display:grid;
+  place-items:center;
+  background:var(--gear-bg);
+  border:1px solid var(--gear-accent);
+  color:var(--gear-accent);
+  font-size:1.3rem;
+}
+.gear-badge{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:19px;
+  height:17px;
+  padding:0 4px;
+  border-radius:999px;
+  font-size:.58rem;
+  font-weight:900;
+  line-height:1;
+  color:white;
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:0 2px 6px rgba(0,0,0,.35);
+}
+.gear-badge.enhance{
+  right:-5px;
+  bottom:-4px;
+  background:rgba(30,64,175,.96);
+}
+.gear-badge.refine{
+  left:-5px;
+  top:-5px;
+  background:rgba(124,58,237,.96);
+}
+.hero-gear-text{min-width:0}
+.hero-gear .slot{
+  color:var(--gear-accent);
+  font-size:.63rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  font-weight:800;
+}
+.hero-gear .gear-name{
+  font-weight:850;
+  margin-top:2px;
+  font-size:.8rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.hero-gear .gear-meta{
+  color:#cbd5e1;
+  font-size:.68rem;
+  margin-top:2px;
+  line-height:1.25;
+}
+/* Ranks */
+.rank-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.rank-card{
+  background:#020617;
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:10px;
+  padding:10px;
+}
+.rank-name{
+  color:#cbd5e1;
+  font-size:.8rem;
+}
+.rank-place{
+  margin-top:4px;
+  font-size:1.35rem;
+  font-weight:900;
+  color:var(--gold);
+}
+.rank-value{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:.78rem;
+}
+
+#results{display:none}
+
+@media(max-width:900px){
+  .statgrid{grid-template-columns:1fr 1fr}
+  .gov-grid{grid-template-columns:1fr 1fr}
+  .rank-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:650px){
+  body{padding:10px}
+
+  .top{
+    align-items:flex-start;
+  }
+
+  h1{
+    font-size:1.75rem;
+    margin:10px 0;
+  }
+
+  .card{
+    padding:11px;
+    margin:9px 0;
+    border-radius:12px;
+  }
+
+  .searchbar{
+    grid-template-columns:1fr;
+  }
+
+  .searchbar button{
+    width:100%;
+  }
+
+  .profile{
+    grid-template-columns:68px 1fr;
+    gap:11px;
+  }
+
+  .avatar{
+    width:68px;
+    height:68px;
+    border-radius:13px;
+  }
+
+  .name{
+    font-size:1.35rem;
+  }
+
+  .subline{
+    font-size:.82rem;
+  }
+
+  .statgrid{
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:9px;
+  }
+
+  .kv{
+    padding:8px;
+  }
+
+  .k{
+    font-size:.62rem;
+  }
+
+  .v{
+    font-size:.84rem;
+  }
+
+  .section-title{
+    margin-bottom:9px;
+  }
+
+  .section-title h2{
+    font-size:1.05rem;
+  }
+
+  .hero-grid,
+  .gov-grid{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+
+  .hero{
+    padding:10px;
+  }
+
+  .hero-icon{
+    width:52px;
+    height:52px;
+  }
+
+  .hero-gear-grid{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+
+  .hero-gear{
+    padding:7px;
+  }
+
+  .gear-tile{
+    grid-template-columns:40px 1fr;
+    gap:7px;
+  }
+
+  .gear-art-wrap,
+  .hero-gear-art,
+  .hero-gear-placeholder{
+    width:40px;
+    height:40px;
+  }
+
+  .hero-gear-placeholder{
+    font-size:1.05rem;
+  }
+
+  .hero-gear .gear-name{
+    font-size:.72rem;
+  }
+
+  .hero-gear .gear-meta{
+    font-size:.62rem;
+  }
+
+  .gear-badge{
+    min-width:17px;
+    height:15px;
+    font-size:.52rem;
+  }
+
+  .rank-grid{
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+  }
+
+  .rank-card{
+    padding:8px;
+  }
+
+  .rank-name{
+    font-size:.72rem;
+  }
+
+  .rank-place{
+    font-size:1.1rem;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+
+<div class="top">
+  <div>
+    <div class="toplinks">
+      <a href="../">← Admin</a>
+      <a href="../transfers/">Transfer Admin</a>
+    </div>
+    <h1>Player Search</h1>
+  </div>
+  <div>
+    <span id="adminName" class="muted"></span>
+    <button id="signOut">Sign Out</button>
+  </div>
+</div>
+
+<section class="card">
+  <h2>Search Kingshot Player</h2>
+  <div class="searchbar" style="margin-top:10px">
+    <label>
+      Kingshot Player ID
+      <input id="playerId" inputmode="numeric" placeholder="e.g. 24649596">
+    </label>
+    <button id="searchBtn" class="primary">Search Player</button>
+  </div>
+  <div id="msg" class="msg"></div>
+</section>
+
+<div id="results">
+
+  <section class="card">
+    <div class="profile">
+      <img id="avatar" class="avatar" alt="Player profile picture">
+      <div>
+        <div id="playerName" class="name"></div>
+        <div id="playerMeta" class="subline"></div>
+      </div>
+    </div>
+
+    <div class="statgrid">
+      <div class="kv"><div class="k">Power</div><div id="power" class="v"></div></div>
+      <div class="kv"><div class="k">Town Center</div><div id="tc" class="v"></div></div>
+      <div class="kv"><div class="k">VIP</div><div id="vip" class="v"></div></div>
+      <div class="kv"><div class="k">Kills</div><div id="kills" class="v"></div></div>
+
+      <div class="kv"><div class="k">Coordinates</div><div id="coords" class="v"></div></div>
+      <div class="kv"><div class="k">Office</div><div id="office" class="v"></div></div>
+      <div class="kv"><div class="k">Online</div><div id="online" class="v"></div></div>
+      <div class="kv"><div class="k">Last Active</div><div id="lastActive" class="v"></div></div>
+    </div>
+  </section>
+
+  <section class="card" id="govSection">
+    <div class="section-title">
+      <h2>Governor Gear</h2>
+      <span id="govGearState" class="badge"></span>
+    </div>
+    <div id="govGear"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Heroes & Hero Gear</h2>
+      <span id="heroCount" class="badge"></span>
+    </div>
+    <div id="heroes" class="hero-grid"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Kingdom Rankings</h2>
+      <span id="rankCount" class="badge"></span>
+    </div>
+    <div id="ranks" class="rank-grid"></div>
+  </section>
+
+</div>
+
+</main>
+
+<script>
+const SUPABASE_URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const SEARCH_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-player-search";
+
+const sbClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function numberFmt(n){
+  const v=Number(n);
+  return Number.isFinite(v)?v.toLocaleString():"—";
+}
+
+function compact(n){
+  const v=Number(n);
+  if(!Number.isFinite(v))return"—";
+  if(v>=1e9)return(v/1e9).toFixed(2)+"B";
+  if(v>=1e6)return(v/1e6).toFixed(1)+"M";
+  if(v>=1e3)return(v/1e3).toFixed(1)+"K";
+  return v.toLocaleString();
+}
+
+function yesNo(v){
+  if(v===true)return"Yes";
+  if(v===false)return"No";
+  return"—";
+}
+
+function rankNumber(r){
+  const v=
+    r?.kingdom_rank ??
+    r?.rank ??
+    r?.position ??
+    null;
+
+  return v==null ? "—" : `#${v}`;
+}
+
+async function session(){
+  const {data}=await sbClient.auth.getSession();
+
+  if(!data.session){
+    location.href="../";
+    return null;
+  }
+
+  return data.session;
+}
+
+async function searchPlayer(){
+  const playerId=$("playerId").value.replace(/\s/g,"");
+
+  $("msg").textContent="";
+  $("msg").className="msg";
+
+  if(!/^\d{4,20}$/.test(playerId)){
+    $("msg").textContent="Enter a valid numeric Player ID.";
+    $("msg").className="msg error";
+    return;
+  }
+
+  const s=await session();
+  if(!s)return;
+
+  $("searchBtn").disabled=true;
+  $("searchBtn").textContent="Searching…";
+  $("results").style.display="none";
+
+  try{
+    const r=await fetch(SEARCH_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+s.access_token
+      },
+      body:JSON.stringify({player_id:playerId})
+    });
+
+    let j={};
+    try{j=await r.json()}catch{}
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Player search failed");
+    }
+
+    $("adminName").textContent=
+      j.admin?.display_name||
+      j.admin?.username||
+      "Admin";
+
+    renderPlayer(j);
+
+    $("msg").textContent="Player loaded.";
+    $("msg").className="msg ok";
+    $("results").style.display="block";
+
+  }catch(e){
+    $("msg").textContent=e.message;
+    $("msg").className="msg error";
+  }finally{
+    $("searchBtn").disabled=false;
+    $("searchBtn").textContent="Search Player";
+  }
+}
+
+function renderPlayer(j){
+  const p=j.player||{};
+  const alliance=p.alliance||{};
+
+  $("avatar").src=p.avatar_url||"";
+  $("avatar").style.display=p.avatar_url?"block":"none";
+
+  $("playerName").textContent=
+    p.name||("Player "+(p.player_id??""));
+
+  $("playerMeta").innerHTML=
+    `Player ID ${esc(p.player_id??"—")}<br>`+
+    `State ${esc(p.kingdom??"—")}<br>`+
+    `${esc(alliance.abbr||"")} ${esc(alliance.name||"")}`;
+
+  $("power").textContent=compact(p.power);
+  $("tc").textContent=p.town_center_level??"—";
+  $("vip").textContent=p.vip??"—";
+  $("kills").textContent=numberFmt(p.kills);
+
+  $("coords").textContent=
+    (p.x!=null&&p.y!=null)
+      ? `X ${p.x} · Y ${p.y}`
+      : "—";
+
+  $("office").textContent=p.office||"—";
+  $("online").textContent=yesNo(p.online);
+  $("lastActive").textContent=
+    p.last_login||
+    p.last_active_at||
+    "—";
+
+  renderGovGear(j.gov_gear);
+  renderHeroes(j.heroes||[]);
+  renderRanks(j.ranks);
+}
+
+function renderGovGear(g){
+  if(!g){
+    $("govGearState").textContent="No data";
+    $("govGear").innerHTML=
+      '<div class="hidden-note">No governor gear data returned.</div>';
+    return;
+  }
+
+  if(g.hidden){
+    $("govGearState").textContent="Hidden";
+    $("govGear").innerHTML=
+      `<div class="hidden-note">${esc(g.message||"This player is hiding their governor gear.")}</div>`;
+    return;
+  }
+
+  const items=Array.isArray(g.items)?g.items:[];
+
+  $("govGearState").textContent=`${items.length} items`;
+
+  $("govGear").innerHTML=
+    `<div class="gov-grid">
+      ${
+        items.length
+          ? items.map(item=>{
+              const gems=Array.isArray(item.gems)?item.gems:[];
+              return `
+                <div class="gov-item">
+                  <div class="gov-head">
+                    ${
+                      item.icon
+                        ? `<img class="gov-icon" src="${esc(item.icon)}" alt="">`
+                        : ``
+                    }
+                    <div>
+                      <div class="gov-name">${esc(item.name||item.slot||"Gear")}</div>
+                      <div class="gov-sub">${esc(item.slot||"")}</div>
+                    </div>
+                  </div>
+
+                  <div class="gov-stats">
+                    <div class="mini">
+                      <div class="k">Quality</div>
+                      <div class="v">${esc(item.quality??"—")}</div>
+                    </div>
+                    <div class="mini">
+                      <div class="k">Tier</div>
+                      <div class="v">${esc(item.tier??"—")}</div>
+                    </div>
+                    <div class="mini">
+                      <div class="k">Stars</div>
+                      <div class="v">${esc(item.star??"—")}</div>
+                    </div>
+                    <div class="mini">
+                      <div class="k">Strength</div>
+                      <div class="v">${esc(item.strength_level??"—")}</div>
+                    </div>
+                  </div>
+
+                  ${
+                    gems.length
+                      ? `<div class="gems">
+                          ${gems.map(gem=>`
+                            <span class="gem">${esc(
+                              gem?.name ??
+                              gem?.label ??
+                              gem?.level ??
+                              JSON.stringify(gem)
+                            )}</span>
+                          `).join("")}
+                        </div>`
+                      : ``
+                  }
+                </div>
+              `;
+            }).join("")
+          : '<div class="hidden-note">No governor gear items returned.</div>'
+      }
+    </div>`;
+}
+
+
+const HERO_GEAR_IMAGES={
+  infantry:{
+    helmet:"https://kingshotoptimizer.com/images/icons/gear-pieces/infantry-helm.png",
+    gloves:"https://kingshotoptimizer.com/images/icons/gear-pieces/infantry-gloves.png",
+    armor:"https://kingshotoptimizer.com/images/icons/gear-pieces/infantry-chest.png",
+    chest:"https://kingshotoptimizer.com/images/icons/gear-pieces/infantry-chest.png",
+    boots:"https://kingshotoptimizer.com/images/icons/gear-pieces/infantry-boots.png"
+  },
+  cavalry:{
+    helmet:"https://kingshotoptimizer.com/images/icons/gear-pieces/cavalry-helm.png",
+    gloves:"https://kingshotoptimizer.com/images/icons/gear-pieces/cavalry-gloves.png",
+    armor:"https://kingshotoptimizer.com/images/icons/gear-pieces/cavalry-chest.png",
+    chest:"https://kingshotoptimizer.com/images/icons/gear-pieces/cavalry-chest.png",
+    boots:"https://kingshotoptimizer.com/images/icons/gear-pieces/cavalry-boots.png"
+  },
+  archer:{
+    helmet:"https://kingshotoptimizer.com/images/icons/gear-pieces/archer-helm.png",
+    gloves:"https://kingshotoptimizer.com/images/icons/gear-pieces/archer-gloves.png",
+    armor:"https://kingshotoptimizer.com/images/icons/gear-pieces/archer-chest.png",
+    chest:"https://kingshotoptimizer.com/images/icons/gear-pieces/archer-chest.png",
+    boots:"https://kingshotoptimizer.com/images/icons/gear-pieces/archer-boots.png"
+  }
+};
+
+function normalizeTroop(g){
+  const raw=String(g?.troop_label ?? g?.troop ?? "").toLowerCase();
+  if(raw.includes("infantry") || raw==="1")return"infantry";
+  if(raw.includes("cavalry") || raw==="2")return"cavalry";
+  if(raw.includes("archer") || raw.includes("marksman") || raw==="3")return"archer";
+  return"";
+}
+
+function normalizeSlot(g){
+  const raw=String(g?.slot ?? g?.name ?? "").toLowerCase();
+  if(raw.includes("helm"))return"helmet";
+  if(raw.includes("glove"))return"gloves";
+  if(raw.includes("armor") || raw.includes("armour") || raw.includes("chest"))return"armor";
+  if(raw.includes("boot"))return"boots";
+  return"";
+}
+
+function heroGearQualityClass(g){
+  if(g?.red)return"quality-red";
+
+  const raw=String(
+    g?.quality_label ??
+    g?.quality_key ??
+    g?.quality ??
+    ""
+  ).toLowerCase();
+
+  if(raw.includes("red"))return"quality-red";
+  if(raw.includes("gold") || raw.includes("mythic") || raw.includes("orange") || raw.includes("legendary"))return"quality-gold";
+  if(raw.includes("purple") || raw.includes("epic"))return"quality-purple";
+  if(raw.includes("blue") || raw.includes("rare"))return"quality-blue";
+  if(raw.includes("green") || raw.includes("uncommon"))return"quality-green";
+  if(raw.includes("grey") || raw.includes("gray") || raw.includes("common"))return"quality-grey";
+
+  const q=Number(g?.quality);
+  if(Number.isFinite(q)){
+    if(q>=6)return"quality-red";
+    if(q===5)return"quality-gold";
+    if(q===4)return"quality-purple";
+    if(q===3)return"quality-blue";
+    if(q===2)return"quality-green";
+    if(q<=1)return"quality-grey";
+  }
+
+  return"quality-grey";
+}
+
+function heroGearImage(g){
+  const quality=heroGearQualityClass(g);
+
+  // We currently have trustworthy artwork only for Mythic/Gold gear.
+  // Red gear is the ascended version of the same piece, so it is safe to reuse.
+  if(quality!=="quality-gold" && quality!=="quality-red"){
+    return"";
+  }
+
+  const troop=normalizeTroop(g);
+  const slot=normalizeSlot(g);
+  return HERO_GEAR_IMAGES?.[troop]?.[slot] || "";
+}
+
+function gearSlotIcon(g){
+  const slot=normalizeSlot(g);
+  if(slot==="helmet")return"⛑";
+  if(slot==="gloves")return"🧤";
+  if(slot==="armor")return"🛡";
+  if(slot==="boots")return"🥾";
+  return"⚙";
+}
+
+function renderHeroes(heroes){
+  $("heroCount").textContent=`${heroes.length} heroes`;
+
+  $("heroes").innerHTML=
+    heroes.length
+      ? heroes.map(hero=>`
+        <div class="hero">
+          <div class="hero-head">
+            ${
+              hero.icon
+                ? `<img class="hero-icon" src="${esc(hero.icon)}" alt="">`
+                : ``
+            }
+            <div>
+              <div class="hero-name">${esc(hero.name||"Hero")}</div>
+              <div class="hero-meta">
+                Lv ${esc(hero.level??"—")}
+                · Stars ${esc(hero.stars??hero.star??"—")}
+                · ${esc(compact(hero.power))}
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-topstats">
+            <span class="hero-pill">Quality ${esc(hero.quality??"—")}</span>
+            <span class="hero-pill">Exclusive ${esc(hero.exclusive_gear_level??"—")}</span>
+          </div>
+
+          ${
+            Array.isArray(hero.gear)&&hero.gear.length
+              ? `<div class="hero-gear-grid">
+                  ${hero.gear.map(g=>{
+                    const qualityClass=heroGearQualityClass(g);
+                    const art=heroGearImage(g);
+
+                    return `
+                      <div class="hero-gear ${qualityClass}">
+                        <div class="gear-tile">
+                          <div class="gear-art-wrap">
+                            ${
+                              art
+                                ? `<img class="hero-gear-art"
+                                     src="${esc(art)}"
+                                     alt="${esc((g.troop_label||"")+" "+(g.slot||g.name||"Hero gear"))}"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'">`
+                                : `<div class="hero-gear-placeholder" aria-hidden="true">${gearSlotIcon(g)}</div>`
+                            }
+
+                            ${
+                              g.refine_level!=null
+                                ? `<span class="gear-badge refine" title="Refine level">◆${esc(g.refine_level)}</span>`
+                                : ``
+                            }
+
+                            ${
+                              g.enhancement_level!=null
+                                ? `<span class="gear-badge enhance" title="Enhancement level">🔨${esc(g.enhancement_level)}</span>`
+                                : ``
+                            }
+                          </div>
+
+                          <div class="hero-gear-text">
+                            <div class="slot">${esc(g.slot||g.name||"Gear")}</div>
+                            <div class="gear-name">${esc(g.quality_label||g.quality_key||g.quality||"Gear")}</div>
+                            <div class="gear-meta">
+                              Enhance ${esc(g.enhancement_level??"—")}
+                              · Refine ${esc(g.refine_level??"—")}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>`
+              : `<div class="hidden-note" style="margin-top:10px">No hero gear returned.</div>`
+          }
+        </div>
+      `).join("")
+      : '<div class="hidden-note">No hero data returned.</div>';
+}
+
+function normalizeRanks(ranks){
+  if(!ranks)return[];
+
+  if(Array.isArray(ranks)){
+    return ranks;
+  }
+
+  if(Array.isArray(ranks.leaderboards)){
+    return ranks.leaderboards;
+  }
+
+  if(Array.isArray(ranks.items)){
+    return ranks.items;
+  }
+
+  return Object.entries(ranks)
+    .filter(([k,v])=>typeof v==="object"&&v!==null)
+    .map(([k,v])=>({name:k,...v}));
+}
+
+function renderRanks(ranks){
+  const items=normalizeRanks(ranks);
+
+  $("rankCount").textContent=`${items.length} ranks`;
+
+  if(!items.length){
+    $("ranks").innerHTML=
+      '<div class="hidden-note">No ranking data returned.</div>';
+    return;
+  }
+
+  $("ranks").innerHTML=
+    items.map(r=>{
+      const name=
+        r.name ??
+        r.label ??
+        r.rank_name ??
+        "Ranking";
+
+      const value=
+        r.value_label ??
+        r.value ??
+        r.score ??
+        "";
+
+      return `
+        <div class="rank-card">
+          <div class="rank-name">${esc(name)}</div>
+          <div class="rank-place">${esc(rankNumber(r))}</div>
+          <div class="rank-value">${esc(value||"")}</div>
+        </div>
+      `;
+    }).join("");
+}
+
+$("searchBtn").onclick=searchPlayer;
+
+$("playerId").onkeydown=e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    searchPlayer();
+  }
+};
+
+$("signOut").onclick=async()=>{
+  await sbClient.auth.signOut();
+  location.href="../";
+};
+
+session();
+</script>
+</body>
+</html>

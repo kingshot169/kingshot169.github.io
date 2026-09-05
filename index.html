@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1220">
+  <title>169 KS Tools</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f172a;
+      --panel2:#020617;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --line:rgba(148,163,184,.28);
+      --gold:#facc15;
+      --green:#22c55e;
+      --blue:#3b82f6;
+      --purple:#a855f7;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      padding:1rem;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(250,204,21,.08), transparent 30%),
+        var(--bg);
+      color:var(--text);
+    }
+
+    .wrap{
+      width:min(980px,100%);
+      margin:0 auto;
+    }
+
+    .admin-login{
+      position:fixed;
+      top:14px;
+      right:14px;
+      z-index:10;
+      padding:.5rem .85rem;
+      border:1px solid rgba(148,163,184,.35);
+      border-radius:999px;
+      background:rgba(15,23,42,.92);
+      color:#cbd5e1;
+      text-decoration:none;
+      font-size:.78rem;
+      font-weight:700;
+      backdrop-filter:blur(8px);
+      box-shadow:0 8px 20px rgba(0,0,0,.22);
+      transition:all .15s ease;
+    }
+
+    .admin-login:hover{
+      color:var(--gold);
+      border-color:rgba(250,204,21,.65);
+      transform:translateY(-1px);
+    }
+
+    header{
+      text-align:center;
+      padding:2.4rem 0 1.5rem;
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-size:.8rem;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      margin-bottom:.5rem;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(2.2rem,7vw,4.5rem);
+      line-height:.98;
+    }
+
+    .subtitle{
+      max-width:700px;
+      margin:.8rem auto 0;
+      color:var(--muted);
+      font-size:clamp(.95rem,2.5vw,1.08rem);
+      line-height:1.5;
+    }
+
+    .tools{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .tool{
+      display:flex;
+      flex-direction:column;
+      min-height:260px;
+      padding:1.25rem;
+      text-decoration:none;
+      color:inherit;
+      background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,.96));
+      border:1px solid var(--line);
+      border-radius:1.1rem;
+      box-shadow:0 18px 38px rgba(0,0,0,.28);
+      transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .tool:hover{
+      transform:translateY(-3px);
+      border-color:rgba(250,204,21,.7);
+      box-shadow:0 22px 42px rgba(0,0,0,.34);
+    }
+
+    .icon{
+      font-size:2.3rem;
+      line-height:1;
+      margin-bottom:1rem;
+    }
+
+    .tool h2{
+      margin:0;
+      font-size:1.35rem;
+    }
+
+    .tool p{
+      margin:.6rem 0 0;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.92rem;
+    }
+
+    .tag{
+      margin-top:auto;
+      padding-top:1.2rem;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+
+    .rally .tag{color:var(--green)}
+    .transfer .tag{color:var(--blue)}
+    .buffs .tag{color:var(--purple)}
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.78rem;
+      padding:1.8rem 0 .6rem;
+    }
+
+    footer strong{color:var(--gold)}
+
+    @media(max-width:760px){
+      .tools{grid-template-columns:1fr}
+      .tool{min-height:190px}
+      header{padding-top:1.5rem}
+    }
+
+    @media(max-width:520px){
+      .admin-login{
+        top:10px;
+        right:10px;
+        padding:.42rem .7rem;
+        font-size:.72rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="admin-login" href="./admin/">🔐 Admin Login</a>
+
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">State 169</div>
+      <h1>Kingshot Tools</h1>
+      <p class="subtitle">
+        Simple community tools for rally coordination, transfer applications and KVK King's Buff enrolment.
+      </p>
+    </header>
+
+    <section class="tools" aria-label="Kingshot tools">
+      <a class="tool rally" href="./rally/">
+        <div class="icon">⚔️</div>
+        <h2>Rally Sync</h2>
+        <p>Calculate launch delays and run a silent visual timer so multiple rallies land together.</p>
+        <div class="tag">OPEN TOOL →</div>
+      </a>
+
+      <a class="tool transfer" href="./transfer/">
+        <div class="icon">🔄</div>
+        <h2>Transfer Application</h2>
+        <p>Apply to transfer into State 169 with one clean, consistent application form.</p>
+        <div class="tag">OPEN APPLICATION →</div>
+      </a>
+
+      <a class="tool buffs" href="./kings-buffs/">
+        <div class="icon">👑</div>
+        <h2>King's Buffs</h2>
+        <p>Register for KVK King's Buff appointments and keep requests organised in one place.</p>
+        <div class="tag">OPEN ENROLMENT →</div>
+      </a>
+    </section>
+
+    <footer>
+      169 Kingshot community tools · <strong>Saint Uber</strong>
+    </footer>
+  </main>
+</body>
+</html>

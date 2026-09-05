@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>King's Buffs Admin · State 169</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#0f172a;
+  --panel2:#020617;
+  --panel3:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#334155;
+  --line2:rgba(148,163,184,.18);
+  --gold:#facc15;
+  --blue:#2563eb;
+  --green:#16a34a;
+  --green2:#22c55e;
+  --red:#dc2626;
+  --orange:#f97316;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  padding:12px;
+  padding-bottom:max(20px,env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at top,rgba(37,99,235,.08),transparent 32rem),
+    var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+main{max-width:1180px;margin:auto}
+a{color:var(--muted);text-decoration:none}
+button,input,select{font:inherit}
+button{
+  border:0;
+  border-radius:999px;
+  padding:9px 12px;
+  background:#334155;
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.primary{background:var(--blue)}
+button.success{background:var(--green)}
+button.danger{background:var(--red)}
+button.ghost{background:#1e293b}
+button.compact{padding:6px 9px;font-size:.72rem}
+input,select{
+  padding:9px 10px;
+  border-radius:9px;
+  border:1px solid #475569;
+  background:var(--panel2);
+  color:var(--text);
+}
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.top h1{
+  color:var(--gold);
+  margin:6px 0 2px;
+  font-size:clamp(1.6rem,5vw,2.2rem);
+}
+.sub{color:var(--muted);font-size:.76rem}
+.top-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.card{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(15,23,42,.94));
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  margin:10px 0;
+  box-shadow:0 8px 28px rgba(0,0,0,.12);
+}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.section-title h2{margin:0;font-size:1rem}
+.msg{min-height:18px;font-size:.78rem;margin-top:6px}
+.error{color:#fca5a5}.ok{color:#86efac}.warn{color:#fdba74}.muted{color:var(--muted)}
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+.summary{
+  background:var(--panel2);
+  border:1px solid var(--line2);
+  border-radius:11px;
+  padding:10px;
+}
+.summary .k{
+  color:var(--muted);
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  font-weight:800;
+}
+.summary .v{
+  margin-top:3px;
+  font-size:1.15rem;
+  font-weight:900;
+}
+.summary .hint{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:.65rem;
+}
+
+.tabs-wrap{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(11,18,32,.96);
+  backdrop-filter:blur(8px);
+  padding:8px 0 6px;
+  margin:2px -2px 0;
+}
+.tabs{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding:1px 2px 4px;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  white-space:nowrap;
+  flex:0 0 auto;
+  background:#1e293b;
+  border:1px solid transparent;
+  text-align:left;
+  border-radius:11px;
+  padding:8px 11px;
+}
+.tab.active{
+  background:#1d4ed8;
+  border-color:#60a5fa;
+}
+.tab .small{
+  display:block;
+  font-size:.62rem;
+  color:#cbd5e1;
+  margin-top:2px;
+}
+.tab .count{
+  display:inline-block;
+  margin-left:5px;
+  padding:1px 5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  font-size:.62rem;
+}
+
+.schedule{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin-top:9px;
+}
+.appt{
+  background:var(--panel2);
+  border:1px solid var(--line2);
+  border-radius:10px;
+  padding:8px;
+  min-width:0;
+}
+.appt-time{color:var(--gold);font-size:1rem;font-weight:900}
+.appt-name{
+  font-weight:850;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.appt-meta{font-size:.66rem;color:var(--muted);margin-top:2px}
+.appt.completed{border-color:rgba(34,197,94,.45);background:rgba(22,101,52,.15)}
+.appt.booked{border-color:rgba(96,165,250,.38)}
+.appt.scheduled{border-color:rgba(250,204,21,.3)}
+
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) auto auto;
+  gap:7px;
+  align-items:center;
+  margin:10px 0 8px;
+}
+.toolbar .quickfilters{display:flex;gap:5px;flex-wrap:wrap}
+.filter-btn{
+  padding:7px 9px;
+  font-size:.7rem;
+}
+.filter-btn.active{background:var(--blue)}
+
+.request{
+  border:1px solid var(--line2);
+  border-radius:12px;
+  padding:10px;
+  background:var(--panel2);
+  margin:8px 0;
+}
+.request.needs-action{border-color:rgba(250,204,21,.38)}
+.request.scheduled{border-color:rgba(96,165,250,.34)}
+.request.completed{border-color:rgba(34,197,94,.36)}
+.player{
+  display:grid;
+  grid-template-columns:50px 1fr auto;
+  gap:9px;
+  align-items:center;
+}
+.avatar{
+  width:50px;
+  height:50px;
+  border-radius:11px;
+  object-fit:cover;
+  background:#111827;
+  border:1px solid rgba(148,163,184,.2);
+}
+.name{font-weight:900;line-height:1.15}
+.meta{color:var(--muted);font-size:.7rem;line-height:1.4;margin-top:2px}
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:.64rem;
+  font-weight:900;
+  padding:.22rem .45rem;
+  border-radius:999px;
+  background:#1e293b;
+  text-transform:capitalize;
+}
+.status.requested{background:rgba(245,158,11,.15);color:#fde68a}
+.status.scheduled{background:rgba(37,99,235,.18);color:#bfdbfe}
+.status.booked{background:rgba(14,165,233,.18);color:#bae6fd}
+.status.completed{background:rgba(22,163,74,.18);color:#bbf7d0}
+.status.cancelled{background:rgba(220,38,38,.18);color:#fecaca}
+
+.availability-label{
+  margin-top:9px;
+  font-size:.66rem;
+  text-transform:uppercase;
+  color:var(--muted);
+  letter-spacing:.05em;
+  font-weight:800;
+}
+.availability{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-top:5px;
+}
+.slot{
+  padding:6px 8px;
+  border:1px solid #475569;
+  border-radius:8px;
+  background:#111827;
+  color:#cbd5e1;
+  font-size:.7rem;
+  font-weight:850;
+}
+.slot:hover{border-color:#60a5fa}
+.slot.assigned{
+  background:#166534;
+  border-color:#4ade80;
+  color:white;
+}
+.slot.conflict{
+  opacity:.32;
+  text-decoration:line-through;
+}
+.slot.best{
+  box-shadow:inset 0 0 0 1px rgba(250,204,21,.28);
+}
+
+.actions{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:9px;
+}
+.actions select{font-size:.72rem;padding:7px 8px}
+.actions button{font-size:.7rem;padding:7px 9px}
+.right-actions{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:18px 8px;
+  font-size:.8rem;
+}
+.legend{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:7px;
+  color:var(--muted);
+  font-size:.65rem;
+}
+.legend span::before{
+  content:"";
+  display:inline-block;
+  width:8px;height:8px;border-radius:50%;
+  margin-right:4px;
+}
+.legend .l-request::before{background:#f59e0b}
+.legend .l-booked::before{background:#3b82f6}
+.legend .l-done::before{background:#22c55e}
+
+@media(max-width:800px){
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .schedule{grid-template-columns:1fr 1fr}
+  .toolbar{grid-template-columns:1fr}
+  .toolbar input,.toolbar select{width:100%}
+}
+
+@media(max-width:560px){
+  body{padding:9px}
+  .card{padding:10px;border-radius:12px}
+  .top-actions{width:100%}
+  .top-actions button{flex:1 1 auto}
+  .summary-grid{gap:6px}
+  .summary{padding:8px}
+  .summary .v{font-size:1rem}
+  .schedule{grid-template-columns:1fr 1fr;gap:6px}
+  .appt{padding:7px}
+  .appt-time{font-size:.9rem}
+  .appt-name{font-size:.78rem}
+  .player{grid-template-columns:46px 1fr}
+  .avatar{width:46px;height:46px}
+  .player>div:last-child{grid-column:1/-1}
+  .status{font-size:.6rem}
+  .right-actions{margin-left:0;width:100%}
+  .right-actions button{flex:1 1 auto}
+  .availability{gap:4px}
+  .slot{padding:6px 7px;font-size:.68rem}
+}
+
+.prep-security{
+  margin:10px 0 12px;
+  padding:12px;
+  border:1px solid rgba(250,204,21,.30);
+  border-radius:13px;
+  background:rgba(250,204,21,.05);
+}
+.prep-security h3{
+  margin:0 0 6px;
+  color:#facc15;
+  font-size:.95rem;
+}
+.prep-security .row{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  align-items:end;
+}
+.prep-security label{
+  flex:1 1 220px;
+  display:grid;
+  gap:5px;
+  font-size:.72rem;
+  color:#cbd5e1;
+}
+.prep-security .status{
+  font-size:.72rem;
+  color:#94a3b8;
+  margin:6px 0;
+  line-height:1.4;
+}
+.prep-security input{
+  width:100%;
+  padding:9px;
+  border-radius:8px;
+  border:1px solid #475569;
+  background:#020617;
+  color:#fff;
+  font:inherit;
+}
+.prep-security button{
+  white-space:nowrap;
+}
+@media(max-width:600px){
+  .prep-security .row{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+  .prep-security button{
+    width:100%;
+  }
+}
+
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <a href="../">← Admin Dashboard</a>
+      <h1>King's Buffs Admin</h1>
+      <div class="sub">Fast booking control for KVK Prep · all times Kingshot / UTC</div>
+    </div>
+    <div class="top-actions">
+      <span id="adminName" class="muted"></span>
+      <button id="refresh" class="ghost">Refresh</button>
+      <button id="signOut">Sign Out</button>
+    </div>
+  </div>
+
+
+  <section id="prepSecurity" class="prep-security" style="display:none">
+    <h3>🔐 Prep Booking Security</h3>
+
+    <div id="prepCodeStatus" class="status">
+      Loading booking code status…
+    </div>
+
+    <div id="prepCodeReveal" class="status" style="display:none">
+      Current code:
+      <strong id="prepCurrentCode" style="color:#fff;letter-spacing:.04em"></strong>
+      <button id="copyPrepCode" type="button" class="ghost" style="margin-left:6px">
+        Copy
+      </button>
+    </div>
+
+    <div id="prepCodeLegacyNotice" class="status" style="display:none">
+      The current code was created before code-reveal support was added.
+      Set it once more from the super-admin account to make it viewable.
+    </div>
+
+    <div id="prepCodeManage" class="row" style="display:none">
+      <label>
+        New Prep Booking Code
+        <input
+          id="prepCodeInput"
+          type="password"
+          minlength="8"
+          maxlength="64"
+          autocomplete="new-password"
+          placeholder="Enter a new code"
+        >
+      </label>
+
+      <button id="setPrepCode" type="button" class="primary">
+        Set New Code
+      </button>
+
+      <button id="clearPrepCode" type="button" class="ghost">
+        Clear Code
+      </button>
+    </div>
+
+    <div id="prepCodeManageNote" class="status" style="display:none">
+      Only the super-admin can change or clear the code. King’s Buff admins can view and copy it.
+    </div>
+
+    <div id="prepCodeMsg" class="msg"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <div>
+        <strong id="eventName">KVK Prep</strong>
+        <div class="muted" style="font-size:.72rem">30-minute appointment slots</div>
+      </div>
+      <button id="copyAll" class="primary">Copy All Days</button>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary">
+        <div class="k">Requests</div>
+        <div id="sumRequests" class="v">0</div>
+        <div class="hint">current buff</div>
+      </div>
+      <div class="summary">
+        <div class="k">Unscheduled</div>
+        <div id="sumUnscheduled" class="v">0</div>
+        <div class="hint">need action</div>
+      </div>
+      <div class="summary">
+        <div class="k">Assigned</div>
+        <div id="sumAssigned" class="v">0</div>
+        <div class="hint">scheduled/booked</div>
+      </div>
+      <div class="summary">
+        <div class="k">Completed</div>
+        <div id="sumCompleted" class="v">0</div>
+        <div class="hint">finished</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tabs-wrap">
+    <div id="tabs" class="tabs"></div>
+  </div>
+
+  <section class="card">
+    <div class="section-title">
+      <div>
+        <h2>Final Schedule</h2>
+        <div id="daySubtitle" class="muted" style="font-size:.7rem"></div>
+      </div>
+      <button id="copySchedule">Copy This Day</button>
+    </div>
+    <div class="legend">
+      <span class="l-request">Requested</span>
+      <span class="l-booked">Assigned</span>
+      <span class="l-done">Completed</span>
+    </div>
+    <div id="schedule" class="schedule"></div>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <input id="search" placeholder="Search player, ID or alliance">
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="requested">Requested</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="booked">Booked</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <div class="quickfilters">
+        <button class="filter-btn active" data-quick="all">All</button>
+        <button class="filter-btn" data-quick="needs">Needs Action</button>
+        <button class="filter-btn" data-quick="assigned">Assigned</button>
+      </div>
+    </div>
+
+    <div id="msg" class="msg"></div>
+    <div id="requests"></div>
+  </section>
+</main>
+
+<script>
+const SUPABASE_URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const API_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-kings-buffs";
+const PREP_CODE_API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-prep-code";
+const sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const $=id=>document.getElementById(id);
+let bundle={event:null,days:[],requests:[]};
+let activeDay=null;
+let quickFilter="all";
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function buffIcon(t){
+  return t==="construction"?"🏗️":t==="research"?"🔬":"🪖";
+}
+function fmtDate(s){
+  return new Date(s+"T00:00:00Z").toLocaleDateString("en-AU",{
+    weekday:"long",day:"numeric",month:"short",timeZone:"UTC"
+  });
+}
+function power(n){
+  n=Number(n);
+  if(!Number.isFinite(n))return"—";
+  if(n>=1e9)return(n/1e9).toFixed(2)+"B";
+  if(n>=1e6)return(n/1e6).toFixed(1)+"M";
+  return n.toLocaleString();
+}
+function activeRows(){
+  return bundle.requests.filter(r=>r.buff_day_id===activeDay);
+}
+function isAssigned(r){
+  return !!r.assigned_time && ["scheduled","booked","completed"].includes(r.status);
+}
+function isNeedsAction(r){
+  return r.status==="requested" && !r.assigned_time;
+}
+
+async function session(){
+  const {data}=await sbClient.auth.getSession();
+  if(!data.session){
+    location.href="../";
+    return null;
+  }
+  return data.session;
+}
+
+async function api(method,body){
+  const s=await session();
+  if(!s)return;
+
+  const r=await fetch(API_URL,{
+    method,
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
+      "Authorization":"Bearer "+s.access_token
+    },
+    body:body?JSON.stringify(body):undefined
+  });
+
+  let j={};
+  try{j=await r.json()}catch{}
+  if(!r.ok)throw new Error(j.error||"Request failed");
+  return j;
+}
+
+function bookedTimes(dayId){
+  return new Set(
+    bundle.requests
+      .filter(r=>r.buff_day_id===dayId&&isAssigned(r))
+      .map(r=>r.assigned_time)
+  );
+}
+
+function renderSummary(){
+  const rows=activeRows();
+  $("sumRequests").textContent=rows.filter(r=>r.status!=="cancelled").length;
+  $("sumUnscheduled").textContent=rows.filter(isNeedsAction).length;
+  $("sumAssigned").textContent=rows.filter(r=>["scheduled","booked"].includes(r.status)&&r.assigned_time).length;
+  $("sumCompleted").textContent=rows.filter(r=>r.status==="completed").length;
+}
+
+function renderTabs(){
+  $("tabs").innerHTML=bundle.days.map(d=>{
+    const rows=bundle.requests.filter(r=>r.buff_day_id===d.id&&r.status!=="cancelled");
+    const pending=rows.filter(isNeedsAction).length;
+
+    return `
+      <button class="tab ${d.id===activeDay?"active":""}" data-day="${d.id}">
+        ${buffIcon(d.buff_type)} ${esc(d.label)}
+        ${pending?`<span class="count">${pending} waiting</span>`:""}
+        <span class="small">Prep Day ${d.prep_day} · ${fmtDate(d.buff_date)}</span>
+      </button>
+    `;
+  }).join("");
+
+  document.querySelectorAll("[data-day]").forEach(b=>{
+    b.onclick=()=>{
+      activeDay=b.dataset.day;
+      render();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+  });
+}
+
+function renderSchedule(){
+  const day=bundle.days.find(d=>d.id===activeDay);
+
+  if(!day){
+    $("schedule").innerHTML="";
+    $("daySubtitle").textContent="";
+    return;
+  }
+
+  $("daySubtitle").textContent=
+    `Prep Day ${day.prep_day} · ${fmtDate(day.buff_date)} · Kingshot UTC`;
+
+  const rows=activeRows()
+    .filter(isAssigned)
+    .sort((a,b)=>a.assigned_time.localeCompare(b.assigned_time));
+
+  $("schedule").innerHTML=rows.length
+    ? rows.map(r=>`
+        <div class="appt ${esc(r.status)}">
+          <div class="appt-time">${esc(r.assigned_time)} UTC</div>
+          <div class="appt-name">${esc(r.player_name)}</div>
+          <div class="appt-meta">
+            ${esc(r.alliance_abbr||"No alliance")} · ${esc(r.status)}
+          </div>
+        </div>
+      `).join("")
+    : `<div class="empty" style="grid-column:1/-1">No appointments assigned yet.</div>`;
+}
+
+function sortedRequests(rows){
+  return [...rows].sort((a,b)=>{
+    const aNeed=isNeedsAction(a)?0:1;
+    const bNeed=isNeedsAction(b)?0:1;
+    if(aNeed!==bNeed)return aNeed-bNeed;
+
+    if(a.assigned_time&&b.assigned_time){
+      return a.assigned_time.localeCompare(b.assigned_time);
+    }
+    if(a.assigned_time)return-1;
+    if(b.assigned_time)return 1;
+
+    return new Date(a.submitted_at)-new Date(b.submitted_at);
+  });
+}
+
+function renderRequests(){
+  const q=$("search").value.trim().toLowerCase();
+  const sf=$("statusFilter").value;
+  const used=bookedTimes(activeDay);
+
+  let rows=activeRows();
+
+  if(sf)rows=rows.filter(r=>r.status===sf);
+
+  if(quickFilter==="needs"){
+    rows=rows.filter(isNeedsAction);
+  }else if(quickFilter==="assigned"){
+    rows=rows.filter(isAssigned);
+  }
+
+  if(q){
+    rows=rows.filter(r=>
+      String(r.player_name||"").toLowerCase().includes(q)||
+      String(r.player_id||"").includes(q)||
+      String(r.alliance_abbr||"").toLowerCase().includes(q)||
+      String(r.alliance_name||"").toLowerCase().includes(q)
+    );
+  }
+
+  rows=sortedRequests(rows);
+
+  $("requests").innerHTML=rows.length
+    ? rows.map(r=>{
+        const stateClass=
+          r.status==="completed"
+            ?"completed"
+            : isAssigned(r)
+              ?"scheduled"
+              : isNeedsAction(r)
+                ?"needs-action"
+                :"";
+
+        return `
+          <div class="request ${stateClass}">
+            <div class="player">
+              ${
+                r.avatar_url
+                  ? `<img class="avatar" src="${esc(r.avatar_url)}" alt="">`
+                  : `<div class="avatar"></div>`
+              }
+
+              <div>
+                <div class="name">${esc(r.player_name)}</div>
+                <div class="meta">
+                  ${esc(r.alliance_abbr||"")} ${esc(r.alliance_name||"")}
+                  ${r.power?` · ${power(r.power)}`:""}<br>
+                  ID ${esc(r.player_id)}
+                  ${r.town_center_level!=null?` · TC ${esc(r.town_center_level)}`:""}
+                </div>
+              </div>
+
+              <div>
+                <span class="status ${esc(r.status)}">${esc(r.status)}</span>
+              </div>
+            </div>
+
+            <div class="availability-label">
+              ${r.assigned_time?`Assigned ${esc(r.assigned_time)} UTC · `:""}Player availability
+            </div>
+
+            <div class="availability">
+              ${(r.availability||[]).map((t,i)=>{
+                const mine=r.assigned_time===t;
+                const conflict=used.has(t)&&!mine;
+                const best=!mine&&!conflict&&i===0;
+
+                return `
+                  <button
+                    class="slot ${mine?"assigned":""} ${conflict?"conflict":""} ${best?"best":""}"
+                    data-assign="${r.id}|${t}"
+                    ${conflict?"disabled":""}
+                    title="${conflict?"Already assigned to another player":"Assign "+t+" UTC"}"
+                  >
+                    ${mine?"✓ ":""}${t}
+                  </button>
+                `;
+              }).join("")}
+            </div>
+
+            <div class="actions">
+              <select data-status="${r.id}" aria-label="Booking status">
+                ${["requested","scheduled","booked","completed","cancelled"]
+                  .map(s=>`<option value="${s}" ${r.status===s?"selected":""}>${s}</option>`)
+                  .join("")}
+              </select>
+
+              ${
+                r.assigned_time
+                  ? `<button data-unassign="${r.id}">Remove ${esc(r.assigned_time)}</button>`
+                  : ""
+              }
+
+              ${
+                r.assigned_time && r.status!=="completed"
+                  ? `<button class="success" data-complete="${r.id}">Mark Completed</button>`
+                  : ""
+              }
+
+              <div class="right-actions">
+                <button class="danger" data-delete="${r.id}" data-name="${esc(r.player_name)}">Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("")
+    : `<div class="empty">No requests match this view.</div>`;
+
+  document.querySelectorAll("[data-assign]").forEach(b=>{
+    b.onclick=async()=>{
+      const [id,time]=b.dataset.assign.split("|");
+
+      try{
+        b.disabled=true;
+        await api("POST",{
+          action:"assign",
+          request_id:id,
+          assigned_time:time
+        });
+        await load(false);
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-unassign]").forEach(b=>{
+    b.onclick=async()=>{
+      try{
+        await api("POST",{
+          action:"unassign",
+          request_id:b.dataset.unassign
+        });
+        await load(false);
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-complete]").forEach(b=>{
+    b.onclick=async()=>{
+      try{
+        await api("POST",{
+          action:"status",
+          request_id:b.dataset.complete,
+          status:"completed"
+        });
+        await load(false);
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-status]").forEach(s=>{
+    s.onchange=async()=>{
+      try{
+        await api("POST",{
+          action:"status",
+          request_id:s.dataset.status,
+          status:s.value
+        });
+        await load(false);
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(b=>{
+    b.onclick=async()=>{
+      if(!confirm(`Delete King's Buff request for ${b.dataset.name}?`))return;
+
+      try{
+        await api("DELETE",{request_id:b.dataset.delete});
+        await load(false);
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }
+    };
+  });
+}
+
+function render(){
+  renderTabs();
+  renderSummary();
+  renderSchedule();
+  renderRequests();
+}
+
+async function load(showLoading=true){
+  if(showLoading){
+    $("msg").textContent="Loading…";
+    $("msg").className="msg";
+  }
+
+  try{
+    const j=await api("GET");
+
+    bundle={
+      event:j.event,
+      days:j.days||[],
+      requests:j.requests||[]
+    };
+
+    if(!activeDay||!bundle.days.some(d=>d.id===activeDay)){
+      activeDay=bundle.days[0]?.id||null;
+    }
+
+    $("eventName").textContent=bundle.event?.name||"KVK Prep";
+    $("adminName").textContent=
+      j.admin?.display_name||j.admin?.username||"Admin";
+
+    $("msg").textContent="";
+    render();
+  }catch(e){
+    $("msg").textContent=e.message;
+    $("msg").className="msg error";
+  }
+}
+
+function dayScheduleText(day){
+  const rows=bundle.requests
+    .filter(r=>r.buff_day_id===day.id&&isAssigned(r))
+    .sort((a,b)=>a.assigned_time.localeCompare(b.assigned_time));
+
+  return [
+    `👑 ${day.label.toUpperCase()}`,
+    `${fmtDate(day.buff_date)} · KINGSHOT UTC`,
+    "",
+    ...(rows.length
+      ? rows.map(r=>
+          `${r.assigned_time}  ${r.player_name}${r.alliance_abbr?` [${r.alliance_abbr}]`:""}`
+        )
+      : ["No appointments assigned"])
+  ].join("\n");
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    $("msg").textContent="Copied.";
+    $("msg").className="msg ok";
+  }catch{
+    $("msg").textContent=text;
+    $("msg").className="msg";
+  }
+}
+
+
+async function loadPrepCodeStatus(){
+  const s=await session();
+  if(!s)return;
+
+  try{
+    const r=await fetch(PREP_CODE_API,{
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+s.access_token
+      }
+    });
+
+    let j={};
+    try{j=await r.json()}catch{}
+
+    if(r.status===403){
+      $("prepSecurity").style.display="none";
+      return;
+    }
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Could not load Prep booking security.");
+    }
+
+    $("prepSecurity").style.display="block";
+
+    const canManage=!!j.permissions?.can_manage_code;
+    const currentCode=j.current_code||"";
+
+    $("prepCodeManage").style.display=canManage?"flex":"none";
+    $("prepCodeManageNote").style.display=canManage?"block":"none";
+
+    const when=j.updated_at
+      ? new Date(j.updated_at).toLocaleString("en-AU")
+      : "";
+
+    const who=j.updated_by?.display_name
+      ? j.updated_by.display_name
+      : "";
+
+    let status=j.code_set
+      ? "Booking code: SET ✓"
+      : "Booking code: NOT SET";
+
+    if(when)status+=` · ${when}`;
+    if(who)status+=` · by ${who}`;
+
+    $("prepCodeStatus").textContent=status;
+
+    if(currentCode){
+      $("prepCurrentCode").textContent=currentCode;
+      $("prepCodeReveal").style.display="block";
+      $("prepCodeLegacyNotice").style.display="none";
+    }else{
+      $("prepCurrentCode").textContent="";
+      $("prepCodeReveal").style.display="none";
+      $("prepCodeLegacyNotice").style.display=
+        j.code_set && !j.code_recoverable ? "block" : "none";
+    }
+  }catch(e){
+    $("prepSecurity").style.display="block";
+    $("prepCodeStatus").textContent="Could not load booking code status.";
+    $("prepCodeMsg").textContent=e.message;
+    $("prepCodeMsg").className="msg error";
+  }
+}
+
+async function setPrepCode(){
+  const code=$("prepCodeInput").value.trim();
+
+  if(code.length<8){
+    $("prepCodeMsg").textContent="Use at least 8 characters.";
+    $("prepCodeMsg").className="msg error";
+    return;
+  }
+
+  const s=await session();
+  if(!s)return;
+
+  $("setPrepCode").disabled=true;
+  $("prepCodeMsg").textContent="Saving…";
+  $("prepCodeMsg").className="msg";
+
+  try{
+    const r=await fetch(PREP_CODE_API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+s.access_token
+      },
+      body:JSON.stringify({action:"set",code})
+    });
+
+    let j={};
+    try{j=await r.json()}catch{}
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Could not set Prep booking code.");
+    }
+
+    $("prepCodeInput").value="";
+    $("prepCodeMsg").textContent=j.message||"Prep booking code updated.";
+    $("prepCodeMsg").className="msg ok";
+    await loadPrepCodeStatus();
+  }catch(e){
+    $("prepCodeMsg").textContent=e.message;
+    $("prepCodeMsg").className="msg error";
+  }finally{
+    $("setPrepCode").disabled=false;
+  }
+}
+
+async function clearPrepCode(){
+  if(!confirm(
+    "Clear the current Prep booking code?\n\n"+
+    "Public Prep bookings will be blocked until you set a new code."
+  ))return;
+
+  const s=await session();
+  if(!s)return;
+
+  $("clearPrepCode").disabled=true;
+
+  try{
+    const r=await fetch(PREP_CODE_API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+s.access_token
+      },
+      body:JSON.stringify({action:"clear"})
+    });
+
+    let j={};
+    try{j=await r.json()}catch{}
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Could not clear Prep booking code.");
+    }
+
+    $("prepCodeMsg").textContent=j.message||"Prep booking code cleared.";
+    $("prepCodeMsg").className="msg ok";
+    await loadPrepCodeStatus();
+  }catch(e){
+    $("prepCodeMsg").textContent=e.message;
+    $("prepCodeMsg").className="msg error";
+  }finally{
+    $("clearPrepCode").disabled=false;
+  }
+}
+
+async function copyPrepCode(){
+  const code=$("prepCurrentCode").textContent.trim();
+  if(!code)return;
+
+  try{
+    await navigator.clipboard.writeText(code);
+    $("prepCodeMsg").textContent="Prep booking code copied.";
+    $("prepCodeMsg").className="msg ok";
+  }catch{
+    $("prepCodeMsg").textContent="Could not copy automatically. Press and hold the code to copy it.";
+    $("prepCodeMsg").className="msg warn";
+  }
+}
+
+$("setPrepCode").onclick=setPrepCode;
+$("clearPrepCode").onclick=clearPrepCode;
+$("copyPrepCode").onclick=copyPrepCode;
+
+$("refresh").onclick=()=>{
+  load();
+  loadPrepCodeStatus();
+};
+
+$("setPrepCode").onclick=setPrepCode;
+$("clearPrepCode").onclick=clearPrepCode;
+
+$("search").oninput=renderRequests;
+$("statusFilter").onchange=renderRequests;
+
+document.querySelectorAll("[data-quick]").forEach(b=>{
+  b.onclick=()=>{
+    quickFilter=b.dataset.quick;
+    document.querySelectorAll("[data-quick]").forEach(x=>{
+      x.classList.toggle("active",x===b);
+    });
+    renderRequests();
+  };
+});
+
+$("copySchedule").onclick=()=>{
+  const day=bundle.days.find(d=>d.id===activeDay);
+  if(day)copyText(dayScheduleText(day));
+};
+
+$("copyAll").onclick=()=>{
+  const text=bundle.days.map(day=>dayScheduleText(day)).join("\n\n");
+  copyText(text);
+};
+
+$("signOut").onclick=async()=>{
+  await sbClient.auth.signOut();
+  location.href="../";
+};
+
+load();
+loadPrepCodeStatus();
+</script>
+</body>
+</html>

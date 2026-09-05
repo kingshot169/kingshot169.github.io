@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>King's Buff Bookings · State 169</title>
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#0f172a;
+  --panel2:#020617;
+  --panel3:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#334155;
+  --line2:rgba(148,163,184,.18);
+  --gold:#facc15;
+  --green:#22c55e;
+  --blue:#2563eb;
+  --purple:#a855f7;
+  --orange:#f59e0b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  padding:10px;
+  padding-bottom:max(20px,env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at top,rgba(250,204,21,.07),transparent 30rem),
+    var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+}
+main{max-width:860px;margin:auto}
+a{color:var(--muted);text-decoration:none}
+button,input{font:inherit}
+button{
+  border:0;
+  border-radius:999px;
+  padding:10px 14px;
+  background:var(--blue);
+  color:white;
+  font-weight:850;
+  cursor:pointer;
+}
+button.secondary{background:#334155}
+button.success-btn{background:#16a34a}
+button:disabled{opacity:.5;cursor:not-allowed}
+header{
+  text-align:center;
+  padding:10px 6px 8px;
+}
+.crown{font-size:2rem}
+h1{
+  margin:4px 0 3px;
+  color:var(--gold);
+  font-size:clamp(1.9rem,7vw,3rem);
+}
+header p{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:.88rem;
+  margin:6px auto 0;
+  max-width:620px;
+}
+.utc-banner{
+  margin:8px 0 10px;
+  padding:9px 10px;
+  border:1px solid rgba(250,204,21,.45);
+  border-radius:11px;
+  background:rgba(250,204,21,.08);
+  text-align:center;
+  font-weight:850;
+  color:#fde68a;
+  font-size:.82rem;
+}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin:10px 0;
+}
+.step{
+  padding:8px 6px;
+  border-radius:10px;
+  border:1px solid var(--line2);
+  background:var(--panel2);
+  text-align:center;
+  color:var(--muted);
+  font-size:.68rem;
+  font-weight:800;
+}
+.step.active{
+  border-color:#60a5fa;
+  color:#dbeafe;
+  background:rgba(37,99,235,.14);
+}
+.step.done{
+  border-color:rgba(34,197,94,.45);
+  color:#bbf7d0;
+  background:rgba(22,163,74,.10);
+}
+.card{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(15,23,42,.94));
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:0 8px 28px rgba(0,0,0,.12);
+}
+.card h2{
+  margin:0 0 9px;
+  font-size:1rem;
+}
+.lookup{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:end;
+}
+label{
+  display:grid;
+  gap:6px;
+  font-size:.78rem;
+  color:#cbd5e1;
+}
+input{
+  width:100%;
+  padding:11px;
+  border-radius:9px;
+  border:1px solid #475569;
+  background:var(--panel2);
+  color:var(--text);
+}
+.msg{
+  min-height:17px;
+  margin-top:7px;
+  font-size:.78rem;
+}
+.error{color:#fca5a5}.ok{color:#86efac}.warn{color:#fdba74}
+#playerCard,#bookingArea,#success{display:none}
+
+.player{
+  display:grid;
+  grid-template-columns:64px 1fr;
+  gap:10px;
+  align-items:center;
+}
+.avatar{
+  width:64px;
+  height:64px;
+  border-radius:13px;
+  object-fit:cover;
+  background:var(--panel2);
+  border:2px solid rgba(250,204,21,.7);
+}
+.name{
+  font-size:1.18rem;
+  font-weight:900;
+  line-height:1.15;
+}
+.meta{
+  font-size:.77rem;
+  color:#cbd5e1;
+  line-height:1.42;
+  margin-top:3px;
+}
+.player-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.player-actions button{flex:1 1 auto}
+
+.access-box{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:end;
+  padding:10px;
+  margin:9px 0 10px;
+  border:1px solid rgba(250,204,21,.32);
+  border-radius:11px;
+  background:rgba(250,204,21,.06);
+}
+.access-box label{margin:0}
+.access-note{
+  grid-column:1/-1;
+  color:var(--muted);
+  font-size:.68rem;
+  line-height:1.4;
+}
+@media(max-width:560px){
+  .access-box{grid-template-columns:1fr}
+  .access-box button{width:100%}
+}
+.instruction{
+  color:var(--muted);
+  font-size:.76rem;
+  line-height:1.45;
+  margin-bottom:8px;
+}
+.day{
+  --accent:#60a5fa;
+  border:1px solid var(--line2);
+  border-radius:13px;
+  background:var(--panel2);
+  margin-top:9px;
+  overflow:hidden;
+}
+.day.construction{--accent:#f59e0b}
+.day.research{--accent:#a855f7}
+.day.training{--accent:#22c55e}
+.day.open{border-color:color-mix(in srgb,var(--accent) 58%,transparent)}
+.day-head{
+  width:100%;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:11px;
+  background:var(--panel3);
+  border:0;
+  border-radius:0;
+  text-align:left;
+}
+.day-icon{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:color-mix(in srgb,var(--accent) 15%,#111827);
+  border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);
+  font-size:1.2rem;
+}
+.day-title{font-size:.9rem;font-weight:900}
+.day-sub{
+  color:var(--muted);
+  font-size:.68rem;
+  margin-top:2px;
+  line-height:1.35;
+}
+.chev{
+  color:var(--muted);
+  font-size:.8rem;
+}
+.day.open .chev{transform:rotate(180deg)}
+.day-body{
+  display:none;
+  padding:10px;
+}
+.day.open .day-body{display:block}
+
+.selected-summary{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 9px;
+  margin-bottom:8px;
+  border-radius:9px;
+  background:rgba(37,99,235,.10);
+  border:1px solid rgba(96,165,250,.25);
+}
+.selected-summary.show{display:flex}
+.selected-summary strong{font-size:.75rem}
+.selected-summary span{font-size:.68rem;color:#bfdbfe}
+.selected-summary button{
+  padding:5px 8px;
+  font-size:.66rem;
+  background:#334155;
+}
+
+.time-block-label{
+  margin:9px 0 5px;
+  color:var(--muted);
+  font-size:.63rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:850;
+}
+.times{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:5px;
+}
+.time{
+  border:1px solid #475569;
+  border-radius:8px;
+  padding:8px 2px;
+  text-align:center;
+  background:#111827;
+  color:#cbd5e1;
+  font-size:.71rem;
+  font-weight:850;
+  cursor:pointer;
+  user-select:none;
+}
+.time:hover{border-color:#60a5fa}
+.time.selected{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#07111f;
+  box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+}
+.day-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.count{
+  color:var(--muted);
+  font-size:.7rem;
+}
+.submit{
+  background:var(--accent);
+  color:#07111f;
+}
+.day-note{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:.67rem;
+  line-height:1.35;
+}
+
+.success{
+  border:1px solid rgba(34,197,94,.45);
+  background:rgba(34,197,94,.08);
+  border-radius:12px;
+  padding:13px;
+}
+.success h2{
+  margin:0 0 6px;
+  color:#bbf7d0;
+}
+.success-copy{
+  color:#d1fae5;
+  font-size:.8rem;
+  line-height:1.45;
+}
+.success-actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.success-actions>*{flex:1 1 auto}
+.success-actions a{display:flex}
+.success-actions a button{width:100%}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:.7rem;
+  padding:10px;
+}
+
+@media(max-width:700px){
+  .lookup{grid-template-columns:1fr}
+  .lookup button{width:100%}
+  .times{grid-template-columns:repeat(4,1fr)}
+}
+
+@media(max-width:430px){
+  body{padding:8px}
+  .card{padding:10px;border-radius:12px}
+  .steps{gap:4px}
+  .step{font-size:.62rem;padding:7px 3px}
+  .day-head{padding:10px;gap:8px}
+  .day-icon{width:34px;height:34px}
+  .time{padding:8px 1px;font-size:.69rem}
+}
+</style>
+</head>
+<body>
+<main>
+<a href="../">← 169 KS Tools</a>
+
+<header>
+  <div class="crown">👑</div>
+  <h1>King's Buff Bookings</h1>
+  <p>Tell us every time that genuinely works for you. State 169 leadership will choose one final appointment from your selections.</p>
+</header>
+
+<div class="utc-banner">⏱ All booking times are Kingshot / UTC · 30-minute slots</div>
+
+<div class="steps">
+  <div id="step1" class="step active">1 · Verify Player</div>
+  <div id="step2" class="step">2 · Choose Times</div>
+  <div id="step3" class="step">3 · Submitted</div>
+</div>
+
+<section class="card">
+  <h2>Verify your State 169 Kingshot profile</h2>
+  <div class="lookup">
+    <label>Kingshot Player ID
+      <input id="fid" inputmode="numeric" autocomplete="off" placeholder="e.g. 24649596">
+    </label>
+    <button id="find">Find Player</button>
+  </div>
+  <div id="lookupMsg" class="msg"></div>
+  <div style="color:var(--muted);font-size:.7rem;line-height:1.4">
+    We’ll show the verified profile first. Only State 169 players can continue to buff time selection.
+  </div>
+
+  <div id="playerCard">
+    <div class="player">
+      <img id="avatar" class="avatar" alt="">
+      <div>
+        <div id="pName" class="name"></div>
+        <div id="pMeta" class="meta"></div>
+      </div>
+    </div>
+
+    <div class="player-actions">
+      <button id="continue" type="button">Continue to Buff Times</button>
+      <button id="change" type="button" class="secondary">Different Player</button>
+    </div>
+  </div>
+</section>
+
+<section id="bookingArea" class="card">
+  <h2>Choose your availability</h2>
+  <div id="eventName" class="meta"></div>
+
+  <div class="access-box">
+    <label>State 169 Prep Booking Code
+      <input id="accessCode" autocomplete="off" autocapitalize="characters" placeholder="Code shared by State 169 leadership">
+    </label>
+    <button id="saveCode" type="button" class="secondary">Use Code</button>
+    <div class="access-note">
+      This code is shared privately in State 169 chats. It helps stop outsiders from submitting false bookings.
+    </div>
+  </div>
+
+  <div class="instruction">
+    Open the buff you want, then tap <strong>all</strong> 30-minute times you could attend. You can submit more than one buff.
+  </div>
+  <div id="daysWrap" style="display:none">
+    <div id="days"></div>
+  </div>
+  <div id="submitMsg" class="msg"></div>
+</section>
+
+<section id="success" class="card">
+  <div class="success">
+    <h2>✓ Availability submitted</h2>
+    <div id="successText" class="success-copy"></div>
+    <div class="success-actions">
+      <button id="more" type="button" class="secondary">Add / Change Another Buff</button>
+      <a href="../"><button type="button" class="secondary">Back to 169 Tools</button></a>
+    </div>
+  </div>
+</section>
+
+<footer>169 Kingshot community tools · Saint Uber</footer>
+</main>
+
+<script>
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const PLAYER_LOOKUP_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup";
+const BUFFS_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs";
+
+const $=id=>document.getElementById(id);
+let verified=null;
+let config=null;
+let accessCodeVerified=false;
+const selected={};
+
+const headers=()=>({
+  "Content-Type":"application/json",
+  "apikey":SUPABASE_PUBLISHABLE_KEY,
+  "Authorization":"Bearer "+SUPABASE_PUBLISHABLE_KEY
+});
+
+function setStep(step){
+  for(let i=1;i<=3;i++){
+    const el=$("step"+i);
+    el.classList.toggle("active",i===step);
+    el.classList.toggle("done",i<step);
+  }
+}
+
+function power(n){
+  n=Number(n);
+  if(!Number.isFinite(n))return"—";
+  if(n>=1e9)return(n/1e9).toFixed(2)+"B";
+  if(n>=1e6)return(n/1e6).toFixed(1)+"M";
+  return n.toLocaleString();
+}
+
+function allSlots(){
+  const out=[];
+  for(let h=0;h<24;h++){
+    for(const m of [0,30]){
+      out.push(String(h).padStart(2,"0")+":"+String(m).padStart(2,"0"));
+    }
+  }
+  return out;
+}
+
+function slotGroups(){
+  const all=allSlots();
+  return [
+    {label:"00:00 – 05:30 UTC",slots:all.slice(0,12)},
+    {label:"06:00 – 11:30 UTC",slots:all.slice(12,24)},
+    {label:"12:00 – 17:30 UTC",slots:all.slice(24,36)},
+    {label:"18:00 – 23:30 UTC",slots:all.slice(36,48)}
+  ];
+}
+
+function buffIcon(type){
+  return type==="construction"?"🏗️":type==="research"?"🔬":"🪖";
+}
+
+function fmtDate(s){
+  return new Date(s+"T00:00:00Z").toLocaleDateString("en-AU",{
+    weekday:"long",day:"numeric",month:"short",timeZone:"UTC"
+  });
+}
+
+async function loadConfig(){
+  const r=await fetch(BUFFS_URL,{headers:headers()});
+  const j=await r.json();
+
+  if(!r.ok||!j.ok){
+    throw new Error(j.error||"Could not load King's Buff schedule");
+  }
+
+  config=j;
+}
+
+async function findPlayer(){
+  const fid=$("fid").value.replace(/\s/g,"");
+  $("lookupMsg").textContent="";
+
+  if(!/^\d{4,20}$/.test(fid)){
+    $("lookupMsg").textContent="Enter a valid numeric Player ID.";
+    $("lookupMsg").className="msg warn";
+    return;
+  }
+
+  $("find").disabled=true;
+  $("find").textContent="Finding…";
+
+  try{
+    const r=await fetch(PLAYER_LOOKUP_URL,{
+      method:"POST",
+      headers:headers(),
+      body:JSON.stringify({player_id:fid})
+    });
+
+    const j=await r.json();
+
+    if(!r.ok||!j.ok||!j.player){
+      throw new Error(j.error||"Player lookup failed");
+    }
+
+    verified=j.player;
+
+    const playerState=Number(verified.kingdom);
+
+    $("avatar").src=verified.avatar_url||"";
+    $("avatar").style.display=verified.avatar_url?"block":"none";
+    $("pName").textContent=verified.name||("Player "+verified.player_id);
+
+    const alliance=[
+      verified.alliance_abbr,
+      verified.alliance_name
+    ].filter(Boolean).join(" · ");
+
+    $("pMeta").innerHTML=
+      `State ${verified.kingdom??"—"}<br>`+
+      `${alliance||"No alliance returned"}<br>`+
+      `Power ${power(verified.power)} · TC ${verified.town_center_level??"—"}`;
+
+    $("playerCard").style.display="block";
+    $("fid").disabled=true;
+
+    if(playerState!==169){
+      $("bookingArea").style.display="none";
+      $("success").style.display="none";
+      $("continue").style.display="none";
+
+      $("lookupMsg").textContent=
+        Number.isFinite(playerState)
+          ? `Profile found in State ${playerState}. King's Buff bookings are only available to State 169 players.`
+          : `Profile found, but this Player ID could not be verified as a State 169 player.`;
+
+      $("lookupMsg").className="msg warn";
+      setStep(1);
+      return;
+    }
+
+    $("continue").style.display="";
+    $("lookupMsg").textContent="✓ State 169 player verified.";
+    $("lookupMsg").className="msg ok";
+    setStep(1);
+  }catch(e){
+    $("lookupMsg").textContent=e.message;
+    $("lookupMsg").className="msg error";
+  }finally{
+    $("find").disabled=false;
+    $("find").textContent="Find Player";
+  }
+}
+
+function renderSelectedSummary(dayId){
+  const set=selected[dayId]||new Set();
+  const n=set.size;
+  const summary=$(`summary-${dayId}`);
+  const count=$(`count-${dayId}`);
+  const selectedText=$(`selected-${dayId}`);
+
+  if(!summary||!count||!selectedText)return;
+
+  summary.classList.toggle("show",n>0);
+  count.textContent=`${n} time${n===1?"":"s"} selected`;
+  selectedText.textContent=[...set].sort().join(", ");
+}
+
+function renderDays(){
+  $("eventName").textContent=config?.event?.name||"Current KVK Prep";
+
+  $("days").innerHTML=(config?.days||[]).map(day=>`
+    <div class="day ${day.buff_type}" data-day="${day.id}">
+      <button class="day-head" type="button" data-toggle="${day.id}">
+        <span class="day-icon">${buffIcon(day.buff_type)}</span>
+        <span>
+          <span class="day-title">${day.label}</span>
+          <span class="day-sub">Prep Day ${day.prep_day} · ${fmtDate(day.buff_date)} · UTC</span>
+        </span>
+        <span class="chev">⌄</span>
+      </button>
+
+      <div class="day-body">
+        <div id="summary-${day.id}" class="selected-summary">
+          <div>
+            <strong>Your selected times</strong>
+            <span id="selected-${day.id}"></span>
+          </div>
+          <button type="button" data-clear="${day.id}">Clear</button>
+        </div>
+
+        ${slotGroups().map(group=>`
+          <div class="time-block-label">${group.label}</div>
+          <div class="times">
+            ${group.slots.map(t=>`
+              <div class="time" data-slot="${day.id}|${t}">${t}</div>
+            `).join("")}
+          </div>
+        `).join("")}
+
+        <div class="day-actions">
+          <span class="count" id="count-${day.id}">0 times selected</span>
+          <button class="submit" type="button" data-submit="${day.id}">
+            Submit ${day.label}
+          </button>
+        </div>
+
+        <div class="day-note">
+          Pick every time that genuinely works. The King’s Buff admin will choose one final appointment.
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll("[data-toggle]").forEach(btn=>{
+    btn.onclick=()=>{
+      const card=document.querySelector(`[data-day="${btn.dataset.toggle}"]`);
+      const wasOpen=card.classList.contains("open");
+
+      document.querySelectorAll(".day").forEach(d=>d.classList.remove("open"));
+
+      if(!wasOpen){
+        card.classList.add("open");
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-slot]").forEach(el=>{
+    el.onclick=()=>{
+      const [dayId,time]=el.dataset.slot.split("|");
+      selected[dayId]??=new Set();
+
+      if(selected[dayId].has(time)){
+        selected[dayId].delete(time);
+        el.classList.remove("selected");
+      }else{
+        selected[dayId].add(time);
+        el.classList.add("selected");
+      }
+
+      renderSelectedSummary(dayId);
+    };
+  });
+
+  document.querySelectorAll("[data-clear]").forEach(btn=>{
+    btn.onclick=()=>{
+      const dayId=btn.dataset.clear;
+      selected[dayId]=new Set();
+
+      document.querySelectorAll(`[data-slot^="${dayId}|"]`)
+        .forEach(el=>el.classList.remove("selected"));
+
+      renderSelectedSummary(dayId);
+    };
+  });
+
+  document.querySelectorAll("[data-submit]").forEach(btn=>{
+    btn.onclick=()=>submitDay(btn.dataset.submit,btn);
+  });
+}
+
+async function submitDay(dayId,btn){
+  if(!verified)return;
+
+  const availability=[...(selected[dayId]||[])].sort();
+
+  if(!accessCodeVerified){
+    $("submitMsg").textContent="Verify the State 169 Prep booking code first.";
+    $("submitMsg").className="msg warn";
+    $("accessCode").focus();
+    return;
+  }
+
+  if(!availability.length){
+    $("submitMsg").textContent="Select at least one suitable time first.";
+    $("submitMsg").className="msg warn";
+    return;
+  }
+
+  btn.disabled=true;
+  const old=btn.textContent;
+  btn.textContent="Submitting…";
+
+  try{
+    const r=await fetch(BUFFS_URL,{
+      method:"POST",
+      headers:headers(),
+      body:JSON.stringify({
+        player_id:String(verified.player_id),
+        buff_day_id:dayId,
+        access_code:$("accessCode").value.trim(),
+        availability
+      })
+    });
+
+    const j=await r.json();
+
+    if(!r.ok||!j.ok){
+      throw new Error(j.error||"Could not submit availability");
+    }
+
+    const day=config.days.find(d=>d.id===dayId);
+
+    $("successText").innerHTML=
+      `<strong>${verified.name}</strong>, your availability for `+
+      `<strong>${day.label}</strong> has been saved.<br><br>`+
+      `<strong>${availability.length} selected time${availability.length===1?"":"s"}:</strong><br>`+
+      `${availability.join(", ")} UTC`;
+
+    $("success").style.display="block";
+    $("submitMsg").textContent=j.message||"Availability saved.";
+    $("submitMsg").className="msg ok";
+    setStep(3);
+
+    $("success").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(e){
+    $("submitMsg").textContent=e.message;
+    $("submitMsg").className="msg error";
+  }finally{
+    btn.disabled=false;
+    btn.textContent=old;
+  }
+}
+
+$("saveCode").onclick=async()=>{
+  const code=$("accessCode").value.trim();
+
+  if(!code){
+    $("submitMsg").textContent="Enter the booking code first.";
+    $("submitMsg").className="msg warn";
+    return;
+  }
+
+  $("saveCode").disabled=true;
+  $("saveCode").textContent="Checking…";
+
+  try{
+    const r=await fetch(BUFFS_URL,{
+      method:"POST",
+      headers:headers(),
+      body:JSON.stringify({
+        action:"verify_access_code",
+        access_code:code
+      })
+    });
+
+    const j=await r.json();
+
+    if(!r.ok||!j.ok||!j.access_code_valid){
+      throw new Error(j.error||"Booking code could not be verified.");
+    }
+
+    accessCodeVerified=true;
+    sessionStorage.setItem("state169PrepCode",code);
+    $("daysWrap").style.display="block";
+    $("submitMsg").textContent="✓ State 169 Prep booking code verified.";
+    $("submitMsg").className="msg ok";
+
+    const firstDay=document.querySelector(".day");
+    if(firstDay)firstDay.classList.add("open");
+  }catch(e){
+    accessCodeVerified=false;
+    $("daysWrap").style.display="none";
+    $("submitMsg").textContent=e.message;
+    $("submitMsg").className="msg error";
+  }finally{
+    $("saveCode").disabled=false;
+    $("saveCode").textContent="Use Code";
+  }
+};
+
+const savedPrepCode=sessionStorage.getItem("state169PrepCode");
+if(savedPrepCode){
+  $("accessCode").value=savedPrepCode;
+}
+
+$("find").onclick=findPlayer;
+
+$("fid").onkeydown=e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    findPlayer();
+  }
+};
+
+$("continue").onclick=()=>{
+  $("bookingArea").style.display="block";
+  setStep(2);
+
+  $("bookingArea").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+$("change").onclick=()=>{
+  verified=null;
+  $("playerCard").style.display="none";
+  $("bookingArea").style.display="none";
+  $("success").style.display="none";
+  $("fid").disabled=false;
+  $("fid").value="";
+  $("lookupMsg").textContent="";
+  $("submitMsg").textContent="";
+  accessCodeVerified=false;
+  $("daysWrap").style.display="none";
+  setStep(1);
+  $("fid").focus();
+};
+
+$("more").onclick=()=>{
+  $("success").style.display="none";
+  setStep(2);
+  $("bookingArea").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+(async()=>{
+  try{
+    await loadConfig();
+    renderDays();
+  }catch(e){
+    $("lookupMsg").textContent=e.message;
+    $("lookupMsg").className="msg error";
+  }
+})();
+</script>
+</body>
+</html>

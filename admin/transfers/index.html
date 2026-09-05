@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Transfer Admin · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0b1220;
+  --panel:#0f172a;
+  --panel2:#020617;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#334155;
+  --gold:#facc15;
+  --red:#dc2626;
+  --redHover:#b91c1c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:16px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif
+}
+main{max-width:1180px;margin:auto}
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap
+}
+h1{color:var(--gold);margin:14px 0}
+.muted{color:var(--muted)}
+button{
+  border:0;
+  border-radius:999px;
+  padding:9px 13px;
+  background:#334155;
+  color:white;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer
+}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.55;cursor:not-allowed}
+button.danger{
+  background:var(--red);
+}
+button.danger:hover{
+  background:var(--redHover);
+}
+select{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #475569;
+  background:var(--panel2);
+  color:var(--text)
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px
+}
+.kv{
+  background:#020617;
+  border-radius:9px;
+  padding:10px
+}
+.k{
+  font-size:.72rem;
+  color:var(--muted);
+  text-transform:uppercase
+}
+.v{margin-top:4px}
+.reason{
+  white-space:pre-wrap;
+  line-height:1.45
+}
+.statusline{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+.statusline .spacer{
+  flex:1 1 auto;
+}
+.msg{
+  min-height:20px;
+  margin-top:10px
+}
+.error{color:#fca5a5}
+.ok{color:#86efac}
+
+.player-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.player-avatar{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--gold);
+  background:#020617;
+  flex:0 0 auto;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .statusline{
+    align-items:stretch;
+  }
+  .statusline label,
+  .statusline select,
+  .statusline button{
+    width:100%;
+  }
+  .statusline .spacer{
+    display:none;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <div>
+    <a href="../../" style="color:#94a3b8;text-decoration:none">← 169 KS Tools</a>
+    <h1>Transfer Admin</h1>
+  </div>
+  <div>
+    <span id="adminName" class="muted"></span>
+    <button id="signOut">Sign Out</button>
+  </div>
+</div>
+
+<div class="statusline">
+<label>Status filter
+<select id="filter">
+<option value="">All</option>
+<option value="submitted">Submitted</option>
+<option value="reviewing">Reviewing</option>
+<option value="approved">Approved</option>
+<option value="waitlisted">Waitlisted</option>
+<option value="declined">Declined</option>
+</select>
+</label>
+<button id="refresh">Refresh</button>
+</div>
+
+<div id="msg" class="msg"></div>
+<div id="list"></div>
+</main>
+
+<script>
+const SUPABASE_URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const ADMIN_TRANSFERS_URL="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-transfers";
+
+const sbClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const $=id=>document.getElementById(id);
+let applications=[];
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function pwr(n){
+  n=Number(n);
+  if(!Number.isFinite(n))return"";
+  if(n>=1e9)return(n/1e9).toFixed(2)+"B";
+  if(n>=1e6)return(n/1e6).toFixed(1)+"M";
+  return n.toLocaleString();
+}
+
+function fmtDate(s){
+  try{return new Date(s).toLocaleString()}
+  catch{return s||""}
+}
+
+async function session(){
+  const {data}=await sbClient.auth.getSession();
+
+  if(!data.session){
+    location.href="../";
+    return null;
+  }
+
+  return data.session;
+}
+
+async function api(method,body){
+  const s=await session();
+  if(!s)return;
+
+  const r=await fetch(ADMIN_TRANSFERS_URL,{
+    method,
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
+      "Authorization":"Bearer "+s.access_token
+    },
+    body:body?JSON.stringify(body):undefined
+  });
+
+  let j={};
+
+  try{
+    j=await r.json();
+  }catch{}
+
+  if(!r.ok){
+    throw new Error(j.error||"Request failed");
+  }
+
+  return j;
+}
+
+function render(){
+  const f=$("filter").value;
+  const rows=applications.filter(a=>!f||a.status===f);
+
+  $("list").innerHTML=rows.length
+    ? rows.map(a=>`
+      <section class="card" data-card-id="${esc(a.id)}">
+        <div class="grid">
+
+          <div class="kv">
+            <div class="k">Player</div>
+            <div class="v player-box">
+              ${
+                a.avatar_url
+                  ? `<img class="player-avatar"
+                       src="${esc(a.avatar_url)}"
+                       alt="Player profile picture"
+                       onerror="this.style.display='none'">`
+                  : ``
+              }
+              <div>
+                <strong>${esc(a.player_name)}</strong><br>
+                ID ${esc(a.player_id)}
+              </div>
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="k">State / Alliance</div>
+            <div class="v">
+              ${esc(a.kingdom)}<br>
+              ${esc(a.alliance_abbr||"")} ${esc(a.alliance_name||"")}
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Power / TC</div>
+            <div class="v">
+              ${esc(pwr(a.power))}<br>
+              TC ${esc(a.town_center_level)}
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Coordinates</div>
+            <div class="v">
+              X ${esc(a.x)} · Y ${esc(a.y)}
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Transfer passes</div>
+            <div class="v">${esc(a.transfer_passes)}</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Preferred alliance</div>
+            <div class="v">${esc(a.preferred_alliance||"No preference")}</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Referrer / Friends</div>
+            <div class="v">${esc(a.referrer_or_friends||"—")}</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Submitted</div>
+            <div class="v">${esc(fmtDate(a.submitted_at))}</div>
+          </div>
+
+        </div>
+
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Reason</div>
+          <div class="v reason">${esc(a.reason)}</div>
+        </div>
+
+        <div class="kv" style="margin-top:10px">
+          <div class="k">Notes</div>
+          <div class="v reason">${esc(a.notes||"—")}</div>
+        </div>
+
+        <div class="statusline">
+          <label>
+            Status
+            <select data-status-id="${esc(a.id)}">
+              ${
+                ["submitted","reviewing","approved","waitlisted","declined"]
+                  .map(s=>`
+                    <option value="${s}" ${a.status===s?"selected":""}>
+                      ${s}
+                    </option>
+                  `).join("")
+              }
+            </select>
+          </label>
+
+          <span class="muted">Reference ${esc(a.id)}</span>
+
+          <span class="spacer"></span>
+
+          <button
+            type="button"
+            class="danger"
+            data-delete-id="${esc(a.id)}"
+            data-player-name="${esc(a.player_name)}">
+            Delete Application
+          </button>
+        </div>
+      </section>
+    `).join("")
+    : `<div class="card muted">No applications found.</div>`;
+
+  document.querySelectorAll("select[data-status-id]").forEach(sel=>{
+    sel.onchange=async()=>{
+      const applicationId=sel.dataset.statusId;
+      const app=applications.find(x=>x.id===applicationId);
+      const old=app?.status;
+
+      sel.disabled=true;
+
+      try{
+        await api("POST",{
+          application_id:applicationId,
+          status:sel.value
+        });
+
+        if(app)app.status=sel.value;
+
+        $("msg").textContent="Status updated.";
+        $("msg").className="msg ok";
+
+        render();
+      }catch(e){
+        sel.value=old||"submitted";
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+      }finally{
+        sel.disabled=false;
+      }
+    };
+  });
+
+  document.querySelectorAll("button[data-delete-id]").forEach(btn=>{
+    btn.onclick=async()=>{
+      const applicationId=btn.dataset.deleteId;
+      const playerName=btn.dataset.playerName||"this player";
+
+      const confirmed=window.confirm(
+        `Delete the transfer application for ${playerName}?\n\nThis cannot be undone.`
+      );
+
+      if(!confirmed)return;
+
+      btn.disabled=true;
+      btn.textContent="Deleting…";
+
+      try{
+        await api("DELETE",{
+          application_id:applicationId
+        });
+
+        applications=applications.filter(a=>a.id!==applicationId);
+
+        $("msg").textContent=`Application for ${playerName} deleted.`;
+        $("msg").className="msg ok";
+
+        render();
+      }catch(e){
+        $("msg").textContent=e.message;
+        $("msg").className="msg error";
+
+        btn.disabled=false;
+        btn.textContent="Delete Application";
+      }
+    };
+  });
+}
+
+async function load(){
+  $("msg").textContent="Loading…";
+  $("msg").className="msg";
+
+  try{
+    const j=await api("GET");
+
+    applications=j.applications||[];
+
+    $("adminName").textContent=
+      j.admin?.display_name||
+      j.admin?.username||
+      "Admin";
+
+    $("msg").textContent="";
+    render();
+
+  }catch(e){
+    $("msg").textContent=e.message;
+    $("msg").className="msg error";
+  }
+}
+
+$("refresh").onclick=load;
+$("filter").onchange=render;
+
+$("signOut").onclick=async()=>{
+  await sbClient.auth.signOut();
+  location.href="../";
+};
+
+load();
+</script>
+</body>
+</html>

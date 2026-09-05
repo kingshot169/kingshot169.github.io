@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>Admin · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:14px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{width:min(1000px,100%);margin:auto}
+a{color:var(--muted);text-decoration:none}
+h1{color:var(--gold);margin:6px 0 2px;font-size:clamp(1.9rem,6vw,2.8rem)}
+.sub{color:var(--muted);font-size:.85rem;line-height:1.45}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}
+.login{width:min(460px,100%);margin:7vh auto 0}
+label{display:grid;gap:6px;margin-top:11px;color:#cbd5e1;font-size:.8rem}
+input{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:var(--panel2);color:white;font:inherit}
+button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:white;font:inherit;font-weight:850;cursor:pointer}
+.login button{width:100%;margin-top:14px;background:var(--blue)}
+.msg{min-height:18px;margin-top:8px;font-size:.8rem}.error{color:#fca5a5}.ok{color:#86efac}
+.hint{margin-top:8px;padding:8px 9px;border:1px solid rgba(148,163,184,.18);border-radius:9px;background:#020617;color:var(--muted);font-size:.72rem;line-height:1.4}
+#dashboard{display:none}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
+.admin-actions{display:flex;gap:6px;flex-wrap:wrap}
+.identity{padding:9px 10px;border-radius:10px;background:#020617;border:1px solid rgba(148,163,184,.18);margin-bottom:12px;font-size:.75rem;color:#cbd5e1}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.tool{display:flex;flex-direction:column;min-height:185px;padding:15px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#0f172a,#020617);color:inherit}
+.tool:hover{border-color:rgba(250,204,21,.6);transform:translateY(-1px)}
+.icon{font-size:1.8rem}.tool h2{margin:8px 0 0;font-size:1.05rem}.tool p{color:var(--muted);font-size:.78rem;line-height:1.4}.tag{margin-top:auto;padding-top:10px;font-size:.7rem;font-weight:900;color:#93c5fd}
+.empty{color:var(--muted);padding:18px;text-align:center}
+@media(max-width:760px){.tools{grid-template-columns:1fr}.tool{min-height:145px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section id="loginView" class="card login">
+  <a href="../">← 169 KS Tools</a>
+  <h1>Admin Sign In</h1>
+  <div class="sub">Use your Kingshot Player ID. Existing legacy admins may also use their original email address.</div>
+
+  <label>Player ID or Email
+    <input id="loginId" autocomplete="username" placeholder="24649596 or your existing email">
+  </label>
+
+  <label>Password
+    <input id="password" type="password" autocomplete="current-password">
+  </label>
+
+  <button id="signIn">Sign In</button>
+  <div id="loginMsg" class="msg"></div>
+
+  <div class="hint">
+    New admin accounts use Player ID login. Older admin accounts can continue using their original email until they are converted from Admin Users.
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="top">
+    <div>
+      <a href="../">← 169 KS Tools</a>
+      <h1>Admin Dashboard</h1>
+      <div class="sub">Only tools assigned to your account are shown.</div>
+    </div>
+    <div class="admin-actions">
+      <a href="./account/"><button>Change Password</button></a>
+      <button id="signOut">Sign Out</button>
+    </div>
+  </div>
+
+  <div id="identity" class="identity"></div>
+  <div id="tools" class="tools"></div>
+</section>
+</div>
+
+<script>
+const SUPABASE_URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const PROFILE_API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile";
+const sbClient=window.supabase.createClient(SUPABASE_URL,KEY);
+const $=id=>document.getElementById(id);
+
+function playerLoginEmail(playerId){
+  return `${playerId}@state169.invalid`;
+}
+
+async function getProfile(session){
+  const r=await fetch(PROFILE_API,{
+    headers:{
+      "apikey":KEY,
+      "Authorization":"Bearer "+session.access_token
+    }
+  });
+
+  const j=await r.json();
+
+  if(!r.ok||!j.ok){
+    throw new Error(j.error||"Admin access denied");
+  }
+
+  return j;
+}
+
+function tool(href,icon,title,desc,tag){
+  return `<a class="tool" href="${href}">
+    <div class="icon">${icon}</div>
+    <h2>${title}</h2>
+    <p>${desc}</p>
+    <div class="tag">${tag} →</div>
+  </a>`;
+}
+
+async function showDashboard(session){
+  try{
+    const j=await getProfile(session);
+    const p=j.profile;
+
+    if(p.must_change_password){
+      location.href="./account/?required=1";
+      return;
+    }
+
+    $("loginView").style.display="none";
+    $("dashboard").style.display="block";
+
+    $("identity").textContent=
+      `${p.display_name||p.player_name||p.username}`+
+      `${p.player_id?` · Player ID ${p.player_id}`:""}`+
+      `${p.alliance_abbr?` · [${p.alliance_abbr}]`:""}`+
+      ` · State 169`;
+
+    const cards=[];
+
+    if(p.can_manage_transfers){
+      cards.push(tool(
+        "./transfers/","🔄","Transfer Manager",
+        "Review applicants, update statuses and manage the transfer list.",
+        "OPEN TRANSFERS"
+      ));
+    }
+
+    if(p.can_search_players){
+      cards.push(tool(
+        "./player-search/","🔎","Player Search",
+        "Search players, gear, coordinates and rankings across Kingshot.",
+        "SEARCH PLAYERS"
+      ));
+    }
+
+    if(p.can_manage_buffs){
+      cards.push(tool(
+        "./kings-buffs/","👑","King's Buffs Admin",
+        "Assign and manage KVK Prep King's Buff appointments.",
+        "OPEN BOOKINGS"
+      ));
+    }
+
+    if(p.can_manage_users){
+      cards.push(tool(
+        "./users/","🛡️","Admin Users",
+        "Create admins and assign Player Search, MoJ and Transfer permissions.",
+        "MANAGE ADMINS"
+      ));
+
+      cards.push(tool(
+        "./audit/","📜","Audit Log",
+        "Review recent booking, transfer, player-search and admin account actions.",
+        "VIEW AUDIT LOG"
+      ));
+    }
+
+    $("tools").innerHTML=cards.length
+      ? cards.join("")
+      : `<div class="empty">No admin tools have been assigned to this account.</div>`;
+  }catch(e){
+    await sbClient.auth.signOut();
+    $("dashboard").style.display="none";
+    $("loginView").style.display="block";
+    $("loginMsg").textContent=e.message;
+    $("loginMsg").className="msg error";
+  }
+}
+
+$("signIn").onclick=async()=>{
+  $("loginMsg").textContent="";
+
+  const identifier=$("loginId").value.trim();
+  const password=$("password").value;
+
+  let email;
+
+  if(identifier.includes("@")){
+    email=identifier.toLowerCase();
+  }else if(/^\d{4,20}$/.test(identifier)){
+    email=playerLoginEmail(identifier);
+  }else{
+    $("loginMsg").textContent="Enter a valid Player ID or email address.";
+    $("loginMsg").className="msg error";
+    return;
+  }
+
+  const {data,error}=await sbClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    $("loginMsg").textContent="Invalid login or password.";
+    $("loginMsg").className="msg error";
+    return;
+  }
+
+  await showDashboard(data.session);
+};
+
+$("password").onkeydown=e=>{
+  if(e.key==="Enter")$("signIn").click();
+};
+
+$("signOut").onclick=async()=>{
+  await sbClient.auth.signOut();
+  location.reload();
+};
+
+(async()=>{
+  const {data}=await sbClient.auth.getSession();
+  if(data.session)await showDashboard(data.session);
+})();
+</script>
+</body>
+</html>

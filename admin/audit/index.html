@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>Audit Log · 169 KS Tools</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15}
+*{box-sizing:border-box}
+body{margin:0;padding:10px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:auto}a{color:var(--muted);text-decoration:none}
+h1{color:var(--gold);margin:8px 0 2px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;margin:10px 0}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+input,select{padding:8px;border:1px solid #475569;border-radius:8px;background:var(--panel2);color:var(--text);font:inherit}
+button{padding:8px 11px;border:0;border-radius:999px;background:#334155;color:white;font:inherit;font-weight:800}
+.event{border:1px solid rgba(148,163,184,.16);border-radius:10px;background:#020617;padding:9px;margin:7px 0}
+.head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.action{font-weight:900}.time,.meta{color:var(--muted);font-size:.68rem}
+.details{margin-top:6px;color:#cbd5e1;font-size:.72rem;white-space:pre-wrap;word-break:break-word}
+.msg{font-size:.78rem;color:var(--muted);min-height:18px}
+@media(max-width:600px){.toolbar>*{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<main>
+<a href="../">← Admin Dashboard</a>
+<h1>Admin Audit Log</h1>
+<div style="color:var(--muted);font-size:.78rem">Recent privileged actions across State 169 tools.</div>
+
+<section class="card">
+  <div class="toolbar">
+    <input id="search" placeholder="Search action, admin, player or target">
+    <select id="type">
+      <option value="">All actions</option>
+      <option>BUFF</option>
+      <option>TRANSFER</option>
+      <option>ADMIN</option>
+      <option>PLAYER_SEARCH</option>
+    </select>
+    <button id="refresh">Refresh</button>
+  </div>
+  <div id="msg" class="msg"></div>
+</section>
+
+<section id="events"></section>
+</main>
+
+<script>
+const URL="https://iqjvzhgodwufvepegwyj.supabase.co";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-audit";
+const sbClient=window.supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+let events=[];
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+async function session(){
+  const {data}=await sbClient.auth.getSession();
+  if(!data.session){location.href="../";return null}
+  return data.session;
+}
+
+async function load(){
+  $("msg").textContent="Loading…";
+  const s=await session(); if(!s)return;
+
+  try{
+    const r=await fetch(API+"?limit=300",{
+      headers:{
+        "apikey":KEY,
+        "Authorization":"Bearer "+s.access_token
+      }
+    });
+    const j=await r.json();
+    if(!r.ok||!j.ok)throw new Error(j.error||"Could not load audit log");
+    events=j.events||[];
+    $("msg").textContent=`${events.length} recent events`;
+    render();
+  }catch(e){
+    $("msg").textContent=e.message;
+  }
+}
+
+function render(){
+  const q=$("search").value.trim().toLowerCase();
+  const type=$("type").value;
+
+  const rows=events.filter(e=>{
+    if(type && !String(e.action||"").startsWith(type))return false;
+    if(!q)return true;
+    return JSON.stringify(e).toLowerCase().includes(q);
+  });
+
+  $("events").innerHTML=rows.length?rows.map(e=>`
+    <div class="event">
+      <div class="head">
+        <div>
+          <div class="action">${esc(e.action)}</div>
+          <div class="meta">
+            ${esc(e.actor_display_name||"Admin")}
+            ${e.actor_player_id?` · Player ID ${esc(e.actor_player_id)}`:""}
+          </div>
+        </div>
+        <div class="time">${esc(new Date(e.created_at).toLocaleString())}</div>
+      </div>
+      <div class="meta" style="margin-top:5px">
+        ${esc(e.target_type)}${e.target_id?` · ${esc(e.target_id)}`:""}
+      </div>
+      <div class="details">${esc(JSON.stringify(e.details||{},null,2))}</div>
+    </div>
+  `).join(""):`<div class="card msg">No matching audit events.</div>`;
+}
+
+$("refresh").onclick=load;
+$("search").oninput=render;
+$("type").onchange=render;
+load();
+</script>
+</body>
+</html>
