@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
 <title>Set Password · 169 KS Tools</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -52,6 +53,7 @@ if(new URLSearchParams(location.search).get("required")==="1"){
 $("save").onclick=async()=>{
   const a=$("p1").value;
   const b=$("p2").value;
+
   $("msg").textContent="";
 
   if(a.length<12){
@@ -66,36 +68,69 @@ $("save").onclick=async()=>{
     return;
   }
 
-  const {data}=await sbClient.auth.getSession();
-  if(!data.session){
-    location.href="../";
-    return;
-  }
+  $("save").disabled=true;
+  $("save").textContent="Updating Password…";
 
-  const r=await fetch(CHANGE_PASSWORD_API,{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "apikey":KEY,
-      "Authorization":"Bearer "+data.session.access_token
-    },
-    body:JSON.stringify({new_password:a})
-  });
+  try{
+    const {data,error:sessionError}=await sbClient.auth.getSession();
 
-  const j=await r.json();
+    if(sessionError||!data.session){
+      $("msg").textContent=
+        "Your temporary login session has expired. Please sign in again.";
+      $("msg").className="msg error";
+      setTimeout(()=>location.href="../",1400);
+      return;
+    }
 
-  if(!r.ok||!j.ok){
-    $("msg").textContent=j.error||"Password could not be changed.";
+    const r=await fetch(CHANGE_PASSWORD_API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":KEY,
+        "Authorization":"Bearer "+data.session.access_token
+      },
+      body:JSON.stringify({new_password:a})
+    });
+
+    let j={};
+    try{
+      j=await r.json();
+    }catch{}
+
+    if(!r.ok||!j.ok){
+      throw new Error(
+        j.error||
+        `Password update failed (${r.status}).`
+      );
+    }
+
+    $("p1").value="";
+    $("p2").value="";
+
+    $("msg").textContent=
+      "Password updated successfully. Please sign in again with your Player ID and new password.";
+    $("msg").className="msg ok";
+
+    // A password change can affect the current Supabase session.
+    // Clear only this browser's cached session and return to login.
+    try{
+      await sbClient.auth.signOut({scope:"local"});
+    }catch{
+      // Even if sign-out reports an error, continue back to login.
+    }
+
+    setTimeout(()=>{
+      location.href="../?password_changed=1";
+    },1200);
+
+  }catch(e){
+    $("msg").textContent=
+      e?.message||"Password could not be changed. Please try again.";
     $("msg").className="msg error";
-    return;
+  }finally{
+    $("save").disabled=false;
+    $("save").textContent="Update Password";
   }
-
-  $("msg").textContent="Password updated. Opening Admin Dashboard…";
-  $("msg").className="msg ok";
-  $("p1").value="";
-  $("p2").value="";
-
-  setTimeout(()=>location.href="../",700);
 };
 </script>
 </body>
