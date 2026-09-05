@@ -25,6 +25,21 @@ button.secondary{background:#334155}button.submit{background:#16a34a}button:disa
 .success h2{color:#bbf7d0}.ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;color:#cbd5e1}
 footer{text-align:center;color:var(--muted);font-size:.78rem;padding:10px}
 @media(max-width:650px){.lookup,.grid{grid-template-columns:1fr}.full{grid-column:auto}.lookup button{width:100%}}
+
+.site-credit{
+  margin:28px auto 8px;
+  padding:14px 8px 4px;
+  text-align:center;
+  color:#64748b;
+  font-size:.72rem;
+  line-height:1.45;
+}
+.site-credit-byline{
+  margin-top:2px;
+  font-size:.66rem;
+  color:#475569;
+}
+
 </style>
 </head>
 <body>
@@ -253,5 +268,9 @@ $("form").onsubmit=async e=>{
   }
 };
 </script>
+<footer class="site-credit">
+  <div>169 Kingshot Tools</div>
+  <div class="site-credit-byline">Built by [KRZ] Uub's</div>
+</footer>
 </body>
 </html>
