@@ -91,7 +91,7 @@
 
     .tools{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:1rem;
       margin-top:1rem;
     }
@@ -145,6 +145,8 @@
     .rally .tag{color:var(--green)}
     .transfer .tag{color:var(--blue)}
     .buffs .tag{color:var(--purple)}
+    .compare .tag{color:var(--gold)}
+    .gifts .tag{color:#fb7185}
 
     footer{
       text-align:center;
@@ -195,7 +197,7 @@
       <div class="eyebrow">State 169</div>
       <h1>Kingshot Tools</h1>
       <p class="subtitle">
-        Simple community tools for rally coordination, transfer applications and KVK King's Buff enrolment.
+        Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.
       </p>
     </header>
 
@@ -219,6 +221,20 @@
         <h2>King's Buffs</h2>
         <p>Register for KVK King's Buff appointments and keep requests organised in one place.</p>
         <div class="tag">OPEN ENROLMENT →</div>
+      </a>
+
+      <a class="tool compare" href="./compare/">
+        <div class="icon">🏰</div>
+        <h2>Kingdom Compare</h2>
+        <p>Compare State 169 with another kingdom using current kingdom strength and activity data.</p>
+        <div class="tag">COMPARE KINGDOMS →</div>
+      </a>
+
+      <a class="tool gifts" href="./gift-codes/">
+        <div class="icon">🎁</div>
+        <h2>Gift Codes</h2>
+        <p>Verify your State 169 Player ID and redeem current Kingshot gift codes.</p>
+        <div class="tag">VIEW GIFT CODES →</div>
       </a>
     </section>
 
