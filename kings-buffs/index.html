@@ -392,6 +392,137 @@ footer{
   color:#475569;
 }
 
+
+/* V2 tabbed buff booking */
+.buff-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin:12px 0 14px;
+}
+.buff-tab{
+  border:1px solid #475569;
+  background:#111827;
+  color:#cbd5e1;
+  border-radius:12px;
+  padding:10px 6px;
+  text-align:center;
+  cursor:pointer;
+  min-width:0;
+}
+.buff-tab .tab-icon{
+  display:block;
+  font-size:1.25rem;
+  margin-bottom:3px;
+}
+.buff-tab .tab-label{
+  display:block;
+  font-size:.72rem;
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.buff-tab .tab-state{
+  display:block;
+  margin-top:3px;
+  color:#94a3b8;
+  font-size:.61rem;
+  line-height:1.25;
+}
+.buff-tab.active{
+  border-color:#facc15;
+  box-shadow:0 0 0 1px rgba(250,204,21,.22);
+  background:#172033;
+}
+.buff-tab.registered{
+  border-color:#22c55e;
+  background:rgba(34,197,94,.10);
+}
+.buff-tab.registered .tab-state{
+  color:#86efac;
+}
+.buff-tab.assigned{
+  border-color:#facc15;
+  background:rgba(250,204,21,.10);
+}
+.buff-tab.assigned .tab-state{
+  color:#fde68a;
+}
+.buff-panel{
+  margin-top:8px;
+}
+.buff-panel-head{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  margin-bottom:8px;
+}
+.buff-panel-icon{
+  font-size:1.5rem;
+  line-height:1;
+}
+.buff-panel-title{
+  font-weight:900;
+  color:#fff;
+  font-size:1.02rem;
+}
+.buff-panel-sub{
+  color:#94a3b8;
+  font-size:.7rem;
+  margin-top:2px;
+}
+.booking-status{
+  border:1px solid #334155;
+  background:#0b1325;
+  border-radius:12px;
+  padding:11px;
+  margin:10px 0 12px;
+  font-size:.76rem;
+  line-height:1.5;
+}
+.booking-status.registered{
+  border-color:rgba(34,197,94,.45);
+  background:rgba(34,197,94,.07);
+}
+.booking-status.assigned{
+  border-color:rgba(250,204,21,.5);
+  background:rgba(250,204,21,.07);
+}
+.booking-status .big-time{
+  display:block;
+  margin:4px 0;
+  color:#facc15;
+  font-size:1.25rem;
+  font-weight:950;
+}
+.saved-times{
+  margin-top:7px;
+  color:#cbd5e1;
+  font-size:.72rem;
+}
+.lock-note{
+  color:#94a3b8;
+  font-size:.67rem;
+  margin-top:7px;
+}
+.tab-progress{
+  margin:8px 0 2px;
+  color:#94a3b8;
+  font-size:.7rem;
+  text-align:center;
+}
+.apply-btn{
+  width:100%;
+  margin-top:11px;
+}
+@media(max-width:520px){
+  .buff-tabs{gap:5px}
+  .buff-tab{padding:9px 4px}
+  .buff-tab .tab-label{font-size:.66rem}
+  .buff-tab .tab-state{font-size:.56rem}
+}
+
 </style>
 </head>
 <body>
@@ -408,8 +539,8 @@ footer{
 
 <div class="steps">
   <div id="step1" class="step active">1 · Verify Player</div>
-  <div id="step2" class="step">2 · Choose Times</div>
-  <div id="step3" class="step">3 · Submitted</div>
+  <div id="step2" class="step">2 · Buff Tabs</div>
+  <div id="step3" class="step">3 · Registered</div>
 </div>
 
 <section class="card">
@@ -442,37 +573,31 @@ footer{
 </section>
 
 <section id="bookingArea" class="card">
-  <h2>Choose your availability</h2>
+  <h2>King's Buff registrations</h2>
   <div id="eventName" class="meta"></div>
 
   <div class="access-box">
     <label>State 169 Prep Booking Code
       <input id="accessCode" autocomplete="off" autocapitalize="characters" placeholder="Code shared by State 169 leadership">
     </label>
-    <button id="saveCode" type="button" class="secondary">Use Code</button>
+    <button id="saveCode" type="button" class="secondary">Open My Buffs</button>
     <div class="access-note">
-      This code is shared privately in State 169 chats. It helps stop outsiders from submitting false bookings.
+      Enter the private Prep code once to register and view your existing King's Buff bookings.
     </div>
   </div>
 
-  <div class="instruction">
-    Open the buff you want, then tap <strong>all</strong> 30-minute times you could attend. You can submit more than one buff.
-  </div>
   <div id="daysWrap" style="display:none">
-    <div id="days"></div>
-  </div>
-  <div id="submitMsg" class="msg"></div>
-</section>
-
-<section id="success" class="card">
-  <div class="success">
-    <h2>✓ Availability submitted</h2>
-    <div id="successText" class="success-copy"></div>
-    <div class="success-actions">
-      <button id="more" type="button" class="secondary">Add / Change Another Buff</button>
-      <a href="../"><button type="button" class="secondary">Back to 169 Tools</button></a>
+    <div class="instruction">
+      Choose a buff day at the top. Select <strong>every 30-minute time that genuinely works</strong>, then press Apply.
+      Completed registrations are marked automatically.
     </div>
+
+    <div id="buffTabs" class="buff-tabs"></div>
+    <div id="tabProgress" class="tab-progress"></div>
+    <div id="buffPanel"></div>
   </div>
+
+  <div id="submitMsg" class="msg"></div>
 </section>
 
 </main>
@@ -486,7 +611,9 @@ const $=id=>document.getElementById(id);
 let verified=null;
 let config=null;
 let accessCodeVerified=false;
+let activeDayId=null;
 const selected={};
+const existingByDay={};
 
 const headers=()=>({
   "Content-Type":"application/json",
@@ -497,6 +624,7 @@ const headers=()=>({
 function setStep(step){
   for(let i=1;i<=3;i++){
     const el=$("step"+i);
+    if(!el)continue;
     el.classList.toggle("active",i===step);
     el.classList.toggle("done",i<step);
   }
@@ -540,14 +668,31 @@ function fmtDate(s){
   });
 }
 
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function requestFor(dayId){
+  return existingByDay[dayId]||null;
+}
+
+function isAssignedRequest(r){
+  return !!r?.assigned_time &&
+    ["scheduled","booked","completed"].includes(String(r.status||""));
+}
+
+function registrationCount(){
+  return (config?.days||[]).filter(d=>!!requestFor(d.id)).length;
+}
+
 async function loadConfig(){
   const r=await fetch(BUFFS_URL,{headers:headers()});
   const j=await r.json();
-
   if(!r.ok||!j.ok){
     throw new Error(j.error||"Could not load King's Buff schedule");
   }
-
   config=j;
 }
 
@@ -570,7 +715,6 @@ async function findPlayer(){
       headers:headers(),
       body:JSON.stringify({player_id:fid})
     });
-
     const j=await r.json();
 
     if(!r.ok||!j.ok||!j.player){
@@ -578,7 +722,6 @@ async function findPlayer(){
     }
 
     verified=j.player;
-
     const playerState=Number(verified.kingdom);
 
     $("avatar").src=verified.avatar_url||"";
@@ -600,14 +743,11 @@ async function findPlayer(){
 
     if(playerState!==169){
       $("bookingArea").style.display="none";
-      $("success").style.display="none";
       $("continue").style.display="none";
-
       $("lookupMsg").textContent=
         Number.isFinite(playerState)
           ? `Profile found in State ${playerState}. King's Buff bookings are only available to State 169 players.`
           : `Profile found, but this Player ID could not be verified as a State 169 player.`;
-
       $("lookupMsg").className="msg warn";
       setStep(1);
       return;
@@ -626,78 +766,176 @@ async function findPlayer(){
   }
 }
 
-function renderSelectedSummary(dayId){
-  const set=selected[dayId]||new Set();
-  const n=set.size;
-  const summary=$(`summary-${dayId}`);
-  const count=$(`count-${dayId}`);
-  const selectedText=$(`selected-${dayId}`);
+async function loadMyRequests(){
+  if(!verified||!accessCodeVerified)return;
 
-  if(!summary||!count||!selectedText)return;
+  const r=await fetch(BUFFS_URL,{
+    method:"POST",
+    headers:headers(),
+    body:JSON.stringify({
+      action:"get_my_requests",
+      player_id:String(verified.player_id),
+      access_code:$("accessCode").value.trim()
+    })
+  });
 
-  summary.classList.toggle("show",n>0);
-  count.textContent=`${n} time${n===1?"":"s"} selected`;
-  selectedText.textContent=[...set].sort().join(", ");
+  let j={};
+  try{j=await r.json()}catch{}
+
+  if(!r.ok||!j.ok){
+    throw new Error(j.error||"Could not load your King's Buff registrations.");
+  }
+
+  Object.keys(existingByDay).forEach(k=>delete existingByDay[k]);
+
+  for(const req of (j.requests||[])){
+    existingByDay[req.buff_day_id]=req;
+    selected[req.buff_day_id]=new Set(req.availability||[]);
+  }
 }
 
-function renderDays(){
-  $("eventName").textContent=config?.event?.name||"Current KVK Prep";
+function chooseDefaultTab(){
+  const days=config?.days||[];
+  if(!days.length){
+    activeDayId=null;
+    return;
+  }
 
-  $("days").innerHTML=(config?.days||[]).map(day=>`
-    <div class="day ${day.buff_type}" data-day="${day.id}">
-      <button class="day-head" type="button" data-toggle="${day.id}">
-        <span class="day-icon">${buffIcon(day.buff_type)}</span>
-        <span>
-          <span class="day-title">${day.label}</span>
-          <span class="day-sub">Prep Day ${day.prep_day} · ${fmtDate(day.buff_date)} · UTC</span>
-        </span>
-        <span class="chev">⌄</span>
-      </button>
+  // First priority: an assigned appointment, then first unfinished day,
+  // otherwise the first day.
+  const assigned=days.find(d=>isAssignedRequest(requestFor(d.id)));
+  const unregistered=days.find(d=>!requestFor(d.id));
 
-      <div class="day-body">
-        <div id="summary-${day.id}" class="selected-summary">
-          <div>
-            <strong>Your selected times</strong>
-            <span id="selected-${day.id}"></span>
-          </div>
-          <button type="button" data-clear="${day.id}">Clear</button>
-        </div>
+  activeDayId=
+    activeDayId && days.some(d=>d.id===activeDayId)
+      ? activeDayId
+      : (assigned?.id || unregistered?.id || days[0].id);
+}
 
-        ${slotGroups().map(group=>`
-          <div class="time-block-label">${group.label}</div>
-          <div class="times">
-            ${group.slots.map(t=>`
-              <div class="time" data-slot="${day.id}|${t}">${t}</div>
-            `).join("")}
-          </div>
-        `).join("")}
+function renderTabs(){
+  const days=config?.days||[];
 
-        <div class="day-actions">
-          <span class="count" id="count-${day.id}">0 times selected</span>
-          <button class="submit" type="button" data-submit="${day.id}">
-            Submit ${day.label}
-          </button>
-        </div>
+  $("buffTabs").innerHTML=days.map(day=>{
+    const req=requestFor(day.id);
+    const assigned=isAssignedRequest(req);
 
-        <div class="day-note">
-          Pick every time that genuinely works. The King’s Buff admin will choose one final appointment.
-        </div>
-      </div>
-    </div>
-  `).join("");
+    let cls="buff-tab";
+    if(day.id===activeDayId)cls+=" active";
+    if(req)cls+=" registered";
+    if(assigned)cls+=" assigned";
 
-  document.querySelectorAll("[data-toggle]").forEach(btn=>{
+    let state="Not registered";
+    if(req)state="✓ Registered";
+    if(assigned)state=`★ ${req.assigned_time} UTC`;
+
+    return `
+      <button type="button" class="${cls}" data-tab="${day.id}">
+        <span class="tab-icon">${buffIcon(day.buff_type)}</span>
+        <span class="tab-label">${esc(day.label)}</span>
+        <span class="tab-state">${esc(state)}</span>
+      </button>`;
+  }).join("");
+
+  document.querySelectorAll("[data-tab]").forEach(btn=>{
     btn.onclick=()=>{
-      const card=document.querySelector(`[data-day="${btn.dataset.toggle}"]`);
-      const wasOpen=card.classList.contains("open");
-
-      document.querySelectorAll(".day").forEach(d=>d.classList.remove("open"));
-
-      if(!wasOpen){
-        card.classList.add("open");
-      }
+      activeDayId=btn.dataset.tab;
+      $("submitMsg").textContent="";
+      renderTabs();
+      renderPanel();
     };
   });
+
+  const done=registrationCount();
+  $("tabProgress").textContent=
+    `${done} of ${days.length} buff registration${days.length===1?"":"s"} completed`;
+}
+
+function renderPanel(){
+  const day=(config?.days||[]).find(d=>d.id===activeDayId);
+  if(!day){
+    $("buffPanel").innerHTML="";
+    return;
+  }
+
+  const req=requestFor(day.id);
+
+  if(req){
+    const assigned=isAssignedRequest(req);
+    const availability=Array.isArray(req.availability)?req.availability:[];
+
+    $("buffPanel").innerHTML=`
+      <div class="buff-panel">
+        <div class="buff-panel-head">
+          <div class="buff-panel-icon">${buffIcon(day.buff_type)}</div>
+          <div>
+            <div class="buff-panel-title">${esc(day.label)}</div>
+            <div class="buff-panel-sub">Prep Day ${day.prep_day} · ${fmtDate(day.buff_date)} · Kingshot / UTC</div>
+          </div>
+        </div>
+
+        <div class="booking-status ${assigned?"assigned":"registered"}">
+          ${
+            assigned
+              ? `<strong>✓ Your King's Buff appointment has been assigned</strong>
+                 <span class="big-time">${esc(req.assigned_time)} UTC</span>
+                 <div>Status: ${esc(req.status||"scheduled")}</div>`
+              : `<strong>✓ Registration received</strong>
+                 <div>Your final appointment has not been assigned yet.</div>`
+          }
+
+          <div class="saved-times">
+            <strong>Your submitted availability:</strong><br>
+            ${availability.length ? availability.map(esc).join(", ")+" UTC" : "No availability returned"}
+          </div>
+
+          <div class="lock-note">
+            This registration is locked after submission. Contact State 169 leadership if it needs changing.
+          </div>
+        </div>
+      </div>`;
+
+    return;
+  }
+
+  selected[day.id]??=new Set();
+
+  $("buffPanel").innerHTML=`
+    <div class="buff-panel">
+      <div class="buff-panel-head">
+        <div class="buff-panel-icon">${buffIcon(day.buff_type)}</div>
+        <div>
+          <div class="buff-panel-title">${esc(day.label)}</div>
+          <div class="buff-panel-sub">Prep Day ${day.prep_day} · ${fmtDate(day.buff_date)} · Kingshot / UTC</div>
+        </div>
+      </div>
+
+      <div class="instruction">
+        Select every time you could genuinely accept this buff.
+      </div>
+
+      ${slotGroups().map(group=>`
+        <div class="time-block-label">${group.label}</div>
+        <div class="times">
+          ${group.slots.map(t=>`
+            <div class="time ${selected[day.id].has(t)?"selected":""}" data-slot="${day.id}|${t}">${t}</div>
+          `).join("")}
+        </div>
+      `).join("")}
+
+      <div class="day-actions">
+        <span class="count" id="currentCount">
+          ${selected[day.id].size} time${selected[day.id].size===1?"":"s"} selected
+        </span>
+      </div>
+
+      <button class="submit apply-btn" id="applyCurrent" type="button">
+        Apply for ${esc(day.label)}
+      </button>
+
+      <div class="day-note">
+        After you submit, this buff is locked and the tab will show as completed.
+      </div>
+    </div>`;
 
   document.querySelectorAll("[data-slot]").forEach(el=>{
     el.onclick=()=>{
@@ -712,25 +950,21 @@ function renderDays(){
         el.classList.add("selected");
       }
 
-      renderSelectedSummary(dayId);
+      const count=$("currentCount");
+      if(count){
+        const n=selected[dayId].size;
+        count.textContent=`${n} time${n===1?"":"s"} selected`;
+      }
     };
   });
 
-  document.querySelectorAll("[data-clear]").forEach(btn=>{
-    btn.onclick=()=>{
-      const dayId=btn.dataset.clear;
-      selected[dayId]=new Set();
+  $("applyCurrent").onclick=()=>submitDay(day.id,$("applyCurrent"));
+}
 
-      document.querySelectorAll(`[data-slot^="${dayId}|"]`)
-        .forEach(el=>el.classList.remove("selected"));
-
-      renderSelectedSummary(dayId);
-    };
-  });
-
-  document.querySelectorAll("[data-submit]").forEach(btn=>{
-    btn.onclick=()=>submitDay(btn.dataset.submit,btn);
-  });
+function renderBookingDashboard(){
+  chooseDefaultTab();
+  renderTabs();
+  renderPanel();
 }
 
 async function submitDay(dayId,btn){
@@ -741,7 +975,6 @@ async function submitDay(dayId,btn){
   if(!accessCodeVerified){
     $("submitMsg").textContent="Verify the State 169 Prep booking code first.";
     $("submitMsg").className="msg warn";
-    $("accessCode").focus();
     return;
   }
 
@@ -773,20 +1006,29 @@ async function submitDay(dayId,btn){
       throw new Error(j.error||"Could not submit availability");
     }
 
+    await loadMyRequests();
+
     const day=config.days.find(d=>d.id===dayId);
-
-    $("successText").innerHTML=
-      `<strong>${verified.name}</strong>, your availability for `+
-      `<strong>${day.label}</strong> has been saved.<br><br>`+
-      `<strong>${availability.length} selected time${availability.length===1?"":"s"}:</strong><br>`+
-      `${availability.join(", ")} UTC`;
-
-    $("success").style.display="block";
-    $("submitMsg").textContent=j.message||"Availability saved.";
+    $("submitMsg").textContent=
+      `✓ ${day.label} registration submitted.`;
     $("submitMsg").className="msg ok";
     setStep(3);
 
-    $("success").scrollIntoView({behavior:"smooth",block:"start"});
+    // Move to the next unregistered day where possible.
+    const days=config.days||[];
+    const currentIndex=days.findIndex(d=>d.id===dayId);
+    const next=
+      days.slice(currentIndex+1).find(d=>!requestFor(d.id)) ||
+      days.find(d=>!requestFor(d.id));
+
+    activeDayId=next?.id||dayId;
+    renderTabs();
+    renderPanel();
+
+    if(registrationCount()===days.length){
+      $("submitMsg").textContent=
+        "✓ All three King's Buff registrations are complete. You can return here later to see your assigned times.";
+    }
   }catch(e){
     $("submitMsg").textContent=e.message;
     $("submitMsg").className="msg error";
@@ -826,12 +1068,18 @@ $("saveCode").onclick=async()=>{
 
     accessCodeVerified=true;
     sessionStorage.setItem("state169PrepCode",code);
-    $("daysWrap").style.display="block";
-    $("submitMsg").textContent="✓ State 169 Prep booking code verified.";
-    $("submitMsg").className="msg ok";
 
-    const firstDay=document.querySelector(".day");
-    if(firstDay)firstDay.classList.add("open");
+    await loadMyRequests();
+
+    $("daysWrap").style.display="block";
+    $("submitMsg").textContent=
+      registrationCount()
+        ? "✓ Your existing King's Buff registrations have been loaded."
+        : "✓ Booking code verified. Choose your first buff above.";
+    $("submitMsg").className="msg ok";
+    setStep(2);
+
+    renderBookingDashboard();
   }catch(e){
     accessCodeVerified=false;
     $("daysWrap").style.display="none";
@@ -839,7 +1087,7 @@ $("saveCode").onclick=async()=>{
     $("submitMsg").className="msg error";
   }finally{
     $("saveCode").disabled=false;
-    $("saveCode").textContent="Use Code";
+    $("saveCode").textContent="Open My Buffs";
   }
 };
 
@@ -860,15 +1108,16 @@ $("fid").onkeydown=e=>{
 $("continue").onclick=()=>{
   $("bookingArea").style.display="block";
   setStep(2);
-
   $("bookingArea").scrollIntoView({behavior:"smooth",block:"start"});
 };
 
 $("change").onclick=()=>{
   verified=null;
+  Object.keys(existingByDay).forEach(k=>delete existingByDay[k]);
+  Object.keys(selected).forEach(k=>delete selected[k]);
+  activeDayId=null;
   $("playerCard").style.display="none";
   $("bookingArea").style.display="none";
-  $("success").style.display="none";
   $("fid").disabled=false;
   $("fid").value="";
   $("lookupMsg").textContent="";
@@ -879,16 +1128,10 @@ $("change").onclick=()=>{
   $("fid").focus();
 };
 
-$("more").onclick=()=>{
-  $("success").style.display="none";
-  setStep(2);
-  $("bookingArea").scrollIntoView({behavior:"smooth",block:"start"});
-};
-
 (async()=>{
   try{
     await loadConfig();
-    renderDays();
+    $("eventName").textContent=config?.event?.name||"Current KVK Prep";
   }catch(e){
     $("lookupMsg").textContent=e.message;
     $("lookupMsg").className="msg error";
@@ -898,7 +1141,7 @@ $("more").onclick=()=>{
 
 <footer class="site-credit">
   <div>169 Kingshot Tools</div>
-  <div class="site-credit-byline">Built by [KRZ] Uub's</div>
+  <div class="site-credit-byline">[KRZ] Uub's</div>
 </footer>
 </body>
 </html>
