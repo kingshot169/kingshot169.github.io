@@ -549,6 +549,30 @@ footer{
   cursor:pointer;
 }
 
+
+.buff-submit-bar{
+  position:sticky;
+  bottom:8px;
+  z-index:20;
+  margin-top:12px;
+  padding:9px;
+  border:1px solid rgba(250,204,21,.35);
+  border-radius:14px;
+  background:rgba(11,18,32,.96);
+  backdrop-filter:blur(8px);
+  box-shadow:0 -8px 24px rgba(0,0,0,.28);
+}
+.buff-submit-bar .submit-count{
+  display:block;
+  text-align:center;
+  color:#cbd5e1;
+  font-size:.7rem;
+  margin-bottom:6px;
+}
+.buff-submit-bar .apply-btn{
+  margin:0;
+}
+
 </style>
 </head>
 <body>
@@ -974,19 +998,19 @@ function renderPanel(){
         </div>
       `).join("")}
 
-      <div class="day-actions">
-        <span class="count" id="currentCount">
+      <div class="buff-submit-bar">
+        <span class="submit-count" id="currentCount">
           ${selected[day.id].size} time${selected[day.id].size===1?"":"s"} selected
         </span>
+
+        <button class="submit apply-btn" id="applyCurrent" type="button">
+          ${editingDayId===day.id ? "Save New Availability" : `Apply for ${esc(day.label)}`}
+        </button>
+
+        ${editingDayId===day.id ? `
+          <button class="cancel-edit-btn" id="cancelEdit" type="button">Cancel Changes</button>
+        ` : ""}
       </div>
-
-      <button class="submit apply-btn" id="applyCurrent" type="button">
-        ${editingDayId===day.id ? "Save New Availability" : `Apply for ${esc(day.label)}`}
-      </button>
-
-      ${editingDayId===day.id ? `
-        <button class="cancel-edit-btn" id="cancelEdit" type="button">Cancel Changes</button>
-      ` : ""}
 
       <div class="day-note">
         ${editingDayId===day.id
@@ -1011,7 +1035,7 @@ function renderPanel(){
       const count=$("currentCount");
       if(count){
         const n=selected[dayId].size;
-        count.textContent=`${n} time${n===1?"":"s"} selected`;
+        count.textContent=`${n} time${n===1?"":"s"} selected · ready to ${editingDayId===day.id?"save":"apply"}`;
       }
     };
   });
