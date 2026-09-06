@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>Gift Codes · 169 Kingshot Tools</title>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb;--green:#86efac;--red:#fca5a5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding:14px}
+main{max-width:620px;margin:auto}
+a{color:#cbd5e1;text-decoration:none}
+h1{color:var(--gold);margin:14px 0 4px;font-size:1.65rem}
+.sub{color:var(--muted);font-size:.82rem;margin-bottom:14px;line-height:1.45}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+label{display:grid;gap:5px;color:#cbd5e1;font-size:.76rem}
+input{width:100%;border:1px solid #475569;background:#020617;color:white;border-radius:10px;padding:11px;font:inherit}
+button{border:0;border-radius:999px;background:var(--blue);color:white;padding:10px 14px;font:inherit;font-weight:900;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.lookup{width:100%;margin-top:10px}
+.msg{min-height:18px;margin-top:9px;font-size:.78rem;color:var(--muted);line-height:1.4}
+.error{color:var(--red)} .ok{color:var(--green)}
+.profile{display:flex;gap:11px;align-items:center}
+.avatar{width:54px;height:54px;border-radius:12px;object-fit:cover;background:#020617;border:1px solid #334155}
+.name{font-weight:900;color:white}
+.meta{color:var(--muted);font-size:.74rem;margin-top:2px}
+.codes{display:grid;gap:8px}
+.code{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#0b1325;border:1px solid #26344a;border-radius:12px;padding:10px}
+.code strong{display:block;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.94rem;overflow-wrap:anywhere}
+.code small{color:var(--muted)}
+.redeem{min-width:86px}
+.section-title{color:var(--gold);font-size:.82rem;font-weight:900;margin-bottom:9px}
+.manual{display:grid;grid-template-columns:1fr auto;gap:8px}
+.hidden{display:none}
+.foot{text-align:center;color:#64748b;font-size:.66rem;margin:24px 0 10px;line-height:1.5}
+.note{font-size:.68rem;color:#64748b;line-height:1.45;margin-top:10px}
+@media(max-width:480px){body{padding:10px} .redeem{min-width:78px;padding:9px 11px}}
+</style>
+</head>
+<body>
+<main>
+<a href="../">← 169 Kingshot Tools</a>
+<h1>🎁 Gift Codes</h1>
+<div class="sub">Verify your State 169 Player ID, then redeem current Kingshot gift codes individually.</div>
+
+<section class="card">
+  <label>Player ID
+    <input id="playerId" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Enter your Kingshot Player ID">
+  </label>
+  <button id="verify" class="lookup">Verify Player</button>
+  <div id="verifyMsg" class="msg"></div>
+</section>
+
+<section id="profileCard" class="card hidden">
+  <div class="profile">
+    <img id="avatar" class="avatar" alt="">
+    <div>
+      <div id="playerName" class="name"></div>
+      <div id="playerMeta" class="meta"></div>
+    </div>
+  </div>
+</section>
+
+<section id="codesCard" class="card hidden">
+  <div class="section-title">Active Gift Codes</div>
+  <div id="codes" class="codes"></div>
+  <div id="codesMsg" class="msg"></div>
+  <div class="note">Codes are redeemed one at a time. There is no alliance-wide or background auto-redemption.</div>
+</section>
+
+<section id="manualCard" class="card hidden">
+  <div class="section-title">Redeem Another Code</div>
+  <div class="manual">
+    <input id="manualCode" autocomplete="off" maxlength="64" placeholder="Enter gift code">
+    <button id="manualRedeem">Redeem</button>
+  </div>
+  <div id="manualMsg" class="msg"></div>
+</section>
+
+<div class="foot">169 Kingshot Tools<br>[KRZ] Uub's</div>
+</main>
+
+<script>
+const API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/gift-codes";
+const LOOKUP="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const $=id=>document.getElementById(id);
+let verified=null;
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+async function verify(){
+  const playerId=$("playerId").value.trim();
+  $("verifyMsg").textContent="";
+  if(!/^\d{4,20}$/.test(playerId)){
+    $("verifyMsg").textContent="Enter a valid Kingshot Player ID.";
+    $("verifyMsg").className="msg error";
+    return;
+  }
+  $("verify").disabled=true;
+  $("verify").textContent="Verifying…";
+  try{
+    const r=await fetch(LOOKUP,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":KEY},
+      body:JSON.stringify({player_id:playerId})
+    });
+    let j={}; try{j=await r.json()}catch{}
+    if(!r.ok||!j.ok)throw new Error(j.error||"Could not verify player.");
+    if(Number(j.player?.kingdom)!==169){
+      throw new Error(`Gift redemption here is currently for State 169 players. This ID is in State ${j.player?.kingdom??"unknown"}.`);
+    }
+    verified=j.player;
+    $("playerName").textContent=verified.name||`Player ${verified.player_id}`;
+    $("playerMeta").textContent=`${verified.alliance_abbr?`[${verified.alliance_abbr}] · `:""}State 169 · ID ${verified.player_id}`;
+    if(verified.avatar_url){
+      $("avatar").src=verified.avatar_url;
+      $("avatar").style.display="block";
+    }else $("avatar").style.display="none";
+    $("profileCard").classList.remove("hidden");
+    $("codesCard").classList.remove("hidden");
+    $("manualCard").classList.remove("hidden");
+    $("verifyMsg").textContent="Verified State 169 player.";
+    $("verifyMsg").className="msg ok";
+    localStorage.setItem("ks169_gift_player_id",verified.player_id);
+    await loadCodes();
+  }catch(e){
+    verified=null;
+    $("profileCard").classList.add("hidden");
+    $("codesCard").classList.add("hidden");
+    $("manualCard").classList.add("hidden");
+    $("verifyMsg").textContent=e.message||"Could not verify player.";
+    $("verifyMsg").className="msg error";
+  }finally{
+    $("verify").disabled=false;
+    $("verify").textContent="Verify Player";
+  }
+}
+
+async function loadCodes(){
+  $("codes").innerHTML="";
+  $("codesMsg").textContent="Loading current codes…";
+  $("codesMsg").className="msg";
+  try{
+    const r=await fetch(API,{headers:{"apikey":KEY}});
+    let j={}; try{j=await r.json()}catch{}
+    if(!r.ok||!j.ok)throw new Error(j.error||"Could not load gift codes.");
+    const codes=Array.isArray(j.codes)?j.codes:[];
+    if(!codes.length){
+      $("codesMsg").textContent="No active codes were returned. You can still enter a code manually below.";
+      return;
+    }
+    $("codes").innerHTML=codes.map(c=>`
+      <div class="code">
+        <div>
+          <strong>${esc(c.code)}</strong>
+          <small>${esc(c.expires||c.expiry||c.status||"Active")}</small>
+        </div>
+        <button class="redeem" data-code="${esc(c.code)}">Redeem</button>
+      </div>`).join("");
+    $("codesMsg").textContent="";
+    document.querySelectorAll("[data-code]").forEach(b=>b.onclick=()=>redeem(b.dataset.code,b));
+  }catch(e){
+    $("codesMsg").textContent=(e.message||"Could not load codes.")+" You can still enter a code manually below.";
+    $("codesMsg").className="msg error";
+  }
+}
+
+async function redeem(code,button=null){
+  if(!verified){
+    $("manualMsg").textContent="Verify your Player ID first.";
+    $("manualMsg").className="msg error";
+    return;
+  }
+  code=String(code||"").trim();
+  if(!/^[A-Za-z0-9_-]{3,64}$/.test(code)){
+    $("manualMsg").textContent="Enter a valid gift code.";
+    $("manualMsg").className="msg error";
+    return;
+  }
+  const target=button?$("codesMsg"):$("manualMsg");
+  if(button){button.disabled=true;button.textContent="Redeeming…"}
+  $("manualRedeem").disabled=true;
+  target.textContent=`Redeeming ${code}…`;
+  target.className="msg";
+  try{
+    const r=await fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":KEY},
+      body:JSON.stringify({player_id:verified.player_id,code})
+    });
+    let j={}; try{j=await r.json()}catch{}
+    if(!r.ok||!j.ok)throw new Error(j.error||"Redemption failed.");
+    target.textContent=j.message||"Gift code processed.";
+    target.className=j.redeemed||j.already_redeemed?"msg ok":"msg";
+    if(button&&(j.redeemed||j.already_redeemed)){
+      button.textContent=j.already_redeemed?"Already Used":"Redeemed";
+      button.disabled=true;
+      return;
+    }
+  }catch(e){
+    target.textContent=e.message||"Could not redeem gift code.";
+    target.className="msg error";
+  }finally{
+    if(button&&!button.textContent.match(/Redeemed|Already Used/)){
+      button.disabled=false;button.textContent="Redeem";
+    }
+    $("manualRedeem").disabled=false;
+  }
+}
+
+$("verify").onclick=verify;
+$("manualRedeem").onclick=()=>redeem($("manualCode").value);
+$("playerId").addEventListener("keydown",e=>{if(e.key==="Enter")verify()});
+$("manualCode").addEventListener("keydown",e=>{if(e.key==="Enter")redeem($("manualCode").value)});
+const saved=localStorage.getItem("ks169_gift_player_id");
+if(saved)$("playerId").value=saved;
+</script>
+</body>
+</html>
