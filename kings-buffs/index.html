@@ -523,6 +523,32 @@ footer{
   .buff-tab .tab-state{font-size:.56rem}
 }
 
+
+.edit-availability-btn{
+  width:100%;
+  margin-top:10px;
+  border:0;
+  border-radius:999px;
+  padding:10px 12px;
+  background:#334155;
+  color:#fff;
+  font:inherit;
+  font-weight:900;
+  cursor:pointer;
+}
+.cancel-edit-btn{
+  width:100%;
+  margin-top:7px;
+  border:1px solid #475569;
+  border-radius:999px;
+  padding:9px 12px;
+  background:transparent;
+  color:#cbd5e1;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+
 </style>
 </head>
 <body>
@@ -614,6 +640,7 @@ let accessCodeVerified=false;
 let activeDayId=null;
 const selected={};
 const existingByDay={};
+let editingDayId=null;
 
 const headers=()=>({
   "Content-Type":"application/json",
@@ -681,6 +708,12 @@ function requestFor(dayId){
 function isAssignedRequest(r){
   return !!r?.assigned_time &&
     ["scheduled","booked","completed"].includes(String(r.status||""));
+}
+
+function canPlayerEditRequest(r){
+  return !!r &&
+    !isAssignedRequest(r) &&
+    String(r.status||"requested")==="requested";
 }
 
 function registrationCount(){
@@ -859,8 +892,9 @@ function renderPanel(){
 
   const req=requestFor(day.id);
 
-  if(req){
+  if(req && editingDayId!==day.id){
     const assigned=isAssignedRequest(req);
+    const editable=canPlayerEditRequest(req);
     const availability=Array.isArray(req.availability)?req.availability:[];
 
     $("buffPanel").innerHTML=`
@@ -876,7 +910,7 @@ function renderPanel(){
         <div class="booking-status ${assigned?"assigned":"registered"}">
           ${
             assigned
-              ? `<strong>✓ Your King's Buff appointment has been assigned</strong>
+              ? `<strong>★ Your King's Buff appointment has been assigned</strong>
                  <span class="big-time">${esc(req.assigned_time)} UTC</span>
                  <div>Status: ${esc(req.status||"scheduled")}</div>`
               : `<strong>✓ Registration received</strong>
@@ -888,11 +922,29 @@ function renderPanel(){
             ${availability.length ? availability.map(esc).join(", ")+" UTC" : "No availability returned"}
           </div>
 
-          <div class="lock-note">
-            This registration is locked after submission. Contact State 169 leadership if it needs changing.
-          </div>
+          ${
+            editable
+              ? `<button id="editAvailability" class="edit-availability-btn" type="button">
+                   Change Availability
+                 </button>
+                 <div class="lock-note">
+                   You can change these times until the MoJ/Admin assigns your final appointment.
+                 </div>`
+              : `<div class="lock-note">
+                   This registration is locked because a final appointment has been assigned. Contact State 169 leadership if it needs changing.
+                 </div>`
+          }
         </div>
       </div>`;
+
+    const editBtn=$("editAvailability");
+    if(editBtn){
+      editBtn.onclick=()=>{
+        editingDayId=day.id;
+        selected[day.id]=new Set(availability);
+        renderPanel();
+      };
+    }
 
     return;
   }
@@ -929,11 +981,17 @@ function renderPanel(){
       </div>
 
       <button class="submit apply-btn" id="applyCurrent" type="button">
-        Apply for ${esc(day.label)}
+        ${editingDayId===day.id ? "Save New Availability" : `Apply for ${esc(day.label)}`}
       </button>
 
+      ${editingDayId===day.id ? `
+        <button class="cancel-edit-btn" id="cancelEdit" type="button">Cancel Changes</button>
+      ` : ""}
+
       <div class="day-note">
-        After you submit, this buff is locked and the tab will show as completed.
+        ${editingDayId===day.id
+          ? "Your existing registration remains unchanged until you save."
+          : "After you submit, this tab will show as completed."}
       </div>
     </div>`;
 
@@ -959,6 +1017,15 @@ function renderPanel(){
   });
 
   $("applyCurrent").onclick=()=>submitDay(day.id,$("applyCurrent"));
+
+  const cancelEdit=$("cancelEdit");
+  if(cancelEdit){
+    cancelEdit.onclick=()=>{
+      editingDayId=null;
+      selected[day.id]=new Set(Array.isArray(requestFor(day.id)?.availability)?requestFor(day.id).availability:[]);
+      renderPanel();
+    };
+  }
 }
 
 function renderBookingDashboard(){
@@ -993,6 +1060,7 @@ async function submitDay(dayId,btn){
       method:"POST",
       headers:headers(),
       body:JSON.stringify({
+        action: editingDayId===dayId ? "update_availability" : undefined,
         player_id:String(verified.player_id),
         buff_day_id:dayId,
         access_code:$("accessCode").value.trim(),
@@ -1009,23 +1077,32 @@ async function submitDay(dayId,btn){
     await loadMyRequests();
 
     const day=config.days.find(d=>d.id===dayId);
+    const wasEditing=editingDayId===dayId;
+    editingDayId=null;
+
     $("submitMsg").textContent=
-      `✓ ${day.label} registration submitted.`;
+      wasEditing
+        ? `✓ ${day.label} availability updated.`
+        : `✓ ${day.label} registration submitted.`;
     $("submitMsg").className="msg ok";
     setStep(3);
 
-    // Move to the next unregistered day where possible.
     const days=config.days||[];
-    const currentIndex=days.findIndex(d=>d.id===dayId);
-    const next=
-      days.slice(currentIndex+1).find(d=>!requestFor(d.id)) ||
-      days.find(d=>!requestFor(d.id));
 
-    activeDayId=next?.id||dayId;
+    if(!wasEditing){
+      const currentIndex=days.findIndex(d=>d.id===dayId);
+      const next=
+        days.slice(currentIndex+1).find(d=>!requestFor(d.id)) ||
+        days.find(d=>!requestFor(d.id));
+      activeDayId=next?.id||dayId;
+    }else{
+      activeDayId=dayId;
+    }
+
     renderTabs();
     renderPanel();
 
-    if(registrationCount()===days.length){
+    if(!wasEditing && registrationCount()===days.length){
       $("submitMsg").textContent=
         "✓ All three King's Buff registrations are complete. You can return here later to see your assigned times.";
     }
@@ -1116,6 +1193,7 @@ $("change").onclick=()=>{
   Object.keys(existingByDay).forEach(k=>delete existingByDay[k]);
   Object.keys(selected).forEach(k=>delete selected[k]);
   activeDayId=null;
+  editingDayId=null;
   $("playerCard").style.display="none";
   $("bookingArea").style.display="none";
   $("fid").disabled=false;
