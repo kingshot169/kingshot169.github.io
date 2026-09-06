@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>Kingdom Compare · 169 Kingshot Tools</title>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--panel2:#111c32;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb;--green:#86efac;--red:#fca5a5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding:14px}
+main{max-width:900px;margin:auto}
+a{color:#cbd5e1;text-decoration:none}
+h1{color:var(--gold);margin:14px 0 4px;font-size:1.65rem}
+.sub{color:var(--muted);font-size:.82rem;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+.form{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}
+.fixed,.field{display:grid;gap:5px}
+.label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.statebox,input{border:1px solid #475569;background:#020617;color:white;border-radius:11px;padding:12px;font:inherit;font-weight:800}
+.vs{font-weight:900;color:var(--gold);padding-bottom:11px;text-align:center}
+button{width:100%;margin-top:11px;border:0;border-radius:999px;background:var(--blue);color:white;padding:11px 14px;font:inherit;font-weight:900;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.msg{min-height:20px;margin-top:9px;font-size:.8rem;color:var(--muted)}
+.error{color:var(--red)}
+.compare-head{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.kingdom-title{background:var(--panel2);border-radius:12px;padding:12px;text-align:center}
+.kingdom-title strong{display:block;color:var(--gold);font-size:1.12rem}
+.kingdom-title span{font-size:.72rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.79rem}
+th,td{padding:9px 7px;border-top:1px solid #26344a}
+th{color:#cbd5e1;text-align:left;font-weight:700;width:38%}
+td{text-align:center;font-weight:750}
+.better{color:var(--green)}
+.section-title{font-size:.78rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin:15px 0 5px;font-weight:900}
+.foot{text-align:center;color:#64748b;font-size:.66rem;margin:24px 0 10px;line-height:1.5}
+.source{font-size:.68rem;color:#64748b;margin-top:10px;text-align:center}
+.hidden{display:none}
+@media(max-width:520px){
+ body{padding:10px}
+ .form{grid-template-columns:1fr 32px 1fr;gap:6px}
+ .statebox,input{padding:10px 8px;font-size:.9rem}
+ table{font-size:.71rem}
+ th,td{padding:8px 4px}
+}
+</style>
+</head>
+<body>
+<main>
+<a href="../">← 169 Kingshot Tools</a>
+<h1>🏰 Kingdom Compare</h1>
+<div class="sub">Compare State 169 with another kingdom using current MightPulse kingdom statistics.</div>
+
+<section class="card">
+  <div class="form">
+    <div class="fixed">
+      <div class="label">Our Kingdom</div>
+      <div class="statebox">State 169</div>
+    </div>
+    <div class="vs">VS</div>
+    <label class="field">
+      <span class="label">Opponent</span>
+      <input id="opponent" inputmode="numeric" pattern="[0-9]*" placeholder="82" maxlength="6">
+    </label>
+  </div>
+  <button id="compare">Compare Kingdoms</button>
+  <div id="msg" class="msg"></div>
+</section>
+
+<section id="results" class="card hidden">
+  <div class="compare-head">
+    <div class="kingdom-title"><strong id="leftTitle">State 169</strong><span id="leftHealth"></span></div>
+    <div class="kingdom-title"><strong id="rightTitle"></strong><span id="rightHealth"></span></div>
+  </div>
+
+  <div class="section-title">Kingdom Strength</div>
+  <table id="strength"></table>
+
+  <div class="section-title">Activity & Growth</div>
+  <table id="activity"></table>
+
+  <div class="section-title">Power Breakdown</div>
+  <table id="breakdown"></table>
+
+  <div class="source">Data supplied by MightPulse. Responses may be cached by MightPulse.</div>
+</section>
+
+<div class="foot">169 Kingshot Tools<br>[KRZ] Uub's</div>
+</main>
+
+<script>
+const API="https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kingdom-compare";
+const KEY="sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
+const $=id=>document.getElementById(id);
+
+function num(v){
+  const n=Number(v);
+  return Number.isFinite(n)?n:null;
+}
+function compact(v){
+  const n=num(v);
+  if(n===null)return"—";
+  if(Math.abs(n)>=1e12)return(n/1e12).toFixed(2)+"T";
+  if(Math.abs(n)>=1e9)return(n/1e9).toFixed(2)+"B";
+  if(Math.abs(n)>=1e6)return(n/1e6).toFixed(1)+"M";
+  if(Math.abs(n)>=1e3)return(n/1e3).toFixed(1)+"K";
+  return n.toLocaleString();
+}
+function plain(v){
+  const n=num(v); return n===null?"—":n.toLocaleString();
+}
+function days(v){
+  const n=num(v); return n===null?"—":`${plain(n)} days`;
+}
+function rank(v){
+  const n=num(v); return n===null?"—":`#${plain(n)}`;
+}
+function signed(v){
+  const n=num(v);
+  if(n===null)return"—";
+  return (n>0?"+":"")+compact(n);
+}
+function betterClass(a,b,mode="high"){
+  a=num(a); b=num(b);
+  if(a===null||b===null||a===b)return["",""];
+  const leftWins=mode==="low"?a<b:a>b;
+  return leftWins?["better",""]:["","better"];
+}
+function row(label,a,b,formatter=compact,mode="high"){
+  const c=betterClass(a,b,mode);
+  return `<tr><th>${label}</th><td class="${c[0]}">${formatter(a)}</td><td class="${c[1]}">${formatter(b)}</td></tr>`;
+}
+function table(id, rows){ $(id).innerHTML=rows.join(""); }
+
+async function run(){
+  const opponent=$("opponent").value.trim();
+  if(!/^\d{1,6}$/.test(opponent)||Number(opponent)===169){
+    $("msg").textContent="Enter a valid opponent kingdom other than 169.";
+    $("msg").className="msg error";
+    return;
+  }
+
+  $("compare").disabled=true;
+  $("compare").textContent="Comparing…";
+  $("msg").textContent="Loading kingdom statistics…";
+  $("msg").className="msg";
+
+  try{
+    const r=await fetch(API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":KEY},
+      body:JSON.stringify({opponent:Number(opponent)})
+    });
+    let j={}; try{j=await r.json()}catch{}
+    if(!r.ok||!j.ok)throw new Error(j.error||`Comparison failed (${r.status}).`);
+
+    const a=j.left, b=j.right;
+    $("leftTitle").textContent=`State ${a.kid}`;
+    $("rightTitle").textContent=`State ${b.kid}`;
+    $("leftHealth").textContent=a.health?`Health: ${a.health}`:"";
+    $("rightHealth").textContent=b.health?`Health: ${b.health}`:"";
+
+    table("strength",[
+      row("Total Power",a.power,b.power),
+      row("Average Power",a.avg_power,b.avg_power),
+      row("Power Rank",a.power_rank,b.power_rank,rank,"low"),
+      row("Players",a.player_count,b.player_count,plain),
+      row("Alliances",a.alliance_count,b.alliance_count,plain),
+      row("Kingdom Age",a.age_days,b.age_days,days),
+      row("Migrant Score",a.migrant_score,b.migrant_score)
+    ]);
+
+    table("activity",[
+      row("Active Players · 7d",a.active_7d,b.active_7d,plain),
+      row("Active Players · 30d",a.active_30d,b.active_30d,plain),
+      row("Activity Rank",a.activity_rank,b.activity_rank,rank,"low"),
+      row("7-Day Power Gain",a.power_gain_7d,b.power_gain_7d,signed),
+      row("TC Pushers · 7d",a.tc_pushers_7d,b.tc_pushers_7d,plain),
+      row("Kills",a.kills,b.kills)
+    ]);
+
+    table("breakdown",[
+      row("Alliance Power",a.alliance_power,b.alliance_power),
+      row("Troop Power",a.troop_power,b.troop_power),
+      row("Research Power",a.research_power,b.research_power),
+      row("Building Power",a.building_power,b.building_power),
+      row("Hero Power",a.hero_power,b.hero_power),
+      row("Governor Gear",a.governor_gear_power,b.governor_gear_power),
+      row("Governor Charms",a.governor_charm_power,b.governor_charm_power),
+      row("Pet Power",a.pet_power,b.pet_power)
+    ]);
+
+    $("results").classList.remove("hidden");
+    $("msg").textContent="";
+    history.replaceState(null,"",`?state=${encodeURIComponent(opponent)}`);
+  }catch(e){
+    $("results").classList.add("hidden");
+    $("msg").textContent=e.message||"Could not compare kingdoms.";
+    $("msg").className="msg error";
+  }finally{
+    $("compare").disabled=false;
+    $("compare").textContent="Compare Kingdoms";
+  }
+}
+
+$("compare").onclick=run;
+$("opponent").addEventListener("keydown",e=>{if(e.key==="Enter")run()});
+const preset=new URLSearchParams(location.search).get("state");
+if(preset&&/^\d{1,6}$/.test(preset)){
+  $("opponent").value=preset;
+  run();
+}
+</script>
+</body>
+</html>
