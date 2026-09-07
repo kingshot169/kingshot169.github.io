@@ -170,6 +170,12 @@ async function showDashboard(session){
         "Review recent booking, transfer, player-search and admin account actions.",
         "VIEW AUDIT LOG"
       ));
+
+      cards.push(tool(
+        "./usage/","📊","Usage Analytics",
+        "See how often State 169 tools are being used without exposing player identities.",
+        "VIEW USAGE"
+      ));
     }
 
     $("tools").innerHTML=cards.length
