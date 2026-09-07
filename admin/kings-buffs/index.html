@@ -793,11 +793,11 @@ function renderRequests(){
                 return `
                   <button
                     class="slot ${mine?"assigned":""} ${conflict?"conflict":""} ${best?"best":""}"
-                    data-assign="${r.id}|${t}"
+                    data-assign="${esc(r.id)}|${esc(t)}"
                     ${conflict?"disabled":""}
-                    title="${conflict?"Already assigned to another player":"Assign "+t+" UTC"}"
+                    title="${esc(conflict?"Already assigned to another player":"Assign "+t+" UTC")}"
                   >
-                    ${mine?"✓ ":""}${t}
+                    ${mine?"✓ ":""}${esc(t)}
                   </button>
                 `;
               }).join("")}

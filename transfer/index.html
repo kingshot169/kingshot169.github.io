@@ -155,12 +155,18 @@ async function findPlayer(){
   $("pName").textContent=verified.name||("Player "+verified.player_id);
 
   const alliance=[verified.alliance_abbr,verified.alliance_name].filter(Boolean).join(" · ");
-  $("pMeta").innerHTML=
-    `State ${verified.kingdom ?? "?"}<br>`+
-    `${alliance||"No alliance returned"}<br>`+
-    `Power ${power(verified.power)}<br>`+
-    `Town Center ${verified.town_center_level ?? "?"}<br>`+
-    `Player ID ${verified.player_id}`;
+  const metaLines=[
+    `State ${verified.kingdom ?? "?"}`,
+    alliance||"No alliance returned",
+    `Power ${power(verified.power)}`,
+    `Town Center ${verified.town_center_level ?? "?"}`,
+    `Player ID ${verified.player_id}`
+  ];
+  $("pMeta").replaceChildren();
+  metaLines.forEach((line,i)=>{
+    if(i)$("pMeta").appendChild(document.createElement("br"));
+    $("pMeta").appendChild(document.createTextNode(line));
+  });
 
   $("playerCard").style.display="block";
   $("fid").disabled=true;
