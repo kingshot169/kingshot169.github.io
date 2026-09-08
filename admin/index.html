@@ -11,7 +11,7 @@
 :root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;padding:14px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-.wrap{width:min(1000px,100%);margin:auto}
+.wrap{width:min(1000px,100%);margin:auto;min-height:calc(100vh - 28px);min-height:calc(100svh - 28px)}
 a{color:var(--muted);text-decoration:none}
 h1{color:var(--gold);margin:6px 0 2px;font-size:clamp(1.9rem,6vw,2.8rem)}
 .sub{color:var(--muted);font-size:.85rem;line-height:1.45}
@@ -23,7 +23,8 @@ button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:w
 .login button{width:100%;margin-top:14px;background:var(--blue)}
 .msg{min-height:18px;margin-top:8px;font-size:.8rem}.error{color:#fca5a5}.ok{color:#86efac}
 .hint{margin-top:8px;padding:8px 9px;border:1px solid rgba(148,163,184,.18);border-radius:9px;background:#020617;color:var(--muted);font-size:.72rem;line-height:1.4}
-#dashboard{display:none}
+#loginView,#dashboard{display:none}
+#authLoading{min-height:185px}
 .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
 .admin-actions{display:flex;gap:6px;flex-wrap:wrap}
 .identity{padding:9px 10px;border-radius:10px;background:#020617;border:1px solid rgba(148,163,184,.18);margin-bottom:12px;font-size:.75rem;color:#cbd5e1}
@@ -37,6 +38,11 @@ button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:w
 </head>
 <body>
 <div class="wrap">
+<section id="authLoading" class="card" role="status" aria-live="polite">
+  <h1>Admin</h1>
+  <p id="authStatus" class="sub">Checking your session…</p>
+  <button id="authRetry" type="button" hidden>Try Again</button>
+</section>
 <section id="loginView" class="card login">
   <a href="../">← 169 KS Tools</a>
   <h1>Admin Sign In</h1>
@@ -123,9 +129,6 @@ async function showDashboard(session){
       return;
     }
 
-    $("loginView").style.display="none";
-    $("dashboard").style.display="block";
-
     $("identity").textContent=
       `${p.display_name||p.player_name||p.username}`+
       `${p.player_id?` · Player ID ${p.player_id}`:""}`+
@@ -181,8 +184,12 @@ async function showDashboard(session){
     $("tools").innerHTML=cards.length
       ? cards.join("")
       : `<div class="empty">No admin tools have been assigned to this account.</div>`;
+    $("authLoading").style.display="none";
+    $("loginView").style.display="none";
+    $("dashboard").style.display="block";
   }catch(e){
     await sbClient.auth.signOut();
+    $("authLoading").style.display="none";
     $("dashboard").style.display="none";
     $("loginView").style.display="block";
     $("loginMsg").textContent=e.message;
@@ -231,10 +238,31 @@ $("signOut").onclick=async()=>{
   location.reload();
 };
 
-(async()=>{
-  const {data}=await sbClient.auth.getSession();
-  if(data.session)await showDashboard(data.session);
-})();
+async function initializeAuth(){
+  $("loginView").style.display="none";
+  $("dashboard").style.display="none";
+  $("authLoading").style.display="block";
+  $("authStatus").textContent="Checking your session…";
+  $("authRetry").hidden=true;
+  try{
+    const {data,error}=await sbClient.auth.getSession();
+    if(error)throw error;
+    if(data.session){
+      await showDashboard(data.session);
+    }else{
+      $("authLoading").style.display="none";
+      $("loginView").style.display="block";
+    }
+  }catch(e){
+    $("authStatus").textContent="Unable to check your session. Please try again.";
+    $("authRetry").hidden=false;
+  }
+}
+$("authRetry").onclick=initializeAuth;
+window.addEventListener("pageshow",event=>{
+  if(event.persisted)initializeAuth();
+});
+initializeAuth();
 </script>
 </body>
 </html>

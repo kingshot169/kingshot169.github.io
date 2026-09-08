@@ -38,6 +38,8 @@
     }
 
     .admin-login{
+      min-width:9.5em;
+      text-align:center;
       position:fixed;
       top:14px;
       right:14px;
@@ -190,7 +192,7 @@
 </head>
 <body>
 
-  <a class="admin-login" href="./admin/">🔐 Admin Login</a>
+  <a id="adminLink" class="admin-login" href="./admin/" aria-label="Open admin area" aria-busy="true">…</a>
 
   <main class="wrap">
     <header>
@@ -243,5 +245,56 @@
   <div class="site-credit-byline">Built by [KRZ] Uub's</div>
 </footer>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (()=>{
+    const link=document.getElementById("adminLink");
+    let revision=0;
+    function setLabel(text,pending=false){
+      link.textContent=text;
+      link.setAttribute("aria-busy",String(pending));
+      link.setAttribute("aria-label",pending?"Open admin area":text);
+    }
+    try{
+      // Use the same SDK defaults and persisted session as the admin pages.
+      const client=window.supabase.createClient(
+        "https://iqjvzhgodwufvepegwyj.supabase.co",
+        "sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j"
+      );
+      async function checkSession(){
+        const current=++revision;
+        setLabel("…",true);
+        try{
+          const {data,error}=await client.auth.getSession();
+          if(current!==revision)return;
+          if(error)throw error;
+          setLabel(data.session?"Admin":"Admin Login");
+        }catch{
+          if(current===revision)setLabel("Admin Access");
+        }
+      }
+      client.auth.onAuthStateChange((event,session)=>{
+        // Let getSession handle initialization errors without implying logout.
+        if(event==="INITIAL_SESSION")return;
+        ++revision;
+        setLabel(session?"Admin":"Admin Login");
+      });
+      window.addEventListener("pagehide",()=>{
+        ++revision;
+        setLabel("…",true);
+      });
+      window.addEventListener("pageshow",event=>{
+        if(event.persisted)checkSession();
+      });
+      document.addEventListener("visibilitychange",()=>{
+        if(document.visibilityState==="visible")checkSession();
+      });
+      checkSession();
+    }catch{
+      // Keep navigation usable if the SDK cannot load; do not guess auth state.
+      setLabel("Admin Access");
+    }
+  })();
+  </script>
 </body>
 </html>
