@@ -36,6 +36,8 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
 }
 main{max-width:1180px;margin:auto}
+#adminView{display:none;min-height:calc(100svh - 32px)}
+#adminLoading{max-width:1180px;margin:0 auto;min-height:185px}
 a{color:var(--muted);text-decoration:none}
 button,input,select{font:inherit}
 button{
@@ -424,7 +426,13 @@ input,select{
 </style>
 </head>
 <body>
-<main>
+<section id="adminLoading" class="card" role="status" aria-live="polite">
+  <div class="top"><h1>King's Buffs Admin</h1></div>
+  <p id="adminLoadingStatus" class="sub">Loading admin tools…</p>
+  <button id="adminRetry" type="button" hidden>Try Again</button>
+  <a href="../">← Admin Dashboard</a>
+</section>
+<main id="adminView">
   <div class="top">
     <div>
       <a href="../">← Admin Dashboard</a>
@@ -607,7 +615,8 @@ function isNeedsAction(r){
 }
 
 async function session(){
-  const {data}=await sbClient.auth.getSession();
+  const {data,error}=await sbClient.auth.getSession();
+  if(error)throw error;
   if(!data.session){
     location.href="../";
     return null;
@@ -941,6 +950,7 @@ async function load(showLoading=true){
 
   try{
     const j=await api("GET");
+    if(!j)return false;
 
     bundle={
       event:j.event,
@@ -958,9 +968,11 @@ async function load(showLoading=true){
 
     $("msg").textContent="";
     render();
+    return true;
   }catch(e){
     $("msg").textContent=e.message;
     $("msg").className="msg error";
+    return false;
   }
 }
 
@@ -994,10 +1006,9 @@ async function copyText(text){
 
 
 async function loadPrepCodeStatus(){
-  const s=await session();
-  if(!s)return;
-
   try{
+    const s=await session();
+    if(!s)return false;
     const r=await fetch(PREP_CODE_API,{
       headers:{
         "apikey":SUPABASE_PUBLISHABLE_KEY,
@@ -1010,7 +1021,7 @@ async function loadPrepCodeStatus(){
 
     if(r.status===403){
       $("prepSecurity").style.display="none";
-      return;
+      return true;
     }
 
     if(!r.ok||!j.ok){
@@ -1052,11 +1063,13 @@ async function loadPrepCodeStatus(){
       $("prepCodeLegacyNotice").style.display=
         j.code_set && !j.code_recoverable ? "block" : "none";
     }
+    return true;
   }catch(e){
     $("prepSecurity").style.display="block";
     $("prepCodeStatus").textContent="Could not load booking code status.";
     $("prepCodeMsg").textContent=e.message;
     $("prepCodeMsg").className="msg error";
+    return false;
   }
 }
 
@@ -1200,8 +1213,24 @@ $("signOut").onclick=async()=>{
   location.href="../";
 };
 
-load();
-loadPrepCodeStatus();
+async function initializeAdmin(){
+  $("adminView").style.display="none";
+  $("adminLoading").style.display="block";
+  $("adminLoadingStatus").textContent="Loading admin tools…";
+  $("adminRetry").hidden=true;
+  if(!await load()||!await loadPrepCodeStatus()){
+    $("adminLoadingStatus").textContent="Unable to load admin tools. Please try again.";
+    $("adminRetry").hidden=false;
+    return;
+  }
+  $("adminLoading").style.display="none";
+  $("adminView").style.display="block";
+}
+$("adminRetry").onclick=initializeAdmin;
+window.addEventListener("pageshow",event=>{
+  if(event.persisted)initializeAdmin();
+});
+initializeAdmin();
 </script>
 </body>
 </html>
