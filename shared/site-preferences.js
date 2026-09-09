@@ -98,8 +98,6 @@
     select.addEventListener("change",()=>{state.language=select.value;localStorage.setItem("ks-language",state.language);translate()});
     controls.querySelector("button").addEventListener("click",()=>setTheme(state.theme==="light"?"dark":"light"));
     document.body.appendChild(controls);
-    const observer=new MutationObserver(()=>translate());
-    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
     setTheme(state.theme);translate();
   }
   root.dataset.theme=state.theme;
