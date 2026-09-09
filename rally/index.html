@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#0b1220">
   <title>Kingshot Rally Sync</title>
   <link rel="stylesheet" href="../shared/site-preferences.css">
+<script src="../shared/translations.js" defer></script>
+<script src="../shared/site-preferences.js"></script>
   <style>
     :root{
       --bg:#0b1220;
@@ -338,7 +340,7 @@
         font-size:.76rem;
       }
     }
-  
+
 .site-credit{
   margin:18px auto 10px;
   padding:0 8px;
@@ -358,7 +360,7 @@
 <body>
 
 <div style="max-width:1100px;margin:0 auto 8px">
-  <a href="../" style="color:#94a3b8;text-decoration:none;font-size:.78rem">
+  <a href="../" style="color:#94a3b8;text-decoration:none;font-size:.78rem" data-ks-text="← 169 KS Tools" data-site-nav>
     ← 169 KS Tools
   </a>
 </div>
@@ -366,8 +368,9 @@
   <main class="app">
     <section class="editor">
       <header>
-        <h1>Kingshot Rally Sync</h1>
-        <p class="subtitle">
+        <h1 data-ks-text="Kingshot Rally Sync">Kingshot Rally Sync</h1>
+        <p class="subtitle" data-ks-text="Enter each rally lead's march time. The slowest march becomes the base rally;
+          everyone else launches after the calculated delay so all rallies land together.">
           Enter each rally lead's march time. The slowest march becomes the base rally;
           everyone else launches after the calculated delay so all rallies land together.
         </p>
@@ -376,10 +379,10 @@
       <div class="card">
         <div class="toolbar">
           <div class="toolbar-group">
-            <button id="addRowBtn" type="button" class="secondary">＋ Add Rally</button>
+            <button id="addRowBtn" type="button" class="secondary" data-ks-text="＋ Add Rally">＋ Add Rally</button>
           </div>
           <div class="toolbar-group">
-            <button id="clearBtn" type="button" class="secondary">Clear</button>
+            <button id="clearBtn" type="button" class="secondary" data-ks-text="Clear">Clear</button>
           </div>
         </div>
 
@@ -387,24 +390,21 @@
           <table>
             <thead>
               <tr>
-                <th style="width:16%">Alliance</th>
-                <th style="width:34%">Player</th>
-                <th style="width:10%">Pet</th>
-                <th style="width:25%">March</th>
-                <th style="width:15%">Delay</th>
+                <th style="width:16%" data-ks-text="Alliance">Alliance</th>
+                <th style="width:34%" data-ks-text="Player">Player</th>
+                <th style="width:10%" data-ks-text="Pet">Pet</th>
+                <th style="width:25%" data-ks-text="March">March</th>
+                <th style="width:15%" data-ks-text="Delay">Delay</th>
               </tr>
             </thead>
             <tbody id="rallyBody"></tbody>
           </table>
         </div>
 
-        <div class="help">
-          March time accepts <strong>45</strong>, <strong>1:05</strong>, <strong>1m 5s</strong>,
-          or <strong>00:01:05</strong>. Use a fake rally in-game to measure each lead's march time to the target.
-        </div>
+        <div class="help" data-ks-text="March time accepts 45, 1:05, 1m 5s, or 00:01:05. Use a fake rally in-game to measure each lead's march time to the target.">March time accepts 45, 1:05, 1m 5s, or 00:01:05. Use a fake rally in-game to measure each lead's march time to the target.</div>
 
         <div style="margin-top:1rem">
-          <button id="calcBtn" type="button">⚔️ Calculate Rally Order</button>
+          <button id="calcBtn" type="button" data-ks-text="⚔️ Calculate Rally Order">⚔️ Calculate Rally Order</button>
         </div>
 
         <div id="message" class="message"></div>
@@ -416,9 +416,9 @@
           <div id="orderPreview" class="order-preview"></div>
 
           <div class="result-actions">
-            <button id="copyBtn" type="button" class="blue">📋 Copy Rally Order</button>
-            <button id="startBtn" type="button">▶ Start Visual Timer</button>
-            <button id="editBtn" type="button" class="secondary">✏️ Edit</button>
+            <button id="copyBtn" type="button" class="blue" data-ks-text="📋 Copy Rally Order">📋 Copy Rally Order</button>
+            <button id="startBtn" type="button" data-ks-text="▶ Start Visual Timer">▶ Start Visual Timer</button>
+            <button id="editBtn" type="button" class="secondary" data-ks-text="✏️ Edit">✏️ Edit</button>
           </div>
         </div>
       </div>
@@ -427,14 +427,14 @@
 
     <section class="hud" aria-live="polite">
       <div class="hud-panel">
-        <div id="hudLabel" class="hud-label">Base rally</div>
-        <div id="hudName" class="hud-name high">GO</div>
-        <div id="hudTime" class="hud-time high"></div>
+        <div id="hudLabel" class="hud-label" data-ks-text="Base rally">Base rally</div>
+        <div id="hudName" translate="no" class="hud-name high" data-ks-text="GO">GO</div>
+        <div id="hudTime" translate="no" class="hud-time high"></div>
         <div id="hudNextline" class="hud-nextline"></div>
 
         <div class="hud-buttons">
-          <button id="restartBtn" type="button" class="secondary">Restart</button>
-          <button id="cancelBtn" type="button" class="secondary">Back</button>
+          <button id="restartBtn" type="button" class="secondary" data-ks-text="Restart">Restart</button>
+          <button id="cancelBtn" type="button" class="secondary" data-ks-text="Back">Back</button>
         </div>
       </div>
     </section>
@@ -470,6 +470,7 @@
       const n = (name || '').trim() || 'Unnamed';
       return `${pet ? '🐾 ' : ''}${t ? `[${t}] ` : ''}${n}`;
     }
+    function displayLabel(item){return makeLabel(item.tag,item.name||KSPreferences.text('Unnamed'),item.pet)}
 
     function parseMarchTime(input) {
       if (!input) return NaN;
@@ -521,8 +522,8 @@
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><input class="tag" type="text" maxlength="8" placeholder="KRZ"></td>
-        <td><input class="name" type="text" maxlength="30" placeholder="Player"></td>
-        <td class="pet-cell"><input class="pet" type="checkbox" aria-label="Pet buff active"></td>
+        <td><input class="name" type="text" maxlength="30" placeholder="Player" data-ks-placeholder="Player"></td>
+        <td class="pet-cell"><input class="pet" type="checkbox" aria-label="Pet buff active" data-ks-aria-label="Pet buff active"></td>
         <td><input class="march" type="text" inputmode="text" placeholder="1:05"></td>
         <td class="delay">—</td>
       `;
@@ -537,17 +538,17 @@
       stopLive();
       schedule = [];
       resultCard.style.display = 'none';
-      orderPreview.textContent = '';
-      resultTitle.textContent = '';
-      resultSub.textContent = '';
-      message.textContent = '';
+      KSPreferences.setText(orderPreview, '');
+      KSPreferences.setText(resultTitle, '');
+      KSPreferences.setText(resultSub, '');
+      KSPreferences.setText(message, '');
       message.className = 'message';
       document.body.classList.remove('live-mode');
 
       for (const row of rallyBody.querySelectorAll('tr')) {
         const delay = row.querySelector('.delay');
         if (delay) {
-          delay.textContent = '—';
+          KSPreferences.setText(delay, '—');
           delay.classList.remove('base');
         }
       }
@@ -566,14 +567,14 @@
 
         const march = parseMarchTime(marchText);
         if (!Number.isFinite(march) || march <= 0) {
-          throw new Error(`Invalid march time${name ? ` for ${name}` : ''}. Try 45, 1:05, or 1m 5s.`);
+          throw KSPreferences.error(name?'Invalid march time for {name}. Try 45, 1:05, or 1m 5s.':'Invalid march time. Try 45, 1:05, or 1m 5s.',{name});
         }
 
         entries.push({ tag, name, pet, march, row });
       }
 
       if (entries.length < 2) {
-        throw new Error('Add at least two rallies to sync.');
+        throw KSPreferences.error('Add at least two rallies to sync.');
       }
 
       return entries;
@@ -581,21 +582,21 @@
 
     function buildCopyText(items, maxMarch) {
       const sorted = [...items].sort((a, b) => a.delay - b.delay || a.label.localeCompare(b.label));
-      const lines = ['⚔️ KVK RALLY SYNC', ''];
+      const lines = [KSPreferences.text('⚔️ KVK RALLY SYNC'), ''];
 
       const bases = sorted.filter(i => i.delay === 0);
-      lines.push('BASE');
-      bases.forEach(i => lines.push(`${i.label} — GO`));
+      lines.push(KSPreferences.text('BASE'));
+      bases.forEach(i => lines.push(KSPreferences.text('{name} — GO',{name:displayLabel(i)})));
 
       const others = sorted.filter(i => i.delay > 0);
       if (others.length) lines.push('');
 
       others.forEach(i => {
-        lines.push(`+${formatSeconds(i.delay)}  ${i.label}`);
+        lines.push(KSPreferences.text('+{delay}  {name}',{delay:formatSeconds(i.delay),name:displayLabel(i)}));
       });
 
       lines.push('');
-      lines.push(`Slowest march: ${formatSeconds(maxMarch)}`);
+      lines.push(KSPreferences.text('Slowest march: {time}',{time:formatSeconds(maxMarch)}));
 
       return lines.join('\n');
     }
@@ -607,7 +608,7 @@
       try {
         entries = readEntries();
       } catch (error) {
-        message.textContent = error.message;
+        KSPreferences.setError(message, error);
         message.className = 'message warn';
         return;
       }
@@ -618,32 +619,32 @@
         const delay = Math.max(0, maxMarch - e.march);
         const label = makeLabel(e.tag, e.name, e.pet);
 
-        e.row.querySelector('.delay').textContent = delay === 0 ? 'BASE' : `+${formatSeconds(delay)}`;
+        if(delay===0)KSPreferences.setText(e.row.querySelector('.delay'),'BASE');
+        else KSPreferences.setRawText(e.row.querySelector('.delay'),`+${formatSeconds(delay)}`);
         if (delay === 0) e.row.querySelector('.delay').classList.add('base');
 
         return {
+          tag:e.tag,name:e.name,pet:e.pet,
           label,
           delay,
           march: e.march
         };
       }).sort((a, b) => a.delay - b.delay || a.label.localeCompare(b.label));
 
-      const bases = schedule.filter(i => i.delay === 0);
-      const baseNames = bases.map(i => i.label).join(', ');
-
-      resultTitle.textContent = bases.length === 1
-        ? `${baseNames} starts the base rally`
-        : `Choose one base rally: ${baseNames}`;
-
-      resultSub.textContent = `Slowest march is ${formatSeconds(maxMarch)}. Launch each remaining rally after the delay shown.`;
-
-      const copyText = buildCopyText(schedule, maxMarch);
-      orderPreview.textContent = copyText;
-
-      resultCard.dataset.copyText = copyText;
+      refreshSummary();
       resultCard.style.display = 'block';
-      message.textContent = '';
+      KSPreferences.setText(message, '');
     }
+    function refreshSummary(){
+      if(!schedule.length)return;
+      const bases=schedule.filter(i=>i.delay===0),names=bases.map(displayLabel).join(', ');
+      const maxMarch=Math.max(...schedule.map(i=>i.march));
+      KSPreferences.setText(resultTitle,bases.length===1?'{names} starts the base rally':'Choose one base rally: {names}',{names});
+      KSPreferences.setText(resultSub,'Slowest march is {time}. Launch each remaining rally after the delay shown.',{time:formatSeconds(maxMarch)});
+      const copyText=buildCopyText(schedule,maxMarch);
+      KSPreferences.setRawText(orderPreview,copyText);resultCard.dataset.copyText=copyText;
+    }
+    window.addEventListener('ks-language-rendered',refreshSummary);
 
     async function copyOrder() {
       const text = resultCard.dataset.copyText || '';
@@ -651,7 +652,7 @@
 
       try {
         await navigator.clipboard.writeText(text);
-        message.textContent = 'Rally order copied.';
+        KSPreferences.setText(message, 'Rally order copied.');
         message.className = 'message ok';
       } catch {
         const temp = document.createElement('textarea');
@@ -663,16 +664,16 @@
         document.execCommand('copy');
         temp.remove();
 
-        message.textContent = 'Rally order copied.';
+        KSPreferences.setText(message, 'Rally order copied.');
         message.className = 'message ok';
       }
     }
 
     function setHud(label, name, time, urgency, nextline='') {
-      hudLabel.textContent = label;
-      hudName.textContent = name;
-      hudTime.textContent = time;
-      hudNextline.textContent = nextline;
+      KSPreferences.setText(hudLabel, label);
+      KSPreferences.setValue(hudName, name);
+      KSPreferences.setValue(hudTime, time);
+      KSPreferences.setValue(hudNextline, nextline);
       hudName.className = `hud-name ${urgency}`;
       hudTime.className = `hud-time ${urgency}`;
     }
@@ -685,14 +686,14 @@
       document.body.classList.add('live-mode');
 
       const bases = schedule.filter(i => i.delay === 0);
-      const baseText = bases.length === 1 ? bases[0].label : 'BASE RALLY';
+      const baseText = bases.length === 1 ? displayLabel(bases[0]) : KSPreferences.message('BASE RALLY');
 
       setHud(
         'Create base rally now',
         baseText,
-        'GO',
+        KSPreferences.message('GO'),
         'high',
-        schedule.some(i => i.delay > 0) ? 'Next launch timing begins now.' : ''
+        schedule.some(i => i.delay > 0) ? KSPreferences.message('Next launch timing begins now.') : ''
       );
 
       liveTimer = setInterval(updateLive, 50);
@@ -714,10 +715,10 @@
 
         setHud(
           'Next rally',
-          next.label,
-          `in ${shown}`,
+          displayLabel(next),
+          KSPreferences.message('in {time}',{time:shown}),
           urgency,
-          `Elapsed: ${elapsed.toFixed(1)}s`
+          KSPreferences.message('Elapsed: {time}',{time:elapsed.toFixed(1)+'s'})
         );
         return;
       }
@@ -726,15 +727,15 @@
       if (elapsed < lastDelay + 1.25) {
         setHud(
           'All rallies launched',
-          'DONE',
+          KSPreferences.message('DONE'),
           '',
           'low',
-          `Elapsed: ${elapsed.toFixed(1)}s`
+          KSPreferences.message('Elapsed: {time}',{time:elapsed.toFixed(1)+'s'})
         );
         return;
       }
 
-      setHud('Rally sync complete', 'ALL SENT', '', 'low', '');
+      setHud('Rally sync complete', KSPreferences.message('ALL SENT'), '', 'low', '');
       stopLive(false);
     }
 
@@ -773,9 +774,10 @@
     addRow();
   </script>
 <footer class="site-credit">
-  <div>169 Kingshot Tools</div>
-  <div class="site-credit-byline">Built by [KRZ] Uub's</div>
+  <div data-ks-text="169 Kingshot Tools">169 Kingshot Tools</div>
+  <div class="site-credit-byline" data-ks-text="Built by {author}" data-ks-params="{&quot;author&quot;:&quot;[KRZ] Uub's&quot;}">Built by [KRZ] Uub's</div>
 </footer>
-<script src="../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

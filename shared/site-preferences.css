@@ -1,13 +1,39 @@
 /* Shared site preferences: kept separate so every standalone tool stays lightweight. */
 .site-controls{
-  position:fixed;
-  top:14px;
-  left:14px;
-  z-index:100;
+  justify-content:flex-end;
   display:flex;
   align-items:center;
   gap:8px;
 }
+.site-preferences-header .site-header-nav-link{position:static;inset:auto;min-width:0;float:none;transform:none}
+.site-preferences-header{
+  width:min(980px,100%);
+  margin:0 auto;
+  padding:12px 0;
+  display:grid;
+  justify-items:end;
+  gap:7px;
+  position:relative;
+  direction:ltr;
+  flex:none;
+}
+.site-header-nav-link{
+  display:inline-block;
+  max-width:100%;
+  padding:6px 10px;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:999px;
+  background:rgba(15,23,42,.88);
+  color:#cbd5e1;
+  text-decoration:none;
+  font-size:.78rem;
+  font-weight:750;
+  line-height:1.25;
+  text-align:right;
+  box-shadow:0 8px 20px rgba(0,0,0,.16);
+  backdrop-filter:blur(8px);
+}
+.site-header-nav-link:hover,.site-header-nav-link:focus-visible{color:#facc15;border-color:rgba(250,204,21,.65);outline:0}
 .site-control-button,.site-language-select{
   border:1px solid rgba(148,163,184,.32);
   border-radius:999px;
@@ -28,6 +54,12 @@
 }
 .site-control-button:hover,.site-control-button:focus-visible{background:rgba(250,204,21,.16);outline:0}
 .site-language-select{padding:7px 9px;cursor:pointer}
+.site-controls{flex-wrap:wrap;max-width:100%}
+.site-controls .site-language-select{width:auto;min-width:0;max-width:100%;margin:0}
+.site-controls .site-control-button{flex:0 0 32px;margin:0}
+.site-header-nav-link{overflow-wrap:anywhere}
+body.live-mode .site-preferences-header{display:none}
+[translate="no"],input[inputmode="numeric"],input[type="password"],input[type="time"],.big-time,.time,.hud-time{direction:ltr;unicode-bidi:isolate}
 .site-language-select option{background:#0f172a;color:#e5e7eb}
 .site-control-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
@@ -43,12 +75,15 @@ html[data-theme="light"] body{
   color:var(--text);
 }
 html[data-theme="light"] .site-control-button,html[data-theme="light"] .site-language-select{color:#172033;background:rgba(255,255,255,.94);border-color:#cbd5e1}
+html[data-theme="light"] .site-header-nav-link{background:rgba(255,255,255,.94);color:#334155;border-color:#cbd5e1}
 html[data-theme="light"] .site-language-select option{background:#fff;color:#172033}
 html[data-theme="light"] .tool,html[data-theme="light"] .card,html[data-theme="light"] .panel{box-shadow:0 12px 30px rgba(51,65,85,.1)}
 html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select,html[data-theme="light"] .statebox{background:#fff;color:#172033;border-color:#94a3b8}
 html[data-theme="light"] a{color:#334155}
 
 @media(max-width:520px){
-  .site-controls{top:8px;left:8px}
+  .site-preferences-header{padding-top:8px}
+  .site-controls{width:100%;flex-wrap:wrap}
   .site-language-select{max-width:88px}
+  .site-header-nav-link{max-width:100%;font-size:.72rem}
 }

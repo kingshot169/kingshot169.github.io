@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b1220">
 <title>Transfer Admin · 169 KS Tools</title>
 <link rel="stylesheet" href="../../shared/site-preferences.css">
+<script src="../../shared/translations.js" defer></script>
+<script src="../../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -145,27 +147,26 @@ select{
 <main>
 <div class="top">
   <div>
-    <a href="../" style="color:#94a3b8;text-decoration:none">← Admin Dashboard</a>
-    <h1>Transfer Admin</h1>
+    <a href="../" style="color:#94a3b8;text-decoration:none" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
+    <h1 data-ks-text="Transfer Admin">Transfer Admin</h1>
   </div>
   <div>
-    <span id="adminName" class="muted"></span>
-    <button id="signOut">Sign Out</button>
+    <span id="adminName" translate="no" class="muted"></span>
+    <button id="signOut" data-ks-text="Sign Out">Sign Out</button>
   </div>
 </div>
 
 <div class="statusline">
-<label>Status filter
-<select id="filter">
-<option value="">All</option>
-<option value="submitted">Submitted</option>
-<option value="reviewing">Reviewing</option>
-<option value="approved">Approved</option>
-<option value="waitlisted">Waitlisted</option>
-<option value="declined">Declined</option>
+<label><span data-ks-text="Status filter">Status filter</span><select id="filter">
+<option value="" data-ks-text="All">All</option>
+<option value="submitted" data-ks-text="Submitted">Submitted</option>
+<option value="reviewing" data-ks-text="Reviewing">Reviewing</option>
+<option value="approved" data-ks-text="Approved">Approved</option>
+<option value="waitlisted" data-ks-text="Waitlisted">Waitlisted</option>
+<option value="declined" data-ks-text="Declined">Declined</option>
 </select>
 </label>
-<button id="refresh">Refresh</button>
+<button id="refresh" data-ks-text="Refresh">Refresh</button>
 </div>
 
 <div id="msg" class="msg"></div>
@@ -240,7 +241,7 @@ async function api(method,body){
   }catch{}
 
   if(!r.ok){
-    throw new Error(j.error||"Request failed");
+    throw KSPreferences.apiError(j.error,"Request failed",{});
   }
 
   return j;
@@ -256,25 +257,25 @@ function render(){
         <div class="grid">
 
           <div class="kv">
-            <div class="k">Player</div>
+            <div class="k" data-ks-text="Player">Player</div>
             <div class="v player-box">
               ${
                 a.avatar_url
                   ? `<img class="player-avatar"
                        src="${esc(a.avatar_url)}"
-                       alt="Player profile picture"
+                       alt="Player profile picture" data-ks-alt="Player profile picture"
                        onerror="this.style.display='none'">`
                   : ``
               }
               <div>
                 <strong>${esc(a.player_name)}</strong><br>
-                ID ${esc(a.player_id)}
+                ${KSPreferences.html("Player ID {id}",{id:a.player_id})}
               </div>
             </div>
           </div>
 
           <div class="kv">
-            <div class="k">State / Alliance</div>
+            <div class="k" data-ks-text="State / Alliance">State / Alliance</div>
             <div class="v">
               ${esc(a.kingdom)}<br>
               ${esc(a.alliance_abbr||"")} ${esc(a.alliance_name||"")}
@@ -282,60 +283,60 @@ function render(){
           </div>
 
           <div class="kv">
-            <div class="k">Power / TC</div>
+            <div class="k" data-ks-text="Power / TC">Power / TC</div>
             <div class="v">
               ${esc(pwr(a.power))}<br>
-              TC ${esc(a.town_center_level)}
+              ${KSPreferences.html("Town Center {level}",{level:a.town_center_level})}
             </div>
           </div>
 
           <div class="kv">
-            <div class="k">Coordinates</div>
+            <div class="k" data-ks-text="Coordinates">Coordinates</div>
             <div class="v">
               X ${esc(a.x)} · Y ${esc(a.y)}
             </div>
           </div>
 
           <div class="kv">
-            <div class="k">Transfer passes</div>
+            <div class="k" data-ks-text="Transfer passes">Transfer passes</div>
             <div class="v">${esc(a.transfer_passes)}</div>
           </div>
 
           <div class="kv">
-            <div class="k">Preferred alliance</div>
-            <div class="v">${esc(a.preferred_alliance||"No preference")}</div>
+            <div class="k" data-ks-text="Preferred alliance">Preferred alliance</div>
+            <div class="v">${KSPreferences.fallbackHTML(a.preferred_alliance,"No preference")}</div>
           </div>
 
           <div class="kv">
-            <div class="k">Referrer / Friends</div>
+            <div class="k" data-ks-text="Referrer / Friends">Referrer / Friends</div>
             <div class="v">${esc(a.referrer_or_friends||"—")}</div>
           </div>
 
           <div class="kv">
-            <div class="k">Submitted</div>
-            <div class="v">${esc(fmtDate(a.submitted_at))}</div>
+            <div class="k" data-ks-text="Submitted">Submitted</div>
+            <div class="v">${KSPreferences.html("{time}",{time:KSPreferences.dateTime(a.submitted_at)})}</div>
           </div>
 
         </div>
 
         <div class="kv" style="margin-top:10px">
-          <div class="k">Reason</div>
+          <div class="k" data-ks-text="Reason">Reason</div>
           <div class="v reason">${esc(a.reason)}</div>
         </div>
 
         <div class="kv" style="margin-top:10px">
-          <div class="k">Notes</div>
+          <div class="k" data-ks-text="Notes">Notes</div>
           <div class="v reason">${esc(a.notes||"—")}</div>
         </div>
 
         <div class="statusline">
           <label>
-            Status
+            <span data-ks-text="Status">Status</span>
             <select data-status-id="${esc(a.id)}">
               ${
                 ["submitted","reviewing","approved","waitlisted","declined"]
                   .map(s=>`
-                    <option value="${s}" ${a.status===s?"selected":""}>
+                    <option value="${s}" data-ks-text="${s}" ${a.status===s?"selected":""}>
                       ${s}
                     </option>
                   `).join("")
@@ -343,7 +344,7 @@ function render(){
             </select>
           </label>
 
-          <span class="muted">Reference ${esc(a.id)}</span>
+          <span class="muted">${KSPreferences.html("Reference {reference}",{reference:a.id})}</span>
 
           <span class="spacer"></span>
 
@@ -351,13 +352,13 @@ function render(){
             type="button"
             class="danger"
             data-delete-id="${esc(a.id)}"
-            data-player-name="${esc(a.player_name)}">
+            data-player-name="${esc(a.player_name)}" data-ks-text="Delete Application">
             Delete Application
           </button>
         </div>
       </section>
     `).join("")
-    : `<div class="card muted">No applications found.</div>`;
+    : `<div class="card muted" data-ks-text="No applications found.">No applications found.</div>`;
 
   document.querySelectorAll("select[data-status-id]").forEach(sel=>{
     sel.onchange=async()=>{
@@ -375,13 +376,13 @@ function render(){
 
         if(app)app.status=sel.value;
 
-        $("msg").textContent="Status updated.";
+        KSPreferences.setText($("msg"), "Status updated.");
         $("msg").className="msg ok";
 
         render();
       }catch(e){
         sel.value=old||"submitted";
-        $("msg").textContent=e.message;
+        KSPreferences.setError($("msg"),e);
         $("msg").className="msg error";
       }finally{
         sel.disabled=false;
@@ -392,16 +393,16 @@ function render(){
   document.querySelectorAll("button[data-delete-id]").forEach(btn=>{
     btn.onclick=async()=>{
       const applicationId=btn.dataset.deleteId;
-      const playerName=btn.dataset.playerName||"this player";
+      const playerName=btn.dataset.playerName||KSPreferences.message("this player");
 
       const confirmed=window.confirm(
-        `Delete the transfer application for ${playerName}?\n\nThis cannot be undone.`
+        KSPreferences.text('Delete the transfer application for {name}? This cannot be undone.',{name:playerName})
       );
 
       if(!confirmed)return;
 
       btn.disabled=true;
-      btn.textContent="Deleting…";
+      KSPreferences.setText(btn, "Deleting…");
 
       try{
         await api("DELETE",{
@@ -410,23 +411,23 @@ function render(){
 
         applications=applications.filter(a=>a.id!==applicationId);
 
-        $("msg").textContent=`Application for ${playerName} deleted.`;
+        KSPreferences.setText($("msg"),"Application for {name} deleted.",{name:playerName});
         $("msg").className="msg ok";
 
         render();
       }catch(e){
-        $("msg").textContent=e.message;
+        KSPreferences.setError($("msg"),e);
         $("msg").className="msg error";
 
         btn.disabled=false;
-        btn.textContent="Delete Application";
+        KSPreferences.setText(btn, "Delete Application");
       }
     };
   });
 }
 
 async function load(){
-  $("msg").textContent="Loading…";
+  KSPreferences.setText($("msg"), "Loading…");
   $("msg").className="msg";
 
   try{
@@ -434,16 +435,13 @@ async function load(){
 
     applications=j.applications||[];
 
-    $("adminName").textContent=
-      j.admin?.display_name||
-      j.admin?.username||
-      "Admin";
+    KSPreferences.setResponse($("adminName"), j.admin?.display_name||j.admin?.username, "Admin");
 
-    $("msg").textContent="";
+    KSPreferences.setText($("msg"), "");
     render();
 
   }catch(e){
-    $("msg").textContent=e.message;
+    KSPreferences.setError($("msg"),e);
     $("msg").className="msg error";
   }
 }
@@ -458,6 +456,7 @@ $("signOut").onclick=async()=>{
 
 load();
 </script>
-<script src="../../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

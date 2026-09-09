@@ -7,6 +7,8 @@
 <meta name="referrer" content="no-referrer">
 <title>Transfer to State 169</title>
 <link rel="stylesheet" href="../shared/site-preferences.css">
+<script src="../shared/translations.js" defer></script>
+<script src="../shared/site-preferences.js"></script>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--green:#22c55e}
 *{box-sizing:border-box}body{margin:0;padding:16px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
@@ -45,51 +47,50 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;padding:10px}
 </head>
 <body>
 <main>
-<div class="top"><a href="../">← 169 KS Tools</a><strong>STATE 169</strong></div>
-<header><div style="font-size:2.4rem">🔄</div><h1>Transfer Application</h1><p>Verify your Kingshot profile, then complete the short application.</p></header>
+<div class="top"><a href="../" data-ks-text="← 169 KS Tools" data-site-nav>← 169 KS Tools</a><strong data-ks-text="STATE 169">STATE 169</strong></div>
+<header><div style="font-size:2.4rem">🔄</div><h1 data-ks-text="Transfer Application">Transfer Application</h1><p data-ks-text="Verify your Kingshot profile, then complete the short application.">Verify your Kingshot profile, then complete the short application.</p></header>
 
 <section class="card">
-<h2>1. Find your Kingshot profile</h2>
+<h2 data-ks-text="1. Find your Kingshot profile">1. Find your Kingshot profile</h2>
 <div class="lookup">
-<label>Kingshot Player ID<input id="fid" inputmode="numeric" placeholder="e.g. 24649596"></label>
-<button id="find">Find Player</button>
+<label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="fid" inputmode="numeric" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596"></label>
+<button id="find" data-ks-text="Find Player">Find Player</button>
 </div>
 <div id="lookupMsg" class="msg"></div>
 
 <div id="playerCard">
 <div class="player">
 <div class="avatar">👤</div>
-<div><div id="pName" class="name"></div><div id="pMeta" class="meta"></div></div>
+<div><div id="pName" translate="no" class="name"></div><div id="pMeta" class="meta"></div></div>
 </div>
-<div class="actions"><button id="continue">Continue Application</button><button id="change" class="secondary">Different Player</button></div>
+<div class="actions"><button id="continue" data-ks-text="Continue Application">Continue Application</button><button id="change" class="secondary" data-ks-text="Different Player">Different Player</button></div>
 </div>
 </section>
 
 <section id="application" class="card">
-<h2>2. Transfer details</h2>
+<h2 data-ks-text="2. Transfer details">2. Transfer details</h2>
 <form id="form">
 <div class="grid">
-<label>Transfer Passes<input name="passes" required placeholder="How many do you currently have?"></label>
-<label>Preferred 169 Alliance
-<select name="preferred"><option value="">No preference</option><option>KRZ</option><option>GRD</option><option>Other / discuss with leadership</option></select>
+<label><span data-ks-text="Transfer Passes">Transfer Passes</span><input name="passes" required placeholder="How many do you currently have?" data-ks-placeholder="How many do you currently have?"></label>
+<label><span data-ks-text="Preferred 169 Alliance">Preferred 169 Alliance</span><select name="preferred"><option value="" data-ks-text="No preference">No preference</option><option>KRZ</option><option>GRD</option><option value="Other / discuss with leadership" data-ks-text="Other / discuss with leadership">Other / discuss with leadership</option></select>
 </label>
-<label class="full">Referred by / Friends in 169<input name="friends" placeholder="Optional"></label>
-<label class="full">Why would you like to transfer to State 169?<textarea name="reason" required></textarea></label>
-<label class="full">Anything else we should know?<textarea name="notes" placeholder="Optional"></textarea></label>
-<div class="full consent"><input id="consent" type="checkbox" required><label for="consent">I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.</label></div>
+<label class="full"><span data-ks-text="Referred by / Friends in 169">Referred by / Friends in 169</span><input name="friends" placeholder="Optional" data-ks-placeholder="Optional"></label>
+<label class="full"><span data-ks-text="Why would you like to transfer to State 169?">Why would you like to transfer to State 169?</span><textarea name="reason" required></textarea></label>
+<label class="full"><span data-ks-text="Anything else we should know?">Anything else we should know?</span><textarea name="notes" placeholder="Optional" data-ks-placeholder="Optional"></textarea></label>
+<div class="full consent"><input id="consent" type="checkbox" required><label for="consent" data-ks-text="I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.">I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.</label></div>
 </div>
-<div class="actions"><button id="submitBtn" class="submit" type="submit">Submit Application</button></div>
+<div class="actions"><button id="submitBtn" class="submit" type="submit" data-ks-text="Submit Application">Submit Application</button></div>
 <div id="submitMsg" class="msg"></div>
 </form>
 </section>
 
 <section id="successCard" class="card">
 <div class="success">
-<h2>Application received</h2>
-<p>Thanks <strong id="successName"></strong>. Your transfer application has been submitted to State 169 leadership.</p>
-<p>Reference:</p>
-<div id="successRef" class="ref"></div>
-<div class="actions"><a href="../" style="text-decoration:none"><button type="button" class="secondary">Back to 169 KS Tools</button></a></div>
+<h2 data-ks-text="Application received">Application received</h2>
+<p id="successMessage"></p>
+<p data-ks-text="Reference:">Reference:</p>
+<div id="successRef" translate="no" class="ref"></div>
+<div class="actions"><a href="../" style="text-decoration:none"><button type="button" class="secondary" data-ks-text="Back to 169 KS Tools">Back to 169 KS Tools</button></a></div>
 </div>
 </section>
 
@@ -113,7 +114,7 @@ const authHeaders=()=>({
 
 const power=n=>{
   n=Number(n);
-  if(!Number.isFinite(n))return"Unknown";
+  if(!Number.isFinite(n))return KSPreferences.message("Unknown");
   if(n>=1e9)return(n/1e9).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"B";
   if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,"")+"M";
   return n.toLocaleString();
@@ -121,23 +122,23 @@ const power=n=>{
 
 async function findPlayer(){
  const fid=$("fid").value.replace(/\s/g,"");
- $("lookupMsg").textContent="";
+ KSPreferences.setText($("lookupMsg"), "");
  $("lookupMsg").className="msg";
 
  if(!/^\d{4,20}$/.test(fid)){
-   $("lookupMsg").textContent="Enter a valid numeric Player ID.";
+   KSPreferences.setText($("lookupMsg"), "Enter a valid numeric Player ID.");
    $("lookupMsg").className="msg warn";
    return;
  }
 
  if(SUPABASE_PUBLISHABLE_KEY.startsWith("PASTE_")){
-   $("lookupMsg").textContent="Add your Supabase publishable key to this file first.";
+   KSPreferences.setText($("lookupMsg"), "Add your Supabase publishable key to this file first.");
    $("lookupMsg").className="msg warn";
    return;
  }
 
  $("find").disabled=true;
- $("find").textContent="Finding…";
+ KSPreferences.setText($("find"), "Finding…");
 
  try{
   const r=await fetch(LOOKUP_URL,{
@@ -149,24 +150,24 @@ async function findPlayer(){
   const j=await r.json();
 
   if(!r.ok||!j.ok||!j.player){
-    throw new Error(j.error||"Player lookup failed");
+    throw KSPreferences.apiError(j.error,"Player lookup failed");
   }
 
   verified=j.player;
-  $("pName").textContent=verified.name||("Player "+verified.player_id);
+  KSPreferences.setResponse($("pName"), verified.name,"Player {id}",{id:verified.player_id});
 
   const alliance=[verified.alliance_abbr,verified.alliance_name].filter(Boolean).join(" · ");
   const metaLines=[
-    `State ${verified.kingdom ?? "?"}`,
-    alliance||"No alliance returned",
-    `Power ${power(verified.power)}`,
-    `Town Center ${verified.town_center_level ?? "?"}`,
-    `Player ID ${verified.player_id}`
+    KSPreferences.node("State {state}",{state:verified.kingdom??"?"}),
+    alliance?document.createTextNode(alliance):KSPreferences.node("No alliance returned"),
+    KSPreferences.node("Power {power}",{power:power(verified.power)}),
+    KSPreferences.node("Town Center {level}",{level:verified.town_center_level??"?"}),
+    KSPreferences.node("Player ID {id}",{id:verified.player_id})
   ];
   $("pMeta").replaceChildren();
   metaLines.forEach((line,i)=>{
     if(i)$("pMeta").appendChild(document.createElement("br"));
-    $("pMeta").appendChild(document.createTextNode(line));
+    $("pMeta").appendChild(line);
   });
 
   $("playerCard").style.display="block";
@@ -177,22 +178,21 @@ async function findPlayer(){
   if(playerState===169){
     $("continue").style.display="none";
     $("application").style.display="none";
-    $("lookupMsg").textContent=
-      "This account is already in State 169, so it cannot apply to transfer into State 169.";
+    KSPreferences.setText($("lookupMsg"), "This account is already in State 169, so it cannot apply to transfer into State 169.");
     $("lookupMsg").className="msg warn";
     return;
   }
 
   $("continue").style.display="";
-  $("lookupMsg").textContent="✓ Player verified and eligible to apply.";
+  KSPreferences.setText($("lookupMsg"), "✓ Player verified and eligible to apply.");
   $("lookupMsg").className="msg ok";
  }catch(e){
-  $("lookupMsg").textContent=e.message;
+  KSPreferences.setError($("lookupMsg"), e);
   $("lookupMsg").className="msg error";
   $("playerCard").style.display="none";
  }finally{
   $("find").disabled=false;
-  $("find").textContent="Find Player";
+  KSPreferences.setText($("find"), "Find Player");
  }
 }
 
@@ -211,7 +211,7 @@ $("change").onclick=()=>{
   $("successCard").style.display="none";
   $("fid").disabled=false;
   $("continue").style.display="";
-  $("lookupMsg").textContent="";
+  KSPreferences.setText($("lookupMsg"), "");
   $("lookupMsg").className="msg";
   $("fid").value="";
   $("fid").focus();
@@ -222,8 +222,7 @@ $("form").onsubmit=async e=>{
   if(!verified)return;
 
   if(Number(verified.kingdom)===169){
-    $("submitMsg").textContent=
-      "This account is already in State 169 and cannot submit a transfer application.";
+    KSPreferences.setText($("submitMsg"), "This account is already in State 169 and cannot submit a transfer application.");
     $("submitMsg").className="msg error";
     return;
   }
@@ -241,8 +240,8 @@ $("form").onsubmit=async e=>{
   };
 
   $("submitBtn").disabled=true;
-  $("submitBtn").textContent="Submitting…";
-  $("submitMsg").textContent="";
+  KSPreferences.setText($("submitBtn"), "Submitting…");
+  KSPreferences.setText($("submitMsg"), "");
   $("submitMsg").className="msg";
 
   try{
@@ -256,28 +255,29 @@ $("form").onsubmit=async e=>{
     try{j=await r.json()}catch{}
 
     if(!r.ok||!j.ok){
-      throw new Error(j.error||"Application submission failed");
+      throw KSPreferences.apiError(j.error,"Application submission failed");
     }
 
     $("application").style.display="none";
-    $("successName").textContent=verified.name||"";
-    $("successRef").textContent=j.reference||"";
+    KSPreferences.setText($("successMessage"),"Thanks {name}. Your transfer application has been submitted to State 169 leadership.",{name:verified.name||""});
+    KSPreferences.setRawText($("successRef"), j.reference||"");
     $("successCard").style.display="block";
     $("successCard").scrollIntoView({behavior:"smooth"});
 
   }catch(err){
-    $("submitMsg").textContent=err.message||"Application submission failed.";
+    KSPreferences.setError($("submitMsg"),err,"Application submission failed.");
     $("submitMsg").className="msg error";
   }finally{
     $("submitBtn").disabled=false;
-    $("submitBtn").textContent="Submit Application";
+    KSPreferences.setText($("submitBtn"), "Submit Application");
   }
 };
 </script>
 <footer class="site-credit">
-  <div>169 Kingshot Tools</div>
-  <div class="site-credit-byline">Built by [KRZ] Uub's</div>
+  <div data-ks-text="169 Kingshot Tools">169 Kingshot Tools</div>
+  <div class="site-credit-byline" data-ks-text="Built by {author}" data-ks-params="{&quot;author&quot;:&quot;[KRZ] Uub's&quot;}">Built by [KRZ] Uub's</div>
 </footer>
-<script src="../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

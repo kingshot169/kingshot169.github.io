@@ -7,6 +7,8 @@
 <meta name="referrer" content="no-referrer">
 <title>Set Password · 169 KS Tools</title>
 <link rel="stylesheet" href="../../shared/site-preferences.css">
+<script src="../../shared/translations.js" defer></script>
+<script src="../../shared/site-preferences.js"></script>
 <style>
 :root{
   --bg:#0b1220;
@@ -89,22 +91,20 @@ button:disabled{opacity:.65;cursor:wait}
 <body>
 <main>
   <div class="card">
-    <a href="../">← Admin Dashboard</a>
+    <a href="../" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
 
-    <h1>Choose Your Password</h1>
+    <h1 data-ks-text="Choose Your Password">Choose Your Password</h1>
 
-    <div class="note">
+    <div class="note" data-ks-text="Your password is private to you. Use at least 12 characters.">
       Your password is private to you. Use at least 12 characters.
     </div>
 
-    <div id="required" class="required">
+    <div id="required" class="required" data-ks-text="Your temporary password must be changed before you can use the admin tools.">
       Your temporary password must be changed before you can use the admin tools.
     </div>
 
     <form id="passwordForm" novalidate>
-      <label>
-        New password
-        <input
+      <label><span data-ks-text="New password">New password</span><input
           id="p1"
           name="new-password"
           type="password"
@@ -115,9 +115,7 @@ button:disabled{opacity:.65;cursor:wait}
         >
       </label>
 
-      <label>
-        Confirm password
-        <input
+      <label><span data-ks-text="Confirm password">Confirm password</span><input
           id="p2"
           name="confirm-password"
           type="password"
@@ -128,7 +126,7 @@ button:disabled{opacity:.65;cursor:wait}
         >
       </label>
 
-      <button id="save" type="submit">Update Password</button>
+      <button id="save" type="submit" data-ks-text="Update Password">Update Password</button>
     </form>
 
     <div id="msg" class="msg"></div>
@@ -214,17 +212,17 @@ $("passwordForm").addEventListener("submit",async(event)=>{
   const a=$("p1").value;
   const b=$("p2").value;
 
-  $("msg").textContent="";
+  KSPreferences.setText($("msg"), "");
   $("msg").className="msg";
 
   if(a.length<12){
-    $("msg").textContent="Use at least 12 characters.";
+    KSPreferences.setText($("msg"), "Use at least 12 characters.");
     $("msg").className="msg error";
     return;
   }
 
   if(a!==b){
-    $("msg").textContent="Passwords do not match.";
+    KSPreferences.setText($("msg"), "Passwords do not match.");
     $("msg").className="msg error";
     return;
   }
@@ -232,15 +230,14 @@ $("passwordForm").addEventListener("submit",async(event)=>{
   const stored=findStoredSession();
 
   if(!stored?.session?.access_token){
-    $("msg").textContent=
-      "Your admin login session could not be found. Return to Admin Login and sign in again.";
+    KSPreferences.setText($("msg"), "Your admin login session could not be found. Return to Admin Login and sign in again.");
     $("msg").className="msg error";
     return;
   }
 
   $("save").disabled=true;
-  $("save").textContent="Updating Password…";
-  $("msg").textContent="Updating your password securely…";
+  KSPreferences.setText($("save"), "Updating Password…");
+  KSPreferences.setText($("msg"), "Updating your password securely…");
   $("msg").className="msg status";
 
   const controller=new AbortController();
@@ -265,23 +262,17 @@ $("passwordForm").addEventListener("submit",async(event)=>{
     try{
       result=await response.json();
     }catch{
-      throw new Error(
-        `The password service returned an invalid response (HTTP ${response.status}).`
-      );
+      throw KSPreferences.error("The password service returned an invalid response (HTTP {status}).",{status:response.status});
     }
 
     if(!response.ok||!result.ok){
-      throw new Error(
-        result.error||
-        `Password update failed (HTTP ${response.status}).`
-      );
+      throw KSPreferences.apiError(result.error,"Password update failed (HTTP {status}).",{status:response.status});
     }
 
     $("p1").value="";
     $("p2").value="";
 
-    $("msg").textContent=
-      "Password updated successfully. Returning you to Admin Login…";
+    KSPreferences.setText($("msg"), "Password updated successfully. Returning you to Admin Login…");
     $("msg").className="msg ok";
 
     // The password change may invalidate the old session.
@@ -294,22 +285,20 @@ $("passwordForm").addEventListener("submit",async(event)=>{
 
   }catch(error){
     if(error?.name==="AbortError"){
-      $("msg").textContent=
-        "The password service did not respond within 15 seconds. Please tell the super-admin.";
+      KSPreferences.setText($("msg"), "The password service did not respond within 15 seconds. Please tell the super-admin.");
     }else{
-      $("msg").textContent=
-        error?.message||
-        "Password could not be changed. Please try again.";
+      KSPreferences.setError($("msg"),error,"Password could not be changed. Please try again.");
     }
 
     $("msg").className="msg error";
   }finally{
     clearTimeout(timeout);
     $("save").disabled=false;
-    $("save").textContent="Update Password";
+    KSPreferences.setText($("save"), "Update Password");
   }
 });
 </script>
-<script src="../../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

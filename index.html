@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#0b1220">
   <title>169 KS Tools</title>
   <link rel="stylesheet" href="./shared/site-preferences.css">
+<script src="./shared/translations.js" defer></script>
+<script src="./shared/site-preferences.js"></script>
   <style>
     :root{
       --bg:#0b1220;
@@ -174,7 +176,7 @@
         font-size:.72rem;
       }
     }
-  
+
 .site-credit{
   margin:28px auto 8px;
   padding:14px 8px 4px;
@@ -205,58 +207,58 @@ html[data-theme="light"] .community-note{color:#854d0e;background:rgba(234,179,8
 </head>
 <body>
 
-  <a id="adminLink" class="admin-login" href="./admin/" aria-label="Open admin area" aria-busy="true">…</a>
+  <a id="adminLink" class="admin-login" href="./admin/" aria-label="Open admin area" data-ks-aria-label="Open admin area" aria-busy="true" data-site-nav>…</a>
 
   <main class="wrap">
     <header>
-      <div class="eyebrow">State 169</div>
-      <h1>Kingshot Tools</h1>
-      <p class="subtitle">
+      <div class="eyebrow" data-ks-text="State 169">State 169</div>
+      <h1 data-ks-text="Kingshot Tools">Kingshot Tools</h1>
+      <p class="subtitle" data-ks-text="Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.">
         Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.
       </p>
       <p class="community-note" data-i18n="statement">One kingdom, many cultures. We keep geopolitics and religion out of the game so everyone can escape, connect and have fun.</p>
     </header>
 
-    <section class="tools" aria-label="Kingshot tools">
+    <section class="tools" aria-label="Kingshot tools" data-ks-aria-label="Kingshot tools">
       <a class="tool rally" href="./rally/">
         <div class="icon">⚔️</div>
-        <h2>Rally Sync</h2>
-        <p>Calculate launch delays and run a silent visual timer so multiple rallies land together.</p>
+        <h2 data-ks-text="Rally Sync">Rally Sync</h2>
+        <p data-ks-text="Calculate launch delays and run a silent visual timer so multiple rallies land together.">Calculate launch delays and run a silent visual timer so multiple rallies land together.</p>
         <div class="tag" data-i18n="open">OPEN TOOL →</div>
       </a>
 
       <a class="tool transfer" href="./transfer/">
         <div class="icon">🔄</div>
-        <h2>Transfer Application</h2>
-        <p>Apply to transfer into State 169 with one clean, consistent application form.</p>
+        <h2 data-ks-text="Transfer Application">Transfer Application</h2>
+        <p data-ks-text="Apply to transfer into State 169 with one clean, consistent application form.">Apply to transfer into State 169 with one clean, consistent application form.</p>
         <div class="tag" data-i18n="application">OPEN APPLICATION →</div>
       </a>
 
       <a class="tool buffs" href="./kings-buffs/">
         <div class="icon">👑</div>
-        <h2>King's Buffs</h2>
-        <p>Register for KVK King's Buff appointments and keep requests organised in one place.</p>
+        <h2 data-ks-text="King's Buffs">King's Buffs</h2>
+        <p data-ks-text="Register for KVK King's Buff appointments and keep requests organised in one place.">Register for KVK King's Buff appointments and keep requests organised in one place.</p>
         <div class="tag" data-i18n="enrolment">OPEN ENROLMENT →</div>
       </a>
 
       <a class="tool compare" href="./compare/">
         <div class="icon">🏰</div>
-        <h2>Kingdom Compare</h2>
-        <p>Compare State 169 with another kingdom using current kingdom strength and activity data.</p>
+        <h2 data-ks-text="Kingdom Compare">Kingdom Compare</h2>
+        <p data-ks-text="Compare State 169 with another kingdom using current kingdom strength and activity data.">Compare State 169 with another kingdom using current kingdom strength and activity data.</p>
         <div class="tag" data-i18n="compare">COMPARE KINGDOMS →</div>
       </a>
 
       <a class="tool gifts" href="./gift-codes/">
         <div class="icon">🎁</div>
-        <h2>Gift Codes</h2>
-        <p>Verify your State 169 Player ID and redeem current Kingshot gift codes.</p>
+        <h2 data-ks-text="Gift Codes">Gift Codes</h2>
+        <p data-ks-text="Verify your State 169 Player ID and redeem current Kingshot gift codes.">Verify your State 169 Player ID and redeem current Kingshot gift codes.</p>
         <div class="tag" data-i18n="codes">VIEW GIFT CODES →</div>
       </a>
     </section>
 
     <footer class="site-credit">
-  <div>169 Kingshot Tools</div>
-  <div class="site-credit-byline">Built by [KRZ] Uub's</div>
+  <div data-ks-text="169 Kingshot Tools">169 Kingshot Tools</div>
+  <div class="site-credit-byline" data-ks-text="Built by {author}" data-ks-params="{&quot;author&quot;:&quot;[KRZ] Uub's&quot;}">Built by [KRZ] Uub's</div>
 </footer>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -265,9 +267,9 @@ html[data-theme="light"] .community-note{color:#854d0e;background:rgba(234,179,8
     const link=document.getElementById("adminLink");
     let revision=0;
     function setLabel(text,pending=false){
-      link.textContent=text;
+      KSPreferences.setText(link,text);
       link.setAttribute("aria-busy",String(pending));
-      link.setAttribute("aria-label",pending?"Open admin area":text);
+      link.setAttribute("aria-label",KSPreferences.text(pending?"Open admin area":text));
     }
     try{
       // Use the same SDK defaults and persisted session as the admin pages.
@@ -310,6 +312,7 @@ html[data-theme="light"] .community-note{color:#854d0e;background:rgba(234,179,8
     }
   })();
   </script>
-  <script src="./shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

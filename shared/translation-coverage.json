@@ -1,0 +1,34 @@
+{
+  "markedAndCalledKeys": 493,
+  "languages": [
+    "ko",
+    "es",
+    "pt",
+    "fr",
+    "ar"
+  ],
+  "missing": [],
+  "intentionallyUntranslated": {
+    "templates": [
+      "{name}",
+      "{time}",
+      "{status}",
+      "{date} · KINGSHOT UTC",
+      "+{delay} {name}",
+      "{troop} {gear}",
+      "VS",
+      "—"
+    ],
+    "data": [
+      "Player/alliance names and tags",
+      "Player IDs, application references, codes and contact details",
+      "User-authored notes, reasons and custom event names",
+      "API actions, database values and unrecognized server messages",
+      "Numeric UTC time ranges and SI units"
+    ]
+  },
+  "limitations": [
+    "Static markers and literal/conditional translation calls are checked; arbitrary runtime strings require browser fixtures or review.",
+    "Key coverage does not establish linguistic accuracy."
+  ]
+}

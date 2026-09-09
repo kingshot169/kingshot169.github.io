@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b1220">
 <title>Player Search · 169 KS Tools</title>
 <link rel="stylesheet" href="../../shared/site-preferences.css">
+<script src="../../shared/translations.js" defer></script>
+<script src="../../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -579,24 +581,22 @@ label{
 <div class="top">
   <div>
     <div class="toplinks">
-      <a href="../">← Admin Dashboard</a>
+      <a href="../" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
     </div>
-    <h1>Player Search</h1>
+    <h1 data-ks-text="Player Search">Player Search</h1>
   </div>
   <div>
-    <span id="adminName" class="muted"></span>
-    <button id="signOut">Sign Out</button>
+    <span id="adminName" translate="no" class="muted"></span>
+    <button id="signOut" data-ks-text="Sign Out">Sign Out</button>
   </div>
 </div>
 
 <section class="card">
-  <h2>Search Kingshot Player</h2>
+  <h2 data-ks-text="Search Kingshot Player">Search Kingshot Player</h2>
   <div class="searchbar" style="margin-top:10px">
-    <label>
-      Kingshot Player ID
-      <input id="playerId" inputmode="numeric" placeholder="e.g. 24649596">
+    <label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="playerId" inputmode="numeric" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596">
     </label>
-    <button id="searchBtn" class="primary">Search Player</button>
+    <button id="searchBtn" class="primary" data-ks-text="Search Player">Search Player</button>
   </div>
   <div id="msg" class="msg"></div>
 </section>
@@ -605,29 +605,29 @@ label{
 
   <section class="card">
     <div class="profile">
-      <img id="avatar" class="avatar" alt="Player profile picture">
+      <img id="avatar" class="avatar" alt="Player profile picture" data-ks-alt="Player profile picture">
       <div>
-        <div id="playerName" class="name"></div>
+        <div id="playerName" translate="no" class="name"></div>
         <div id="playerMeta" class="subline"></div>
       </div>
     </div>
 
     <div class="statgrid">
-      <div class="kv"><div class="k">Power</div><div id="power" class="v"></div></div>
-      <div class="kv"><div class="k">Town Center</div><div id="tc" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Power">Power</div><div id="power" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Town Center">Town Center</div><div id="tc" class="v"></div></div>
       <div class="kv"><div class="k">VIP</div><div id="vip" class="v"></div></div>
-      <div class="kv"><div class="k">Kills</div><div id="kills" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Kills">Kills</div><div id="kills" class="v"></div></div>
 
-      <div class="kv"><div class="k">Coordinates</div><div id="coords" class="v"></div></div>
-      <div class="kv"><div class="k">Office</div><div id="office" class="v"></div></div>
-      <div class="kv"><div class="k">Online</div><div id="online" class="v"></div></div>
-      <div class="kv"><div class="k">Last Active</div><div id="lastActive" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Coordinates">Coordinates</div><div id="coords" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Office">Office</div><div id="office" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Online">Online</div><div id="online" class="v"></div></div>
+      <div class="kv"><div class="k" data-ks-text="Last Active">Last Active</div><div id="lastActive" class="v"></div></div>
     </div>
   </section>
 
   <section class="card" id="govSection">
     <div class="section-title">
-      <h2>Governor Gear</h2>
+      <h2 data-ks-text="Governor Gear">Governor Gear</h2>
       <span id="govGearState" class="badge"></span>
     </div>
     <div id="govGear"></div>
@@ -635,7 +635,7 @@ label{
 
   <section class="card">
     <div class="section-title">
-      <h2>Heroes & Hero Gear</h2>
+      <h2 data-ks-text="Heroes &amp; Hero Gear">Heroes & Hero Gear</h2>
       <span id="heroCount" class="badge"></span>
     </div>
     <div id="heroes" class="hero-grid"></div>
@@ -643,7 +643,7 @@ label{
 
   <section class="card">
     <div class="section-title">
-      <h2>Kingdom Rankings</h2>
+      <h2 data-ks-text="Kingdom Rankings">Kingdom Rankings</h2>
       <span id="rankCount" class="badge"></span>
     </div>
     <div id="ranks" class="rank-grid"></div>
@@ -690,8 +690,8 @@ function compact(n){
 }
 
 function yesNo(v){
-  if(v===true)return"Yes";
-  if(v===false)return"No";
+  if(v===true)return KSPreferences.message("Yes");
+  if(v===false)return KSPreferences.message("No");
   return"—";
 }
 
@@ -719,11 +719,11 @@ async function session(){
 async function searchPlayer(){
   const playerId=$("playerId").value.replace(/\s/g,"");
 
-  $("msg").textContent="";
+  KSPreferences.setText($("msg"), "");
   $("msg").className="msg";
 
   if(!/^\d{4,20}$/.test(playerId)){
-    $("msg").textContent="Enter a valid numeric Player ID.";
+    KSPreferences.setText($("msg"), "Enter a valid numeric Player ID.");
     $("msg").className="msg error";
     return;
   }
@@ -732,7 +732,7 @@ async function searchPlayer(){
   if(!s)return;
 
   $("searchBtn").disabled=true;
-  $("searchBtn").textContent="Searching…";
+  KSPreferences.setText($("searchBtn"), "Searching…");
   $("results").style.display="none";
 
   try{
@@ -750,26 +750,23 @@ async function searchPlayer(){
     try{j=await r.json()}catch{}
 
     if(!r.ok||!j.ok){
-      throw new Error(j.error||"Player search failed");
+      throw KSPreferences.apiError(j.error,"Player search failed",{});
     }
 
-    $("adminName").textContent=
-      j.admin?.display_name||
-      j.admin?.username||
-      "Admin";
+    KSPreferences.setResponse($("adminName"),j.admin?.display_name||j.admin?.username,"Admin");
 
     renderPlayer(j);
 
-    $("msg").textContent="Player loaded.";
+    KSPreferences.setText($("msg"), "Player loaded.");
     $("msg").className="msg ok";
     $("results").style.display="block";
 
   }catch(e){
-    $("msg").textContent=e.message;
+    KSPreferences.setError($("msg"),e);
     $("msg").className="msg error";
   }finally{
     $("searchBtn").disabled=false;
-    $("searchBtn").textContent="Search Player";
+    KSPreferences.setText($("searchBtn"), "Search Player");
   }
 }
 
@@ -780,30 +777,27 @@ function renderPlayer(j){
   $("avatar").src=p.avatar_url||"";
   $("avatar").style.display=p.avatar_url?"block":"none";
 
-  $("playerName").textContent=
-    p.name||("Player "+(p.player_id??""));
+  KSPreferences.setResponse($("playerName"),p.name,"Player {id}",{id:p.player_id??""});
 
   $("playerMeta").innerHTML=
-    `Player ID ${esc(p.player_id??"—")}<br>`+
-    `State ${esc(p.kingdom??"—")}<br>`+
+    KSPreferences.html("Player ID {id}",{id:p.player_id??"—"})+`<br>`+
+    KSPreferences.html("State {state}",{state:p.kingdom??"—"})+`<br>`+
     `${esc(alliance.abbr||"")} ${esc(alliance.name||"")}`;
 
-  $("power").textContent=compact(p.power);
-  $("tc").textContent=p.town_center_level??"—";
-  $("vip").textContent=p.vip??"—";
-  $("kills").textContent=numberFmt(p.kills);
+  KSPreferences.setRawText($("power"), compact(p.power));
+  KSPreferences.setRawText($("tc"), p.town_center_level??"—");
+  KSPreferences.setRawText($("vip"), p.vip??"—");
+  KSPreferences.setRawText($("kills"), numberFmt(p.kills));
 
-  $("coords").textContent=
-    (p.x!=null&&p.y!=null)
+  KSPreferences.setRawText($("coords"), (p.x!=null&&p.y!=null)
       ? `X ${p.x} · Y ${p.y}`
-      : "—";
+      : "—");
 
-  $("office").textContent=p.office||"—";
-  $("online").textContent=yesNo(p.online);
-  $("lastActive").textContent=
-    p.last_login||
+  KSPreferences.setRawText($("office"), p.office||"—");
+  KSPreferences.setValue($("online"), yesNo(p.online));
+  KSPreferences.setRawText($("lastActive"), p.last_login||
     p.last_active_at||
-    "—";
+    "—");
 
   renderGovGear(j.gov_gear);
   renderHeroes(j.heroes||[]);
@@ -812,22 +806,22 @@ function renderPlayer(j){
 
 function renderGovGear(g){
   if(!g){
-    $("govGearState").textContent="No data";
+    KSPreferences.setText($("govGearState"), "No data");
     $("govGear").innerHTML=
-      '<div class="hidden-note">No governor gear data returned.</div>';
+      "<div class=\"hidden-note\" data-ks-text=\"No governor gear data returned.\">No governor gear data returned.</div>";
     return;
   }
 
   if(g.hidden){
-    $("govGearState").textContent="Hidden";
+    KSPreferences.setText($("govGearState"), "Hidden");
     $("govGear").innerHTML=
-      `<div class="hidden-note">${esc(g.message||"This player is hiding their governor gear.")}</div>`;
+      `<div class="hidden-note">${KSPreferences.fallbackHTML(g.message,"This player is hiding their governor gear.")}</div>`;
     return;
   }
 
   const items=Array.isArray(g.items)?g.items:[];
 
-  $("govGearState").textContent=`${items.length} items`;
+  KSPreferences.setText($("govGearState"),"{count} items",{count:items.length});
 
   $("govGear").innerHTML=
     `<div class="gov-grid">
@@ -844,26 +838,26 @@ function renderGovGear(g){
                         : ``
                     }
                     <div>
-                      <div class="gov-name">${esc(item.name||item.slot||"Gear")}</div>
+                      <div class="gov-name">${KSPreferences.fallbackHTML(item.name||item.slot,"Gear")}</div>
                       <div class="gov-sub">${esc(item.slot||"")}</div>
                     </div>
                   </div>
 
                   <div class="gov-stats">
                     <div class="mini">
-                      <div class="k">Quality</div>
+                      <div class="k" data-ks-text="Quality">Quality</div>
                       <div class="v">${esc(item.quality??"—")}</div>
                     </div>
                     <div class="mini">
-                      <div class="k">Tier</div>
+                      <div class="k" data-ks-text="Tier">Tier</div>
                       <div class="v">${esc(item.tier??"—")}</div>
                     </div>
                     <div class="mini">
-                      <div class="k">Stars</div>
+                      <div class="k" data-ks-text="Stars">Stars</div>
                       <div class="v">${esc(item.star??"—")}</div>
                     </div>
                     <div class="mini">
-                      <div class="k">Strength</div>
+                      <div class="k" data-ks-text="Strength">Strength</div>
                       <div class="v">${esc(item.strength_level??"—")}</div>
                     </div>
                   </div>
@@ -885,7 +879,7 @@ function renderGovGear(g){
                 </div>
               `;
             }).join("")
-          : '<div class="hidden-note">No governor gear items returned.</div>'
+          : "<div class=\"hidden-note\" data-ks-text=\"No governor gear items returned.\">No governor gear items returned.</div>"
       }
     </div>`;
 }
@@ -986,7 +980,7 @@ function gearSlotIcon(g){
 }
 
 function renderHeroes(heroes){
-  $("heroCount").textContent=`${heroes.length} heroes`;
+  KSPreferences.setText($("heroCount"),"{count} heroes",{count:heroes.length});
 
   $("heroes").innerHTML=
     heroes.length
@@ -999,18 +993,16 @@ function renderHeroes(heroes){
                 : ``
             }
             <div>
-              <div class="hero-name">${esc(hero.name||"Hero")}</div>
+              <div class="hero-name">${KSPreferences.fallbackHTML(hero.name,"Hero")}</div>
               <div class="hero-meta">
-                Lv ${esc(hero.level??"—")}
-                · Stars ${esc(hero.stars??hero.star??"—")}
-                · ${esc(compact(hero.power))}
+                ${KSPreferences.html("Lv {level} · Stars {stars} · {power}",{level:hero.level??"—",stars:hero.stars??hero.star??"—",power:compact(hero.power)})}
               </div>
             </div>
           </div>
 
           <div class="hero-topstats">
-            <span class="hero-pill">Quality ${esc(hero.quality??"—")}</span>
-            <span class="hero-pill">Exclusive ${esc(hero.exclusive_gear_level??"—")}</span>
+            <span class="hero-pill">${KSPreferences.html("Quality {quality}",{quality:hero.quality??"—"})}</span>
+            <span class="hero-pill">${KSPreferences.html("Exclusive {level}",{level:hero.exclusive_gear_level??"—"})}</span>
           </div>
 
           ${
@@ -1028,7 +1020,7 @@ function renderHeroes(heroes){
                               art
                                 ? `<img class="hero-gear-art"
                                      src="${esc(art)}"
-                                     alt="${esc((g.troop_label||"")+" "+(g.slot||g.name||"Hero gear"))}"
+                                     ${KSPreferences.attribute("alt","{troop} {gear}",{troop:g.troop_label||"",gear:g.slot||g.name||KSPreferences.message("Hero gear")})}
                                      loading="lazy"
                                      onerror="this.style.display='none'">`
                                 : `<div class="hero-gear-placeholder" aria-hidden="true">${gearSlotIcon(g)}</div>`
@@ -1036,23 +1028,22 @@ function renderHeroes(heroes){
 
                             ${
                               g.refine_level!=null
-                                ? `<span class="gear-badge refine" title="Refine level">◆${esc(g.refine_level)}</span>`
+                                ? `<span class="gear-badge refine" title="Refine level" data-ks-title="Refine level">◆${esc(g.refine_level)}</span>`
                                 : ``
                             }
 
                             ${
                               g.enhancement_level!=null
-                                ? `<span class="gear-badge enhance" title="Enhancement level">🔨${esc(g.enhancement_level)}</span>`
+                                ? `<span class="gear-badge enhance" title="Enhancement level" data-ks-title="Enhancement level">🔨${esc(g.enhancement_level)}</span>`
                                 : ``
                             }
                           </div>
 
                           <div class="hero-gear-text">
-                            <div class="slot">${esc(g.slot||g.name||"Gear")}</div>
-                            <div class="gear-name">${esc(g.quality_label||g.quality_key||g.quality||"Gear")}</div>
+                            <div class="slot">${KSPreferences.fallbackHTML(g.slot||g.name,"Gear")}</div>
+                            <div class="gear-name">${KSPreferences.fallbackHTML(g.quality_label||g.quality_key||g.quality,"Gear")}</div>
                             <div class="gear-meta">
-                              Enhance ${esc(g.enhancement_level??"—")}
-                              · Refine ${esc(g.refine_level??"—")}
+                              ${KSPreferences.html("Enhance {enhancement} · Refine {refine}",{enhancement:g.enhancement_level??"—",refine:g.refine_level??"—"})}
                             </div>
                           </div>
                         </div>
@@ -1060,11 +1051,11 @@ function renderHeroes(heroes){
                     `;
                   }).join("")}
                 </div>`
-              : `<div class="hidden-note" style="margin-top:10px">No hero gear returned.</div>`
+              : `<div class="hidden-note" style="margin-top:10px" data-ks-text="No hero gear returned.">No hero gear returned.</div>`
           }
         </div>
       `).join("")
-      : '<div class="hidden-note">No hero data returned.</div>';
+      : "<div class=\"hidden-note\" data-ks-text=\"No hero data returned.\">No hero data returned.</div>";
 }
 
 function normalizeRanks(ranks){
@@ -1090,11 +1081,11 @@ function normalizeRanks(ranks){
 function renderRanks(ranks){
   const items=normalizeRanks(ranks);
 
-  $("rankCount").textContent=`${items.length} ranks`;
+  KSPreferences.setText($("rankCount"),"{count} ranks",{count:items.length});
 
   if(!items.length){
     $("ranks").innerHTML=
-      '<div class="hidden-note">No ranking data returned.</div>';
+      "<div class=\"hidden-note\" data-ks-text=\"No ranking data returned.\">No ranking data returned.</div>";
     return;
   }
 
@@ -1104,7 +1095,7 @@ function renderRanks(ranks){
         r.name ??
         r.label ??
         r.rank_name ??
-        "Ranking";
+        "";
 
       const value=
         r.value_label ??
@@ -1114,7 +1105,7 @@ function renderRanks(ranks){
 
       return `
         <div class="rank-card">
-          <div class="rank-name">${esc(name)}</div>
+          <div class="rank-name">${KSPreferences.fallbackHTML(name,"Ranking")}</div>
           <div class="rank-place">${esc(rankNumber(r))}</div>
           <div class="rank-value">${esc(value||"")}</div>
         </div>
@@ -1138,6 +1129,7 @@ $("signOut").onclick=async()=>{
 
 session();
 </script>
-<script src="../../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

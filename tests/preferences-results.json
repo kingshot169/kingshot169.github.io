@@ -1,0 +1,2012 @@
+[
+  {
+    "route": "/",
+    "url": "/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "./admin/",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/rally/",
+    "url": "/rally/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/transfer/",
+    "url": "/transfer/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": [
+      "KRZ",
+      "GRD"
+    ]
+  },
+  {
+    "route": "/kings-buffs/",
+    "url": "/kings-buffs/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/compare/",
+    "url": "/compare/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/gift-codes/",
+    "url": "/gift-codes/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/",
+    "url": "/admin/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/account/",
+    "url": "/admin/account/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/audit/",
+    "url": "/admin/audit/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/kings-buffs/",
+    "url": "/admin/kings-buffs/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/player-search/",
+    "url": "/admin/player-search/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": [
+      "VIP"
+    ]
+  },
+  {
+    "route": "/admin/transfers/",
+    "url": "/admin/transfers/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/usage/",
+    "url": "/admin/usage/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/admin/users/",
+    "url": "/admin/users/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "route": "/transfer/admin/",
+    "url": "/admin/",
+    "language": "es",
+    "selector": "es",
+    "headers": 1,
+    "nav": "../",
+    "missing": [],
+    "unmarked": []
+  },
+  {
+    "state": {
+      "value": "12345678",
+      "sameNode": true,
+      "lang": "es",
+      "theme": "light"
+    }
+  },
+  {
+    "dynamic": {
+      "first": "Cargando…",
+      "second": "Chargement…",
+      "name": "Admin"
+    }
+  },
+  {
+    "messages": {
+      "rows": [
+        {
+          "language": "ko",
+          "error": "플레이어 조회에 실패했습니다",
+          "expected": "플레이어 조회에 실패했습니다",
+          "validation": "이 항목을 입력하세요.",
+          "validationExpected": "이 항목을 입력하세요.",
+          "one": "1일",
+          "two": "2일",
+          "unknown": "<img src=x onerror=alert(1)> Admin",
+          "safe": true
+        },
+        {
+          "language": "es",
+          "error": "La búsqueda del jugador falló",
+          "expected": "La búsqueda del jugador falló",
+          "validation": "Completa este campo.",
+          "validationExpected": "Completa este campo.",
+          "one": "1 día",
+          "two": "2 días",
+          "unknown": "<img src=x onerror=alert(1)> Admin",
+          "safe": true
+        },
+        {
+          "language": "pt",
+          "error": "A consulta do jogador falhou",
+          "expected": "A consulta do jogador falhou",
+          "validation": "Preencha este campo.",
+          "validationExpected": "Preencha este campo.",
+          "one": "1 dia",
+          "two": "2 dias",
+          "unknown": "<img src=x onerror=alert(1)> Admin",
+          "safe": true
+        },
+        {
+          "language": "fr",
+          "error": "La recherche du joueur a échoué",
+          "expected": "La recherche du joueur a échoué",
+          "validation": "Remplissez ce champ.",
+          "validationExpected": "Remplissez ce champ.",
+          "one": "1 jour",
+          "two": "2 jours",
+          "unknown": "<img src=x onerror=alert(1)> Admin",
+          "safe": true
+        },
+        {
+          "language": "ar",
+          "error": "فشل البحث عن اللاعب",
+          "expected": "فشل البحث عن اللاعب",
+          "validation": "أكمل هذا الحقل.",
+          "validationExpected": "أكمل هذا الحقل.",
+          "one": "عدد الأيام: 1",
+          "two": "عدد الأيام: 2",
+          "unknown": "<img src=x onerror=alert(1)> Admin",
+          "safe": true
+        }
+      ],
+      "english": [
+        "1 day",
+        "2 days"
+      ],
+      "valid": true,
+      "raw": "<img src=x onerror=alert(1)> Admin"
+    }
+  },
+  {
+    "transferForm": {
+      "same": true,
+      "name": "Admin"
+    }
+  },
+  {
+    "transferSuccess": {
+      "es": "Gracias, Admin. Tu solicitud de transferencia se ha enviado a los líderes del Estado 169.",
+      "ar": "شكرًا Admin. تم إرسال طلب انتقالك إلى قيادة الولاية 169.",
+      "name": true,
+      "reference": "REF-Admin-169",
+      "visible": true,
+      "same": true
+    }
+  },
+  {
+    "layouts": [
+      {
+        "width": 1280,
+        "theme": "light",
+        "below": true,
+        "right": true,
+        "scrollWidth": 1265
+      },
+      {
+        "width": 1280,
+        "theme": "dark",
+        "below": true,
+        "right": true,
+        "scrollWidth": 1265
+      },
+      {
+        "width": 375,
+        "theme": "light",
+        "below": true,
+        "right": true,
+        "scrollWidth": 360
+      },
+      {
+        "width": 375,
+        "theme": "dark",
+        "below": true,
+        "right": true,
+        "scrollWidth": 360
+      },
+      {
+        "width": 188,
+        "theme": "light",
+        "below": true,
+        "right": true,
+        "scrollWidth": 205
+      },
+      {
+        "width": 188,
+        "theme": "dark",
+        "below": true,
+        "right": true,
+        "scrollWidth": 205
+      }
+    ]
+  },
+  {
+    "booking": {
+      "samePanel": true,
+      "selected": 1,
+      "code": true,
+      "name": "Admin",
+      "es": "Horarios seleccionados: 1",
+      "fr": "Créneaux sélectionnés : 1",
+      "utc": true
+    }
+  },
+  {
+    "bookingSubmitted": {
+      "feedback": "✓ Todos los registros de King's Buff están completos. Vuelve más tarde para consultar tus horarios asignados.",
+      "editable": true,
+      "utc": true
+    }
+  },
+  {
+    "bookingEdit": {
+      "sameButton": true,
+      "sameSelection": true,
+      "count": 2,
+      "label": "새 가능 시간 저장"
+    }
+  },
+  {
+    "bookingUpdated": {
+      "feedback": "✓ Disponibilités pour Construction mises à jour.",
+      "editable": true,
+      "utc": true
+    }
+  },
+  {
+    "comparison": {
+      "before": "Puissance totale",
+      "after": "Poder total",
+      "sameCell": true,
+      "value": "82"
+    }
+  },
+  {
+    "timer": {
+      "live": true,
+      "before": "en 59.7s",
+      "after": "بعد 59.5s",
+      "headerHidden": true,
+      "name": "Search"
+    }
+  },
+  {
+    "rallySummary": {
+      "before": "⚔️ مزامنة تجمعات KVK\n\nالأساس\nAdmin — انطلق\n\n+60s Search\n\nأبطأ مسيرة: 90s",
+      "after": "⚔️ SYNCHRONISATION DES RALLIES KVK\n\nBASE\nAdmin — PARTEZ\n\n+60s Search\n\nMarche la plus lente : 90s",
+      "same": true,
+      "names": true,
+      "live": true
+    }
+  },
+  {
+    "admin": {
+      "loginFlashes": 0,
+      "dashboard": "block",
+      "cards": 6,
+      "name": "Admin · État 169"
+    }
+  },
+  {
+    "adminLayouts": [
+      {
+        "route": "/admin/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/account/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/account/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/account/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/audit/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/audit/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/audit/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/player-search/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/player-search/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/player-search/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/transfers/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/transfers/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/transfers/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/usage/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/usage/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/usage/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/users/",
+        "width": 1280,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/users/",
+        "width": 375,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      },
+      {
+        "route": "/admin/users/",
+        "width": 188,
+        "below": true,
+        "right": true,
+        "language": "fr"
+      }
+    ]
+  },
+  {
+    "adminMessages": [
+      {
+        "route": "/admin/users/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": true,
+        "utc": false,
+        "unmarked": [
+          "Admin"
+        ]
+      },
+      {
+        "route": "/admin/transfers/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": true,
+        "utc": true,
+        "unmarked": [
+          "Admin",
+          "Save Search",
+          "Save <Admin>"
+        ]
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": true,
+        "utc": true,
+        "unmarked": [
+          "Mock KVK",
+          "🏗️ Construction",
+          "Admin"
+        ]
+      },
+      {
+        "route": "/admin/audit/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": true,
+        "utc": true,
+        "unmarked": [
+          "transfer.update",
+          "transfer · REF-Admin-169",
+          "{\n  \"notes\": \"Save <Admin>\"\n}"
+        ]
+      },
+      {
+        "route": "/admin/usage/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": false,
+        "utc": true,
+        "unmarked": [
+          "player_search",
+          "transfer.update",
+          "player_search",
+          "transfer.update"
+        ]
+      },
+      {
+        "route": "/admin/player-search/",
+        "sameControls": true,
+        "sameHandlers": true,
+        "editedPreserved": true,
+        "languages": [
+          {
+            "language": "ko",
+            "missing": []
+          },
+          {
+            "language": "es",
+            "missing": []
+          },
+          {
+            "language": "pt",
+            "missing": []
+          },
+          {
+            "language": "fr",
+            "missing": []
+          },
+          {
+            "language": "ar",
+            "missing": []
+          }
+        ],
+        "rawNames": true,
+        "utc": false,
+        "unmarked": [
+          "Save Search",
+          "VIP",
+          "Admin",
+          "Gold",
+          "Search",
+          "boots",
+          "Save"
+        ]
+      }
+    ]
+  },
+  {
+    "mandatoryPassword": "/admin/account/?required=1"
+  },
+  {
+    "reload": {
+      "lang": "pt",
+      "selector": "pt"
+    }
+  },
+  {
+    "back": {
+      "path": "/transfer/",
+      "lang": "ko",
+      "selector": "ko"
+    }
+  },
+  {
+    "forward": {
+      "path": "/compare/",
+      "lang": "ko",
+      "selector": "ko"
+    }
+  },
+  {
+    "errors": [],
+    "requests": [
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/submit-transfer",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/submit-transfer",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\",\"transfer_passes\":\"12\",\"preferred_alliance\":\"\",\"referrer_or_friends\":\"Admin <Save>\",\"reason\":\"Admin <Save>\",\"notes\":\"Admin <Save>\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"action\":\"verify_access_code\",\"access_code\":\"MOCK-CODE\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"action\":\"get_my_requests\",\"player_id\":\"24649596\",\"access_code\":\"MOCK-CODE\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\",\"buff_day_id\":\"day-1\",\"access_code\":\"MOCK-CODE\",\"availability\":[\"00:00\"]}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"action\":\"get_my_requests\",\"player_id\":\"24649596\",\"access_code\":\"MOCK-CODE\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"action\":\"update_availability\",\"player_id\":\"24649596\",\"buff_day_id\":\"day-1\",\"access_code\":\"MOCK-CODE\",\"availability\":[\"00:00\",\"00:30\"]}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "POST",
+        "body": "{\"action\":\"get_my_requests\",\"player_id\":\"24649596\",\"access_code\":\"MOCK-CODE\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kingdom-compare",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kingdom-compare",
+        "method": "POST",
+        "body": "{\"opponent\":82}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-audit?limit=300",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-audit?limit=300",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-kings-buffs",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-transfers",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-transfers",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-usage",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-usage",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-users",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-users",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-users",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-users",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-transfers",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-transfers",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-kings-buffs",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-audit?limit=300",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-audit?limit=300",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-usage",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-usage",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/admin-profile",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/kings-buffs",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/player-lookup",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\"}"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/gift-codes",
+        "method": "OPTIONS"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/gift-codes",
+        "method": "GET"
+      },
+      {
+        "url": "https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/gift-codes",
+        "method": "POST",
+        "body": "{\"player_id\":\"24649596\",\"code\":\"Admin\"}"
+      }
+    ]
+  },
+  {
+    "allLayouts": [
+      {
+        "route": "/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/rally/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/kings-buffs/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/compare/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/gift-codes/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/account/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/audit/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/kings-buffs/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/player-search/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/transfers/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/usage/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/admin/users/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "light",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "light",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "dark",
+        "width": 1280,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 1,
+        "below": true,
+        "right": true
+      },
+      {
+        "route": "/transfer/admin/",
+        "theme": "dark",
+        "width": 375,
+        "zoom": 2,
+        "below": true,
+        "right": true
+      }
+    ]
+  },
+  {
+    "redemption": {
+      "disabled": true,
+      "label": "Utilisé",
+      "code": "Admin",
+      "name": "Admin"
+    }
+  },
+  {
+    "menu": {
+      "focused": "fid",
+      "bodyOverflow": "visible",
+      "headers": 1
+    }
+  },
+  {
+    "fallback": {
+      "label": "مقارنة الممالك",
+      "value": "82",
+      "lang": "ar",
+      "englishFallback": true
+    }
+  }
+]

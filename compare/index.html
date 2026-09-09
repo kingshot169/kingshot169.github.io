@@ -7,6 +7,8 @@
 <meta name="referrer" content="no-referrer">
 <title>Kingdom Compare · 169 Kingshot Tools</title>
 <link rel="stylesheet" href="../shared/site-preferences.css">
+<script src="../shared/translations.js" defer></script>
+<script src="../shared/site-preferences.js"></script>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--panel2:#111c32;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb;--green:#86efac;--red:#fca5a5}
 *{box-sizing:border-box}
@@ -49,45 +51,45 @@ td{text-align:center;font-weight:750}
 </head>
 <body>
 <main>
-<a href="../">← 169 Kingshot Tools</a>
-<h1>🏰 Kingdom Compare</h1>
-<div class="sub">Compare State 169 with another kingdom using current MightPulse kingdom statistics.</div>
+<a href="../" data-ks-text="← 169 Kingshot Tools" data-site-nav>← 169 Kingshot Tools</a>
+<h1 data-ks-text="🏰 Kingdom Compare">🏰 Kingdom Compare</h1>
+<div class="sub" data-ks-text="Compare State 169 with another kingdom using current MightPulse kingdom statistics.">Compare State 169 with another kingdom using current MightPulse kingdom statistics.</div>
 
 <section class="card">
   <div class="form">
     <div class="fixed">
-      <div class="label">Our Kingdom</div>
-      <div class="statebox">State 169</div>
+      <div class="label" data-ks-text="Our Kingdom">Our Kingdom</div>
+      <div class="statebox" data-ks-text="State 169">State 169</div>
     </div>
-    <div class="vs">VS</div>
+    <div class="vs" data-ks-text="VS">VS</div>
     <label class="field">
-      <span class="label">Opponent</span>
+      <span class="label" data-ks-text="Opponent">Opponent</span>
       <input id="opponent" inputmode="numeric" pattern="[0-9]*" placeholder="82" maxlength="6">
     </label>
   </div>
-  <button id="compare">Compare Kingdoms</button>
+  <button id="compare" data-ks-text="Compare Kingdoms">Compare Kingdoms</button>
   <div id="msg" class="msg"></div>
 </section>
 
 <section id="results" class="card hidden">
   <div class="compare-head">
-    <div class="kingdom-title"><strong id="leftTitle">State 169</strong><span id="leftHealth"></span></div>
+    <div class="kingdom-title"><strong id="leftTitle" data-ks-text="State 169">State 169</strong><span id="leftHealth"></span></div>
     <div class="kingdom-title"><strong id="rightTitle"></strong><span id="rightHealth"></span></div>
   </div>
 
-  <div class="section-title">Kingdom Strength</div>
+  <div class="section-title" data-ks-text="Kingdom Strength">Kingdom Strength</div>
   <table id="strength"></table>
 
-  <div class="section-title">Activity & Growth</div>
+  <div class="section-title" data-ks-text="Activity &amp; Growth">Activity & Growth</div>
   <table id="activity"></table>
 
-  <div class="section-title">Power Breakdown</div>
+  <div class="section-title" data-ks-text="Power Breakdown">Power Breakdown</div>
   <table id="breakdown"></table>
 
-  <div class="source">Data supplied by MightPulse. Responses may be cached by MightPulse.</div>
+  <div class="source" data-ks-text="Data supplied by MightPulse. Responses may be cached by MightPulse.">Data supplied by MightPulse. Responses may be cached by MightPulse.</div>
 </section>
 
-<div class="foot">169 Kingshot Tools<br>[KRZ] Uub's</div>
+<div class="foot"><span data-ks-text="169 Kingshot Tools">169 Kingshot Tools</span><br><span translate="no">[KRZ] Uub's</span></div>
 </main>
 
 <script>
@@ -112,7 +114,7 @@ function plain(v){
   const n=num(v); return n===null?"—":n.toLocaleString();
 }
 function days(v){
-  const n=num(v); return n===null?"—":`${plain(n)} days`;
+  const n=num(v); return n===null?"—":KSPreferences.html("{count} days",{count:n});
 }
 function rank(v){
   const n=num(v); return n===null?"—":`#${plain(n)}`;
@@ -130,21 +132,21 @@ function betterClass(a,b,mode="high"){
 }
 function row(label,a,b,formatter=compact,mode="high"){
   const c=betterClass(a,b,mode);
-  return `<tr><th>${label}</th><td class="${c[0]}">${formatter(a)}</td><td class="${c[1]}">${formatter(b)}</td></tr>`;
+  return `<tr><th data-ks-text="${label}">${label}</th><td class="${c[0]}">${formatter(a)}</td><td class="${c[1]}">${formatter(b)}</td></tr>`;
 }
 function table(id, rows){ $(id).innerHTML=rows.join(""); }
 
 async function run(){
   const opponent=$("opponent").value.trim();
   if(!/^\d{1,6}$/.test(opponent)||Number(opponent)===169){
-    $("msg").textContent="Enter a valid opponent kingdom other than 169.";
+    KSPreferences.setText($("msg"), "Enter a valid opponent kingdom other than 169.");
     $("msg").className="msg error";
     return;
   }
 
   $("compare").disabled=true;
-  $("compare").textContent="Comparing…";
-  $("msg").textContent="Loading kingdom statistics…";
+  KSPreferences.setText($("compare"), "Comparing…");
+  KSPreferences.setText($("msg"), "Loading kingdom statistics…");
   $("msg").className="msg";
 
   try{
@@ -154,13 +156,13 @@ async function run(){
       body:JSON.stringify({opponent:Number(opponent)})
     });
     let j={}; try{j=await r.json()}catch{}
-    if(!r.ok||!j.ok)throw new Error(j.error||`Comparison failed (${r.status}).`);
+    if(!r.ok||!j.ok)throw KSPreferences.apiError(j.error,"Comparison failed ({status}).",{status:r.status});
 
     const a=j.left, b=j.right;
-    $("leftTitle").textContent=`State ${a.kid}`;
-    $("rightTitle").textContent=`State ${b.kid}`;
-    $("leftHealth").textContent=a.health?`Health: ${a.health}`:"";
-    $("rightHealth").textContent=b.health?`Health: ${b.health}`:"";
+    KSPreferences.setText($("leftTitle"),"State {state}",{state:a.kid});
+    KSPreferences.setText($("rightTitle"),"State {state}",{state:b.kid});
+    KSPreferences.setText($("leftHealth"),a.health?"Health: {health}":"",{health:a.health});
+    KSPreferences.setText($("rightHealth"),b.health?"Health: {health}":"",{health:b.health});
 
     table("strength",[
       row("Total Power",a.power,b.power),
@@ -193,15 +195,15 @@ async function run(){
     ]);
 
     $("results").classList.remove("hidden");
-    $("msg").textContent="";
+    KSPreferences.setText($("msg"), "");
     history.replaceState(null,"",`?state=${encodeURIComponent(opponent)}`);
   }catch(e){
     $("results").classList.add("hidden");
-    $("msg").textContent=e.message||"Could not compare kingdoms.";
+    KSPreferences.setError($("msg"),e,"Could not compare kingdoms.");
     $("msg").className="msg error";
   }finally{
     $("compare").disabled=false;
-    $("compare").textContent="Compare Kingdoms";
+    KSPreferences.setText($("compare"), "Compare Kingdoms");
   }
 }
 
@@ -213,6 +215,7 @@ if(preset&&/^\d{1,6}$/.test(preset)){
   run();
 }
 </script>
-<script src="../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

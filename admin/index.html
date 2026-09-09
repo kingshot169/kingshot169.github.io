@@ -7,6 +7,8 @@
 <meta name="referrer" content="no-referrer">
 <title>Admin · 169 KS Tools</title>
 <link rel="stylesheet" href="../shared/site-preferences.css">
+<script src="../shared/translations.js" defer></script>
+<script src="../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb}
@@ -40,27 +42,25 @@ button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:w
 <body>
 <div class="wrap">
 <section id="authLoading" class="card" role="status" aria-live="polite">
-  <h1>Admin</h1>
-  <p id="authStatus" class="sub">Checking your session…</p>
-  <button id="authRetry" type="button" hidden>Try Again</button>
+  <h1 data-ks-text="Admin">Admin</h1>
+  <p id="authStatus" class="sub" data-ks-text="Checking your session…">Checking your session…</p>
+  <button id="authRetry" type="button" hidden data-ks-text="Try Again">Try Again</button>
 </section>
 <section id="loginView" class="card login">
-  <a href="../">← 169 KS Tools</a>
-  <h1>Admin Sign In</h1>
-  <div class="sub">Use your Kingshot Player ID. Existing legacy admins may also use their original email address.</div>
+  <a href="../" data-ks-text="← 169 KS Tools" data-site-nav>← 169 KS Tools</a>
+  <h1 data-ks-text="Admin Sign In">Admin Sign In</h1>
+  <div class="sub" data-ks-text="Use your Kingshot Player ID. Existing legacy admins may also use their original email address.">Use your Kingshot Player ID. Existing legacy admins may also use their original email address.</div>
 
-  <label>Player ID or Email
-    <input id="loginId" autocomplete="username" placeholder="24649596 or your existing email">
+  <label><span data-ks-text="Player ID or Email">Player ID or Email</span><input id="loginId" autocomplete="username" placeholder="24649596 or your existing email" data-ks-placeholder="24649596 or your existing email">
   </label>
 
-  <label>Password
-    <input id="password" type="password" autocomplete="current-password">
+  <label><span data-ks-text="Password">Password</span><input id="password" type="password" autocomplete="current-password">
   </label>
 
-  <button id="signIn">Sign In</button>
+  <button id="signIn" data-ks-text="Sign In">Sign In</button>
   <div id="loginMsg" class="msg"></div>
 
-  <div class="hint">
+  <div class="hint" data-ks-text="New admin accounts use Player ID login. Older admin accounts can continue using their original email until they are converted from Admin Users.">
     New admin accounts use Player ID login. Older admin accounts can continue using their original email until they are converted from Admin Users.
   </div>
 </section>
@@ -68,13 +68,13 @@ button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:w
 <section id="dashboard">
   <div class="top">
     <div>
-      <a href="../">← 169 KS Tools</a>
-      <h1>Admin Dashboard</h1>
-      <div class="sub">Only tools assigned to your account are shown.</div>
+      <a href="../" data-ks-text="← 169 KS Tools">← 169 KS Tools</a>
+      <h1 data-ks-text="Admin Dashboard">Admin Dashboard</h1>
+      <div class="sub" data-ks-text="Only tools assigned to your account are shown.">Only tools assigned to your account are shown.</div>
     </div>
     <div class="admin-actions">
-      <a href="./account/"><button>Change Password</button></a>
-      <button id="signOut">Sign Out</button>
+      <a href="./account/"><button data-ks-text="Change Password">Change Password</button></a>
+      <button id="signOut" data-ks-text="Sign Out">Sign Out</button>
     </div>
   </div>
 
@@ -105,7 +105,7 @@ async function getProfile(session){
   const j=await r.json();
 
   if(!r.ok||!j.ok){
-    throw new Error(j.error||"Admin access denied");
+    throw KSPreferences.apiError(j.error,"Admin access denied",{});
   }
 
   return j;
@@ -114,9 +114,9 @@ async function getProfile(session){
 function tool(href,icon,title,desc,tag){
   return `<a class="tool" href="${href}">
     <div class="icon">${icon}</div>
-    <h2>${title}</h2>
-    <p>${desc}</p>
-    <div class="tag">${tag} →</div>
+    <h2 data-ks-text="${title}">${title}</h2>
+    <p data-ks-text="${desc}">${desc}</p>
+    <div class="tag"><span data-ks-text="${tag}">${tag}</span> →</div>
   </a>`;
 }
 
@@ -130,11 +130,10 @@ async function showDashboard(session){
       return;
     }
 
-    $("identity").textContent=
-      `${p.display_name||p.player_name||p.username}`+
-      `${p.player_id?` · Player ID ${p.player_id}`:""}`+
-      `${p.alliance_abbr?` · [${p.alliance_abbr}]`:""}`+
-      ` · State 169`;
+    KSPreferences.setText($("identity"),p.player_id
+      ?(p.alliance_abbr?"{name} · Player ID {id} · [{alliance}] · State 169":"{name} · Player ID {id} · State 169")
+      :(p.alliance_abbr?"{name} · [{alliance}] · State 169":"{name} · State 169"),
+      {name:p.display_name||p.player_name||p.username,id:p.player_id,alliance:p.alliance_abbr});
 
     const cards=[];
 
@@ -184,7 +183,7 @@ async function showDashboard(session){
 
     $("tools").innerHTML=cards.length
       ? cards.join("")
-      : `<div class="empty">No admin tools have been assigned to this account.</div>`;
+      : `<div class="empty" data-ks-text="No admin tools have been assigned to this account.">No admin tools have been assigned to this account.</div>`;
     $("authLoading").style.display="none";
     $("loginView").style.display="none";
     $("dashboard").style.display="block";
@@ -193,13 +192,13 @@ async function showDashboard(session){
     $("authLoading").style.display="none";
     $("dashboard").style.display="none";
     $("loginView").style.display="block";
-    $("loginMsg").textContent=e.message;
+    KSPreferences.setError($("loginMsg"),e);
     $("loginMsg").className="msg error";
   }
 }
 
 $("signIn").onclick=async()=>{
-  $("loginMsg").textContent="";
+  KSPreferences.setText($("loginMsg"), "");
 
   const identifier=$("loginId").value.trim();
   const password=$("password").value;
@@ -211,7 +210,7 @@ $("signIn").onclick=async()=>{
   }else if(/^\d{4,20}$/.test(identifier)){
     email=playerLoginEmail(identifier);
   }else{
-    $("loginMsg").textContent="Enter a valid Player ID or email address.";
+    KSPreferences.setText($("loginMsg"), "Enter a valid Player ID or email address.");
     $("loginMsg").className="msg error";
     return;
   }
@@ -222,7 +221,7 @@ $("signIn").onclick=async()=>{
   });
 
   if(error){
-    $("loginMsg").textContent="Invalid login or password.";
+    KSPreferences.setText($("loginMsg"), "Invalid login or password.");
     $("loginMsg").className="msg error";
     return;
   }
@@ -243,7 +242,7 @@ async function initializeAuth(){
   $("loginView").style.display="none";
   $("dashboard").style.display="none";
   $("authLoading").style.display="block";
-  $("authStatus").textContent="Checking your session…";
+  KSPreferences.setText($("authStatus"), "Checking your session…");
   $("authRetry").hidden=true;
   try{
     const {data,error}=await sbClient.auth.getSession();
@@ -255,7 +254,7 @@ async function initializeAuth(){
       $("loginView").style.display="block";
     }
   }catch(e){
-    $("authStatus").textContent="Unable to check your session. Please try again.";
+    KSPreferences.setText($("authStatus"), "Unable to check your session. Please try again.");
     $("authRetry").hidden=false;
   }
 }
@@ -265,6 +264,7 @@ window.addEventListener("pageshow",event=>{
 });
 initializeAuth();
 </script>
-<script src="../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>

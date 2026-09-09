@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b1220">
 <title>Admin Users · 169 KS Tools</title>
 <link rel="stylesheet" href="../../shared/site-preferences.css">
+<script src="../../shared/translations.js" defer></script>
+<script src="../../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0b1220;--panel:#0f172a;--panel2:#020617;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--gold:#facc15;--blue:#2563eb;--green:#16a34a;--red:#dc2626}
@@ -43,54 +45,53 @@ label{display:grid;gap:5px;font-size:.76rem;color:#cbd5e1}
 </head>
 <body>
 <main>
-<a href="../">← Admin Dashboard</a>
-<h1>Admin Users</h1>
-<div class="sub">Create State 169 admin accounts and give each person only the tools they need.</div>
+<a href="../" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
+<h1 data-ks-text="Admin Users">Admin Users</h1>
+<div class="sub" data-ks-text="Create State 169 admin accounts and give each person only the tools they need.">Create State 169 admin accounts and give each person only the tools they need.</div>
 
 <section class="card">
-  <h2>Add Admin</h2>
+  <h2 data-ks-text="Add Admin">Add Admin</h2>
 
   <div class="grid">
-    <label>Kingshot Player ID
-      <input id="playerId" inputmode="numeric" placeholder="State 169 Player ID">
+    <label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="playerId" inputmode="numeric" placeholder="State 169 Player ID" data-ks-placeholder="State 169 Player ID">
     </label>
-    <div class="muted" style="align-self:end;font-size:.75rem;padding-bottom:10px">
+    <div class="muted" style="align-self:end;font-size:.75rem;padding-bottom:10px" data-ks-text="Login will use this Player ID. No personal email is required.">
       Login will use this Player ID. No personal email is required.
     </div>
   </div>
 
   <div class="presets">
-    <button class="preset" data-preset="r4">R4 / Player Search</button>
-    <button class="preset" data-preset="moj">MoJ / King's Buffs</button>
-    <button class="preset" data-preset="transfer">Transfer Manager</button>
-    <button class="preset" data-preset="full">Full Operational Admin</button>
-    <button class="preset" data-preset="clear">Clear</button>
+    <button class="preset" data-preset="r4" data-ks-text="R4 / Player Search">R4 / Player Search</button>
+    <button class="preset" data-preset="moj" data-ks-text="MoJ / King's Buffs">MoJ / King's Buffs</button>
+    <button class="preset" data-preset="transfer" data-ks-text="Transfer Manager">Transfer Manager</button>
+    <button class="preset" data-preset="full" data-ks-text="Full Operational Admin">Full Operational Admin</button>
+    <button class="preset" data-preset="clear" data-ks-text="Clear">Clear</button>
   </div>
 
   <div class="perms">
-    <label class="perm"><input id="pSearch" type="checkbox"> Player Search</label>
-    <label class="perm"><input id="pBuffs" type="checkbox"> King's Buffs</label>
-    <label class="perm"><input id="pTransfers" type="checkbox"> Transfers</label>
-    <label class="perm"><input id="pUsers" type="checkbox"> Manage Admins</label>
+    <label class="perm"><input id="pSearch" type="checkbox"> <span data-ks-text="Player Search">Player Search</span></label>
+    <label class="perm"><input id="pBuffs" type="checkbox"> <span data-ks-text="King's Buffs">King's Buffs</span></label>
+    <label class="perm"><input id="pTransfers" type="checkbox"> <span data-ks-text="Transfers">Transfers</span></label>
+    <label class="perm"><input id="pUsers" type="checkbox"> <span data-ks-text="Manage Admins">Manage Admins</span></label>
   </div>
 
   <div style="margin-top:10px">
-    <button id="create" class="primary">Verify State 169 & Create Admin</button>
+    <button id="create" class="primary" data-ks-text="Verify State 169 &amp; Create Admin">Verify State 169 & Create Admin</button>
   </div>
 
   <div id="createMsg" class="msg"></div>
   <div id="tempBox" class="temp" style="display:none">
-    <strong>Temporary password — shown once</strong>
-    <div class="muted" style="font-size:.7rem;margin-top:3px">Send this securely. They will be forced to choose a new password at first login.</div>
-    <code id="tempPassword"></code>
-    <button id="copyTemp" style="margin-top:7px">Copy Password</button>
+    <strong data-ks-text="Temporary password — shown once">Temporary password — shown once</strong>
+    <div class="muted" style="font-size:.7rem;margin-top:3px" data-ks-text="Send this securely. They will be forced to choose a new password at first login.">Send this securely. They will be forced to choose a new password at first login.</div>
+    <code id="tempPassword" translate="no"></code>
+    <button id="copyTemp" style="margin-top:7px" data-ks-text="Copy Password">Copy Password</button>
   </div>
 </section>
 
 <section class="card">
   <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap">
-    <h2 style="margin:0">Current Admins</h2>
-    <button id="refresh">Refresh</button>
+    <h2 style="margin:0" data-ks-text="Current Admins">Current Admins</h2>
+    <button id="refresh" data-ks-text="Refresh">Refresh</button>
   </div>
   <div id="listMsg" class="msg"></div>
   <div id="admins"></div>
@@ -125,7 +126,7 @@ async function api(method,body){
     body:body?JSON.stringify(body):undefined
   });
   let j={};try{j=await r.json()}catch{}
-  if(!r.ok)throw new Error(j.error||"Request failed");
+  if(!r.ok)throw KSPreferences.apiError(j.error,"Request failed",{});
   return j;
 }
 
@@ -147,7 +148,7 @@ document.querySelectorAll("[data-preset]").forEach(b=>{
 });
 
 function badge(label,on){
-  return `<span class="badge ${on?"on":"off"}">${esc(label)}</span>`;
+  return `<span class="badge ${on?"on":"off"}">${KSPreferences.html(label)}</span>`;
 }
 
 function render(){
@@ -158,11 +159,9 @@ function render(){
           <div class="admin-name">${esc(a.display_name||a.player_name||a.username)}</div>
           <div class="meta">
             ${a.login_mode==="player_id"
-              ? `Login: Player ID ${esc(a.player_id||"—")}`
-              : `Legacy login: ${esc(a.legacy_email||"email account")}`}<br>
-            Player ID ${esc(a.player_id||"Not linked")}
-            ${a.alliance_abbr?` · [${esc(a.alliance_abbr)}]`:""}
-            · ${a.is_active?"Active":"Disabled"}
+              ? KSPreferences.html("Login: Player ID {id}",{id:a.player_id||"—"})
+              : KSPreferences.html("Legacy login: {email}",{email:a.legacy_email||KSPreferences.message("email account")})}<br>
+            ${KSPreferences.html(a.alliance_abbr?"Player ID {id} · [{alliance}] · {status}":"Player ID {id} · {status}",{id:a.player_id||KSPreferences.message("Not linked"),alliance:a.alliance_abbr,status:KSPreferences.message(a.is_active?"Active":"Disabled")})}
           </div>
         </div>
       </div>
@@ -175,29 +174,29 @@ function render(){
       </div>
 
       <div class="actions">
-        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|search" ${a.can_search_players?"checked":""}> Search</label>
-        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|buffs" ${a.can_manage_buffs?"checked":""}> Buffs</label>
-        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|transfers" ${a.can_manage_transfers?"checked":""}> Transfers</label>
-        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|users" ${a.can_manage_users?"checked":""}> Admins</label>
-        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|active" ${a.is_active?"checked":""}> Active</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|search" ${a.can_search_players?"checked":""}> ${KSPreferences.html("Search")}</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|buffs" ${a.can_manage_buffs?"checked":""}> ${KSPreferences.html("Buffs")}</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|transfers" ${a.can_manage_transfers?"checked":""}> ${KSPreferences.html("Transfers")}</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|users" ${a.can_manage_users?"checked":""}> ${KSPreferences.html("Admins")}</label>
+        <label class="perm"><input type="checkbox" data-perm="${a.user_id}|active" ${a.is_active?"checked":""}> ${KSPreferences.html("Active")}</label>
 
         ${a.login_mode==="legacy_email"
           ? `<input
                data-link-player="${a.user_id}"
                inputmode="numeric"
-               placeholder="${a.player_id?`Player ID ${esc(a.player_id)}`:"State 169 Player ID"}"
+               ${KSPreferences.attribute("placeholder",a.player_id?"Player ID {id}":"State 169 Player ID",{id:a.player_id})}
                value="${esc(a.player_id||"")}"
                style="max-width:180px"
              >
-             <button data-convert="${a.user_id}" class="primary">Convert to Player ID Login</button>`
+             <button data-convert="${a.user_id}" class="primary" data-ks-text="Convert to Player ID Login">Convert to Player ID Login</button>`
           : ""}
 
-        <button data-save="${a.user_id}" class="success">Save</button>
-        <button data-reset="${a.user_id}">Reset Password</button>
-        <button data-delete="${a.user_id}" data-name="${esc(a.display_name||a.username)}" class="danger">Delete</button>
+        <button data-save="${a.user_id}" class="success" data-ks-text="Save">Save</button>
+        <button data-reset="${a.user_id}" data-ks-text="Reset Password">Reset Password</button>
+        <button data-delete="${a.user_id}" data-name="${esc(a.display_name||a.username)}" class="danger" data-ks-text="Delete">Delete</button>
       </div>
     </div>
-  `).join(""):`<div class="muted">No admins found.</div>`;
+  `).join(""):`<div class="muted" data-ks-text="No admins found.">No admins found.</div>`;
 
   document.querySelectorAll("[data-save]").forEach(b=>{
     b.onclick=()=>saveAdmin(b.dataset.save);
@@ -232,11 +231,11 @@ async function saveAdmin(userId){
       can_manage_users:permState(userId,"users"),
       is_active:permState(userId,"active")
     });
-    $("listMsg").textContent="Permissions updated.";
+    KSPreferences.setText($("listMsg"), "Permissions updated.");
     $("listMsg").className="msg ok";
     await load();
   }catch(e){
-    $("listMsg").textContent=e.message;
+    KSPreferences.setError($("listMsg"),e);
     $("listMsg").className="msg error";
   }
 }
@@ -246,14 +245,13 @@ async function convertLogin(userId){
   const playerId=String(input?.value||"").trim();
 
   if(!/^\d{4,20}$/.test(playerId)){
-    $("listMsg").textContent="Enter the State 169 Player ID first.";
+    KSPreferences.setText($("listMsg"), "Enter the State 169 Player ID first.");
     $("listMsg").className="msg error";
     return;
   }
 
   if(!confirm(
-    `Convert this legacy admin to Player ID ${playerId} login?\n\n`+
-    `Their existing password will stay the same.`
+    KSPreferences.text('Convert this legacy admin to Player ID {id} login? Their existing password will stay the same.',{id:playerId})
   ))return;
 
   try{
@@ -263,54 +261,54 @@ async function convertLogin(userId){
       player_id:playerId
     });
 
-    $("listMsg").textContent=j.message||"Login converted.";
+    KSPreferences.setResponse($("listMsg"),j.message,"Login converted.",{});
     $("listMsg").className="msg ok";
     await load();
   }catch(e){
-    $("listMsg").textContent=e.message;
+    KSPreferences.setError($("listMsg"),e);
     $("listMsg").className="msg error";
   }
 }
 
 async function resetPassword(userId){
-  if(!confirm("Create a new temporary password for this admin?"))return;
+  if(!confirm(KSPreferences.text("Create a new temporary password for this admin?")))return;
   try{
     const j=await api("POST",{action:"reset_password",user_id:userId});
-    $("tempPassword").textContent=j.temporary_password;
+    KSPreferences.setRawText($("tempPassword"), j.temporary_password);
     $("tempBox").style.display="block";
     $("tempBox").scrollIntoView({behavior:"smooth"});
   }catch(e){
-    $("listMsg").textContent=e.message;
+    KSPreferences.setError($("listMsg"),e);
     $("listMsg").className="msg error";
   }
 }
 
 async function deleteAdmin(userId,name){
-  if(!confirm(`Permanently delete admin account for ${name}?`))return;
+  if(!confirm(KSPreferences.text('Permanently delete admin account for {name}?',{name})))return;
   try{
     await api("DELETE",{user_id:userId});
     await load();
   }catch(e){
-    $("listMsg").textContent=e.message;
+    KSPreferences.setError($("listMsg"),e);
     $("listMsg").className="msg error";
   }
 }
 
 async function load(){
-  $("listMsg").textContent="Loading…";
+  KSPreferences.setText($("listMsg"), "Loading…");
   try{
     const j=await api("GET");
     admins=j.admins||[];
-    $("listMsg").textContent="";
+    KSPreferences.setText($("listMsg"), "");
     render();
   }catch(e){
-    $("listMsg").textContent=e.message;
+    KSPreferences.setError($("listMsg"),e);
     $("listMsg").className="msg error";
   }
 }
 
 $("create").onclick=async()=>{
-  $("createMsg").textContent="";
+  KSPreferences.setText($("createMsg"), "");
   $("tempBox").style.display="none";
 
   try{
@@ -323,18 +321,17 @@ $("create").onclick=async()=>{
       can_manage_users:$("pUsers").checked
     });
 
-    $("createMsg").textContent=
-      `Created ${j.admin.display_name||j.admin.player_name||"admin"} · login ID ${j.admin.login_id} · State 169 verified.`;
+    KSPreferences.setText($("createMsg"),"Created {name} · login ID {id} · State 169 verified.",{name:j.admin.display_name||j.admin.player_name||KSPreferences.message("Admin"),id:j.admin.login_id});
     $("createMsg").className="msg ok";
 
-    $("tempPassword").textContent=j.temporary_password;
+    KSPreferences.setRawText($("tempPassword"), j.temporary_password);
     $("tempBox").style.display="block";
 
     $("playerId").value="";
     setPreset("clear");
     await load();
   }catch(e){
-    $("createMsg").textContent=e.message;
+    KSPreferences.setError($("createMsg"),e);
     $("createMsg").className="msg error";
   }
 };
@@ -342,7 +339,7 @@ $("create").onclick=async()=>{
 $("copyTemp").onclick=async()=>{
   try{
     await navigator.clipboard.writeText($("tempPassword").textContent);
-    $("createMsg").textContent="Temporary password copied.";
+    KSPreferences.setText($("createMsg"), "Temporary password copied.");
     $("createMsg").className="msg ok";
   }catch{}
 };
@@ -350,6 +347,7 @@ $("copyTemp").onclick=async()=>{
 $("refresh").onclick=load;
 load();
 </script>
-<script src="../../shared/site-preferences.js"></script>
+
+<script>window.KSPreferences?.mount();</script>
 </body>
 </html>
