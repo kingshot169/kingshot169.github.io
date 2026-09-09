@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b1220">
   <title>169 KS Tools</title>
+  <link rel="stylesheet" href="./shared/site-preferences.css">
   <style>
     :root{
       --bg:#0b1220;
@@ -41,7 +42,7 @@
       min-width:9.5em;
       text-align:center;
       position:fixed;
-      top:14px;
+      top:58px;
       right:14px;
       z-index:10;
       padding:.5rem .85rem;
@@ -187,6 +188,18 @@
   font-size:.66rem;
   color:#475569;
 }
+.community-note{
+  max-width:680px;
+  margin:1.15rem auto 0;
+  padding:.8rem 1rem;
+  border:1px solid rgba(250,204,21,.28);
+  border-radius:.8rem;
+  background:rgba(250,204,21,.07);
+  color:#fde68a;
+  font-size:.82rem;
+  line-height:1.5;
+}
+html[data-theme="light"] .community-note{color:#854d0e;background:rgba(234,179,8,.12);border-color:rgba(161,98,7,.28)}
 
 </style>
 </head>
@@ -201,6 +214,7 @@
       <p class="subtitle">
         Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.
       </p>
+      <p class="community-note" data-i18n="statement">One kingdom, many cultures. We keep geopolitics and religion out of the game so everyone can escape, connect and have fun.</p>
     </header>
 
     <section class="tools" aria-label="Kingshot tools">
@@ -208,35 +222,35 @@
         <div class="icon">⚔️</div>
         <h2>Rally Sync</h2>
         <p>Calculate launch delays and run a silent visual timer so multiple rallies land together.</p>
-        <div class="tag">OPEN TOOL →</div>
+        <div class="tag" data-i18n="open">OPEN TOOL →</div>
       </a>
 
       <a class="tool transfer" href="./transfer/">
         <div class="icon">🔄</div>
         <h2>Transfer Application</h2>
         <p>Apply to transfer into State 169 with one clean, consistent application form.</p>
-        <div class="tag">OPEN APPLICATION →</div>
+        <div class="tag" data-i18n="application">OPEN APPLICATION →</div>
       </a>
 
       <a class="tool buffs" href="./kings-buffs/">
         <div class="icon">👑</div>
         <h2>King's Buffs</h2>
         <p>Register for KVK King's Buff appointments and keep requests organised in one place.</p>
-        <div class="tag">OPEN ENROLMENT →</div>
+        <div class="tag" data-i18n="enrolment">OPEN ENROLMENT →</div>
       </a>
 
       <a class="tool compare" href="./compare/">
         <div class="icon">🏰</div>
         <h2>Kingdom Compare</h2>
         <p>Compare State 169 with another kingdom using current kingdom strength and activity data.</p>
-        <div class="tag">COMPARE KINGDOMS →</div>
+        <div class="tag" data-i18n="compare">COMPARE KINGDOMS →</div>
       </a>
 
       <a class="tool gifts" href="./gift-codes/">
         <div class="icon">🎁</div>
         <h2>Gift Codes</h2>
         <p>Verify your State 169 Player ID and redeem current Kingshot gift codes.</p>
-        <div class="tag">VIEW GIFT CODES →</div>
+        <div class="tag" data-i18n="codes">VIEW GIFT CODES →</div>
       </a>
     </section>
 
@@ -296,5 +310,6 @@
     }
   })();
   </script>
+  <script src="./shared/site-preferences.js"></script>
 </body>
 </html>

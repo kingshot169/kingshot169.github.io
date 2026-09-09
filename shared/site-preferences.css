@@ -1,0 +1,59 @@
+/* Shared site preferences: kept separate so every standalone tool stays lightweight. */
+.site-controls{
+  position:fixed;
+  top:14px;
+  right:14px;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:5px;
+  border:1px solid rgba(148,163,184,.32);
+  border-radius:999px;
+  background:rgba(15,23,42,.88);
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+  backdrop-filter:blur(10px);
+}
+.site-control-button,.site-language-select{
+  border:0;
+  border-radius:999px;
+  color:#e5e7eb;
+  background:transparent;
+  font:inherit;
+  font-size:.8rem;
+  font-weight:800;
+}
+.site-control-button{
+  width:32px;
+  height:32px;
+  padding:0;
+  cursor:pointer;
+  font-size:1.05rem;
+}
+.site-control-button:hover,.site-control-button:focus-visible{background:rgba(250,204,21,.16);outline:0}
+.site-language-select{padding:7px 7px 7px 8px;cursor:pointer}
+.site-language-select option{background:#0f172a;color:#e5e7eb}
+.site-control-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+html[data-theme="light"] body{
+  --bg:#f4f7fb;
+  --panel:#ffffff;
+  --panel2:#e8eef7;
+  --panel3:#f8fafc;
+  --text:#172033;
+  --muted:#536277;
+  --line:#cbd5e1;
+  background:radial-gradient(circle at top,rgba(234,179,8,.13),transparent 30rem),var(--bg);
+  color:var(--text);
+}
+html[data-theme="light"] .site-controls{background:rgba(255,255,255,.9);border-color:#cbd5e1}
+html[data-theme="light"] .site-control-button,html[data-theme="light"] .site-language-select{color:#172033}
+html[data-theme="light"] .site-language-select option{background:#fff;color:#172033}
+html[data-theme="light"] .tool,html[data-theme="light"] .card,html[data-theme="light"] .panel{box-shadow:0 12px 30px rgba(51,65,85,.1)}
+html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select,html[data-theme="light"] .statebox{background:#fff;color:#172033;border-color:#94a3b8}
+html[data-theme="light"] a{color:#334155}
+
+@media(max-width:520px){
+  .site-controls{top:8px;right:8px}
+  .site-language-select{max-width:88px}
+}
