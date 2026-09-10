@@ -1,0 +1,18 @@
+/* Scoped recruitment content, shared by the public page and authenticated preview. */
+.tr-recruitment{margin:16px 0;overflow-wrap:anywhere}
+.tr-recruitment .tr-section{padding:16px;margin:12px 0;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.tr-recruitment .tr-custom{white-space:pre-wrap;overflow-wrap:anywhere}
+.tr-recruitment .tr-custom[dir="rtl"]{direction:rtl}
+.tr-recruitment .tr-facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 16px}
+.tr-recruitment dt{color:var(--muted)}
+.tr-recruitment dd{margin:0;overflow-wrap:anywhere}
+.tr-recruitment .tr-contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-top:12px}
+.tr-recruitment .tr-contact{border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+.tr-recruitment .tr-player-id{user-select:all;font-family:monospace;font-size:1rem}
+.tr-recruitment .tr-feedback{min-height:1.5em}
+.tr-recruitment a,.tr-anchors a{color:var(--text)}
+.tr-recruitment button,.tr-anchors a{min-height:38px}
+.tr-anchors{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.tr-anchors a{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-decoration:none}
+.tr-recruitment button:focus-visible,.tr-anchors a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:480px){.tr-recruitment .tr-facts{grid-template-columns:minmax(0,1fr)}.tr-recruitment dd{margin-bottom:8px}}

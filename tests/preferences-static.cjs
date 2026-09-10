@@ -14,11 +14,14 @@ for(const file of pages){
     for(const url of css.matchAll(/url\(\s*['"]?([^)'"\s]+)['"]?\s*\)/g))if(!/^(?:data:|https?:|#)/.test(url[1]))assert(fs.existsSync(path.resolve(path.dirname(stylesheet),url[1].split(/[?#]/)[0])),stylesheet+': missing asset '+url[1]);
   }
   if(file.replaceAll(path.sep,'/')!=='transfer/admin/index.html'){
-    assert.equal(sheets.length,3,file+': foundation, preferences, page CSS');
-    assert(sheets[0].endsWith('/foundation.css')&&sheets[1].endsWith('/site-preferences.css')&&sheets[2].startsWith('./'),file+': stylesheet override order');
+    const recruitment=['transfer/index.html','admin/transfers/index.html'].includes(file.replaceAll(path.sep,'/'));
+    assert.equal(sheets.length,recruitment?4:3,file+': foundation, preferences, optional recruitment, page CSS');
+    assert(sheets[0].endsWith('/foundation.css')&&sheets[1].endsWith('/site-preferences.css')&&sheets.at(-1).startsWith('./'),file+': stylesheet override order');
+    if(recruitment)assert(sheets[2].endsWith('/transfer-recruitment.css'));
   }
   let scripts=0;
   for(const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(match[1],{filename:file+':script-'+(++scripts)});
+  for(const match of html.matchAll(/<script\b[^>]*src="([^":]+)"/g)){const source=path.resolve(path.dirname(file),match[1]);assert(fs.existsSync(source),source);new vm.Script(fs.readFileSync(source,'utf8'),{filename:source})}
   for(const match of html.matchAll(/(?:src|href)="([^"#]*shared\/[^"#]+)"/g))assert(fs.existsSync(path.resolve(path.dirname(file),match[1])),file+': missing '+match[1]);
   assert.equal((html.match(/ data-site-nav\b/g)||[]).length,1,file+': ambiguous header navigation');
   assert.equal((html.match(/src="[^"\n]*site-preferences.js"/g)||[]).length,1,file+': preferences must load once');

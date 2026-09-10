@@ -12,12 +12,22 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  const ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let id=0;const pending=new Map();
  function call(method,params={}){return new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))})}
  let signedIn=false,mustChange=false,missingDictionary=false,transferJourney=false,bookingRequests=[],requests=[];const errors=[];
+ const recruitmentMock=process.env.TRANSFER_SETTINGS_TEST?require('./transfer-settings-fixture.cjs').database():null;
+ let recruitmentFailure=false;
  ws.addEventListener('message',async e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(m.error):p.resolve(m.result)}
  if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails);
  if(m.method==='Fetch.requestPaused'){
  const {requestId,request}=m.params;
  if(missingDictionary&&request.url.endsWith('/shared/translations.js'))await call('Fetch.fulfillRequest',{requestId,responseCode:404,body:''});
  else if(request.url.startsWith('http://127.0.0.1:8766/'))await call('Fetch.continueRequest',{requestId});
+ else if(recruitmentMock&&/\/(?:admin-)?transfer-settings(?:\?|$)/.test(request.url)){
+   recruitmentMock.state.authenticated=signedIn;
+   const isAdmin=new URL(request.url).pathname.endsWith('/admin-transfer-settings');
+   const handler=isAdmin?recruitmentMock.admin:recruitmentMock.public;
+   const fixtureHeaders=new Headers(request.headers);fixtureHeaders.set('origin','https://kingshot169.github.io');
+   const response=recruitmentFailure?Response.json({ok:false},{status:503}):await handler(new Request(request.url,{method:request.method,headers:fixtureHeaders,body:request.postData}));
+   await call('Fetch.fulfillRequest',{requestId,responseCode:response.status,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Access-Control-Allow-Origin',value:'*'},{name:'Access-Control-Allow-Headers',value:'*'},{name:'Access-Control-Allow-Methods',value:'GET,POST,OPTIONS'}],body:Buffer.from(await response.text()).toString('base64')});
+ }
  else if(request.url.includes('supabase-js')){
  const sdk=`window.__loginFlashes=0;setInterval(()=>{const e=document.querySelector('#loginView');if(e&&getComputedStyle(e).display!=='none')window.__loginFlashes++},10);
  window.supabase={createClient(){return {auth:{
@@ -75,6 +85,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    await require('./css-visual.cjs')({call,evaluate,navigate,sleep,routes,setSignedIn:value=>{signedIn=value}});
    ws.close();return;
  }
+ if(recruitmentMock){await require('./transfer-settings-browser.cjs')({call,evaluate,navigate,sleep,db:recruitmentMock,errors,setSignedIn:v=>{signedIn=v},setFailure:v=>{recruitmentFailure=v},setTransferJourney:v=>{transferJourney=v}});ws.close();return}
  for(const route of routes){await navigate(route);results.push({route,...await evaluate(`({url:location.pathname,language:document.documentElement.lang,selector:document.querySelector('.site-language-select')?.value,headers:document.querySelectorAll('.site-preferences-header').length,nav:document.querySelector('[data-site-nav]')?.getAttribute('href'),missing:KSPreferences.getMissing(),unmarked:[...document.querySelectorAll('body *')].filter(e=>!e.closest('script,style,[translate="no"],[data-ks-text],.site-controls,[data-i18n]')).flatMap(e=>[...e.childNodes].filter(n=>n.nodeType===3&&/[A-Za-z]{2}/.test(n.textContent)).map(n=>n.textContent.trim()))})`)})}
  await navigate('/transfer/');
  results.push({state:await evaluate(`(()=>{const input=document.querySelector('#fid');input.value='12345678';const ref=input;for(let i=0;i<20;i++){KSPreferences.setLanguage(i%2?'ar':'fr');KSPreferences.setLanguage(KSPreferences.getLanguage());document.querySelector('.site-theme-toggle').click()}KSPreferences.setLanguage('es');return {value:input.value,sameNode:ref===document.querySelector('#fid'),lang:document.documentElement.lang,theme:document.documentElement.dataset.theme}})()`)});
@@ -139,7 +150,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  for(let i=0;i<10;i++){const rect=await evaluate(`(()=>{const r=document.querySelector('.site-language-select').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);await call('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...rect});await call('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...rect});await call('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await call('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27})}
  results.push({menu:await evaluate(`(()=>{document.querySelector('#fid').focus();return {focused:document.activeElement.id,bodyOverflow:getComputedStyle(document.body).overflow,headers:document.querySelectorAll('.site-preferences-header').length}})()`)});
  missingDictionary=true;await navigate('/compare/');results.push({fallback:await evaluate(`(()=>{KSPreferences.setLanguage('ar');document.querySelector('#opponent').value='82';return {label:document.querySelector('#compare').textContent,value:document.querySelector('#opponent').value,lang:document.documentElement.lang,englishFallback:[...document.querySelectorAll('.section-title')].some(e=>e.textContent==='Kingdom Strength')}})()`)});
- fs.writeFileSync('tests/preferences-results.json',JSON.stringify(results,null,2));
+ fs.writeFileSync(process.env.PREFERENCES_RESULTS||'tests/preferences-results.json',JSON.stringify(results,null,2));
  const assert=require('assert/strict'),get=key=>results.find(x=>Object.hasOwn(x,key))[key];
  assert.equal(errors.length,0,'Browser exceptions');
  assert.equal(allLayouts.filter(x=>!x.balanced||!x.right).length,0,'Header layout');

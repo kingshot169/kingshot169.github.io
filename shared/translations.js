@@ -503,6 +503,111 @@ for(const key of ['Use at least {count} characters.','Use no more than {count} c
   result.en[key]={one:key.replace('characters','character'),other:key};
   for(const language of ['es','pt','fr']){const other=result[language][key];result[language][key]={one:other.replace('caracteres','carácter').replace('caractères','caractère'),other}}
 }
+const recruitmentRows=`
+Transfer admin access denied|이전 관리자 권한이 없습니다.|Acceso de administrador de traslados denegado|Acesso de administrador de transferências negado|Accès administrateur des transferts refusé|تم رفض وصول مسؤول الانتقال
+Not authenticated|로그인이 필요합니다.|No has iniciado sesión|Sessão não iniciada|Authentification requise|لم يتم تسجيل الدخول
+Password change required before using admin tools|관리 도구를 사용하기 전에 비밀번호를 변경하세요.|Debes cambiar la contraseña antes de usar las herramientas de administración|Altere a palavra-passe antes de usar as ferramentas de administração|Changez votre mot de passe avant d'utiliser les outils d'administration|يجب تغيير كلمة المرور قبل استخدام أدوات الإدارة
+Recruitment headline|모집 제목|Titular de reclutamiento|Título de recrutamento|Titre du recrutement|عنوان التجنيد
+Introduction|소개|Introducción|Introdução|Introduction|مقدمة
+Recruitment message|모집 안내|Mensaje de reclutamiento|Mensagem de recrutamento|Message de recrutement|رسالة التجنيد
+Current state / rebuild note|현재 왕국 / 재건 안내|Estado actual / reconstrucción|Situação atual / reconstrução|Situation actuelle / reconstruction|حالة الولاية وإعادة البناء
+Rules and expectations|규칙 및 기대사항|Normas y expectativas|Regras e expectativas|Règles et attentes|القواعد والتوقعات
+Talk to State 169|169 왕국에 문의|Habla con el Estado 169|Fale com o Estado 169|Contactez l'État 169|تواصل مع الولاية 169
+Event name|이벤트 이름|Nombre del evento|Nome do evento|Nom de l'événement|اسم الحدث
+Source announcement URL|공식 안내 출처 URL|URL del anuncio fuente|URL do anúncio de origem|URL de l'annonce source|رابط إعلان المصدر
+Event starts (UTC)|이벤트 시작 (UTC)|Inicio del evento (UTC)|Início do evento (UTC)|Début de l'événement (UTC)|بداية الحدث (UTC)
+Event ends (UTC)|이벤트 종료 (UTC)|Fin del evento (UTC)|Fim do evento (UTC)|Fin de l'événement (UTC)|نهاية الحدث (UTC)
+Pre-transfer starts (UTC)|사전 이전 시작 (UTC)|Inicio de preparación (UTC)|Início da preparação (UTC)|Début de la préparation (UTC)|بداية ما قبل الانتقال (UTC)
+Invitational phase starts (UTC)|초청 단계 시작 (UTC)|Inicio de invitaciones (UTC)|Início dos convites (UTC)|Début des invitations (UTC)|بداية مرحلة الدعوات (UTC)
+Open-transfer phase starts (UTC)|자유 이전 시작 (UTC)|Inicio del traslado abierto (UTC)|Início da transferência aberta (UTC)|Début des transferts ouverts (UTC)|بداية الانتقال المفتوح (UTC)
+Last confirmed (UTC)|마지막 확인 (UTC)|Última confirmación (UTC)|Última confirmação (UTC)|Dernière confirmation (UTC)|آخر تأكيد (UTC)
+Transfer group|이전 그룹|Grupo de traslado|Grupo de transferência|Groupe de transfert|مجموعة الانتقال
+First eligible kingdom|대상 왕국 범위 시작|Primer reino elegible|Primeiro reino elegível|Premier royaume admissible|أول مملكة مؤهلة
+Last eligible kingdom|대상 왕국 범위 끝|Último reino elegible|Último reino elegível|Dernier royaume admissible|آخر مملكة مؤهلة
+Entry Power Cap (in-game)|입장 전투력 제한 (게임 내)|Límite de poder de entrada (en el juego)|Limite de poder de entrada (no jogo)|Plafond de puissance d'entrée (en jeu)|حد قوة الدخول (داخل اللعبة)
+Cap explanation / special invitation exceptions|전투력 제한 / 특별 초청 예외|Explicación del límite / excepciones especiales|Explicação do limite / exceções especiais|Explication du plafond / exceptions spéciales|شرح الحد واستثناءات الدعوات الخاصة
+Confirmed ordinary transfer capacity|확인된 일반 이전 정원|Capacidad ordinaria confirmada|Capacidade normal confirmada|Capacité ordinaire confirmée|سعة الانتقال العادي المؤكدة
+Ordinary places remaining|일반 이전 잔여 자리|Plazas ordinarias restantes|Vagas normais restantes|Places ordinaires restantes|الأماكن العادية المتبقية
+Special invitations remaining|남은 특별 초청|Invitaciones especiales restantes|Convites especiais restantes|Invitations spéciales restantes|الدعوات الخاصة المتبقية
+Alliance places remaining|연맹 잔여 자리|Plazas de alianza restantes|Vagas de aliança restantes|Places d'alliance restantes|أماكن التحالف المتبقية
+Public event notice|공개 이벤트 공지|Aviso público del evento|Aviso público do evento|Avis public de l'événement|إشعار الحدث العام
+Transfer Pass / ticket guidance|이전 패스 / 티켓 안내|Guía de pases de traslado|Orientações sobre passes de transferência|Conseils sur les passes de transfert|إرشادات تصاريح وتذاكر الانتقال
+Local preparedness recommendation (optional)|왕국 준비 권장사항 (선택)|Recomendación local de preparación (opcional)|Recomendação local de preparação (opcional)|Conseil local de préparation (facultatif)|توصية محلية للاستعداد (اختيارية)
+State Discord invite (optional)|왕국 Discord 초대 (선택)|Invitación al Discord del Estado (opcional)|Convite para o Discord do Estado (opcional)|Invitation Discord de l'État (facultative)|دعوة Discord للولاية (اختيارية)
+Contact name|담당자 이름|Nombre del contacto|Nome do contacto|Nom du contact|اسم جهة الاتصال
+Alliance tag|연맹 태그|Etiqueta de alianza|Sigla da aliança|Sigle de l'alliance|وسم التحالف
+Role / description|역할 / 설명|Función / descripción|Função / descrição|Rôle / description|الدور والوصف
+Languages|언어|Idiomas|Idiomas|Langues|اللغات
+Usual availability (include timezone)|주요 접속 시간 (시간대 포함)|Disponibilidad habitual (con zona horaria)|Disponibilidade habitual (com fuso horário)|Disponibilités habituelles (avec fuseau horaire)|أوقات التواجد المعتادة (مع المنطقة الزمنية)
+Recruitment information is currently unavailable. You can still apply.|현재 모집 정보를 불러올 수 없습니다. 신청은 가능합니다.|La información de reclutamiento no está disponible. Puedes enviar una solicitud.|As informações de recrutamento estão indisponíveis. Pode candidatar-se.|Les informations de recrutement sont indisponibles. Vous pouvez toujours postuler.|معلومات التجنيد غير متاحة حاليًا. يمكنك تقديم طلب.
+Administrator-written content ({language}); shown in its original language.|관리자 작성 내용 ({language}): 원문 언어로 표시됩니다.|Contenido del administrador ({language}); se muestra en su idioma original.|Conteúdo do administrador ({language}); apresentado no idioma original.|Contenu rédigé par l'administration ({language}), affiché dans sa langue d'origine.|محتوى كتبه المسؤول ({language})؛ يُعرض بلغته الأصلية.
+Event information|이벤트 정보|Información del evento|Informações do evento|Informations sur l'événement|معلومات الحدث
+Administrator-reported information. Confirm requirements in-game before planning a move.|관리자가 입력한 정보입니다. 이전 계획 전에 게임 내 조건을 확인하세요.|Información indicada por administradores. Confirma los requisitos en el juego antes de planear el traslado.|Informações fornecidas pelos administradores. Confirme os requisitos no jogo antes de planear a mudança.|Informations fournies par l'administration. Vérifiez les conditions en jeu avant de prévoir un transfert.|معلومات أدخلها المسؤولون. تحقق من المتطلبات داخل اللعبة قبل التخطيط للانتقال.
+Awaiting confirmation|확인 대기|Pendiente de confirmación|A aguardar confirmação|En attente de confirmation|بانتظار التأكيد
+Ordinary kingdom|일반 왕국|Reino ordinario|Reino normal|Royaume ordinaire|مملكة عادية
+Leading kingdom|선도 왕국|Reino líder|Reino líder|Royaume dominant|مملكة رائدة
+Kingdom classification|왕국 분류|Clasificación del reino|Classificação do reino|Classification du royaume|تصنيف المملكة
+Pass costs vary with your in-game Transfer Score. Account power alone does not determine eligibility.|패스 비용은 게임 내 이전 점수에 따라 다릅니다. 계정 전투력만으로 자격이 결정되지 않습니다.|El coste depende de tu puntuación de traslado en el juego. El poder de la cuenta no determina por sí solo la elegibilidad.|O custo depende da pontuação de transferência no jogo. O poder da conta não determina sozinho a elegibilidade.|Le coût dépend du score de transfert en jeu. La puissance du compte ne suffit pas à déterminer l'admissibilité.|تختلف تكلفة التصاريح حسب نقاط الانتقال داخل اللعبة. قوة الحساب وحدها لا تحدد الأهلية.
+Source announcement|출처 공지|Anuncio fuente|Anúncio de origem|Annonce source|إعلان المصدر
+Contacting the team is encouraged, but is not required to submit an application.|팀에 먼저 문의하는 것을 권장하지만 신청의 필수 조건은 아닙니다.|Te recomendamos contactar con el equipo, pero no es obligatorio para solicitar.|Recomendamos contactar a equipa, mas não é obrigatório para se candidatar.|Nous vous encourageons à contacter l'équipe, mais ce n'est pas obligatoire pour postuler.|نشجعك على التواصل مع الفريق، لكنه ليس شرطًا لتقديم طلب.
+Join State Discord|왕국 Discord 참여|Únete al Discord del Estado|Entrar no Discord do Estado|Rejoindre le Discord de l'État|انضم إلى Discord الولاية
+Current in-game Transfer Manager|현재 게임 내 이전 관리자|Gestor de traslados actual en el juego|Gestor de transferências atual no jogo|Responsable actuel des transferts en jeu|مدير الانتقال الحالي داخل اللعبة
+State contact (not necessarily an invitation issuer)|왕국 연락 담당자 (초청 권한이 없을 수 있음)|Contacto del Estado (no necesariamente emite invitaciones)|Contacto do Estado (pode não emitir convites)|Contact de l'État (ne délivre pas forcément d'invitations)|جهة اتصال للولاية (ليست بالضرورة مخولة بإصدار الدعوات)
+Copy Player ID|플레이어 ID 복사|Copiar ID del jugador|Copiar ID do jogador|Copier l'ID du joueur|نسخ معرّف اللاعب
+Player ID copied.|플레이어 ID를 복사했습니다.|ID del jugador copiado.|ID do jogador copiado.|ID du joueur copié.|تم نسخ معرّف اللاعب.
+Copy failed. Select and copy the Player ID above.|복사에 실패했습니다. 위의 플레이어 ID를 선택하여 복사하세요.|Error al copiar. Selecciona y copia el ID de arriba.|Falha ao copiar. Selecione e copie o ID acima.|Échec de la copie. Sélectionnez et copiez l'ID ci-dessus.|فشل النسخ. حدد معرّف اللاعب أعلاه وانسخه.
+An enquiry or application is not an in-game invitation or a reserved alliance place.|문의나 신청은 게임 내 초청이나 연맹 자리 예약이 아닙니다.|Una consulta o solicitud no equivale a una invitación ni a una plaza reservada.|Uma consulta ou candidatura não é um convite nem uma vaga reservada.|Une demande de renseignements ou une candidature n'est ni une invitation en jeu ni une place réservée.|الاستفسار أو الطلب ليس دعوة داخل اللعبة ولا حجزًا لمكان في التحالف.
+Transfer sections|이전 메뉴|Secciones de traslado|Secções de transferência|Rubriques de transfert|أقسام الانتقال
+Talk to the team|팀에 문의|Habla con el equipo|Fale com a equipa|Contacter l'équipe|تواصل مع الفريق
+Apply|신청|Solicitar|Candidatar-se|Postuler|تقديم طلب
+Contact the team and quote your application reference.|팀에 문의하고 신청 참조 번호를 알려주세요.|Contacta con el equipo e indica la referencia de tu solicitud.|Contacte a equipa e indique a referência da candidatura.|Contactez l'équipe en indiquant la référence de votre candidature.|تواصل مع الفريق واذكر رقم مرجع طلبك.
+Transfer views|이전 관리 보기|Vistas de traslados|Vistas de transferências|Vues des transferts|واجهات الانتقال
+Applications|신청 목록|Solicitudes|Candidaturas|Candidatures|الطلبات
+Event & Recruitment|이벤트 및 모집|Evento y reclutamiento|Evento e recrutamento|Événement et recrutement|الحدث والتجنيد
+Another admin changed these settings. Your edits are preserved; reload before saving again.|다른 관리자가 설정을 변경했습니다. 입력은 유지됩니다. 다시 저장하기 전에 불러오세요.|Otro administrador cambió estos ajustes. Tus cambios se conservan; recarga antes de guardar.|Outro administrador alterou estas definições. As suas edições foram preservadas; recarregue antes de guardar.|Un autre administrateur a modifié ces réglages. Vos saisies sont conservées ; rechargez avant de sauvegarder.|غيّر مسؤول آخر هذه الإعدادات. تم الاحتفاظ بتعديلاتك؛ أعد التحميل قبل الحفظ مجددًا.
+Use a valid HTTPS announcement URL or a discord.gg/code or discord.com/invite/code invite.|유효한 HTTPS 공지 URL 또는 discord.gg/code, discord.com/invite/code 초대를 사용하세요.|Usa una URL HTTPS válida o una invitación discord.gg/code o discord.com/invite/code.|Use um URL HTTPS válido ou um convite discord.gg/code ou discord.com/invite/code.|Utilisez une URL HTTPS valide ou une invitation discord.gg/code ou discord.com/invite/code.|استخدم رابط إعلان HTTPS صالحًا أو دعوة discord.gg/code أو discord.com/invite/code.
+Check the UTC dates and phase order.|UTC 날짜와 단계 순서를 확인하세요.|Revisa las fechas UTC y el orden de las fases.|Verifique as datas UTC e a ordem das fases.|Vérifiez les dates UTC et l'ordre des phases.|تحقق من تواريخ UTC وترتيب المراحل.
+Include a timezone in contact availability.|담당자의 접속 시간에 시간대를 포함하세요.|Incluye la zona horaria en la disponibilidad.|Inclua o fuso horário na disponibilidade.|Précisez le fuseau horaire des disponibilités.|أدرج المنطقة الزمنية في أوقات التواجد.
+Check all settings, text lengths and contact Player IDs.|설정, 글자 수, 담당자 플레이어 ID를 확인하세요.|Revisa los ajustes, las longitudes de texto y los ID de los contactos.|Verifique as definições, os tamanhos dos textos e os IDs dos contactos.|Vérifiez les réglages, les longueurs de texte et les ID des contacts.|تحقق من الإعدادات وأطوال النصوص ومعرّفات جهات الاتصال.
+The settings are too large. Shorten the text.|설정 내용이 너무 큽니다. 글을 줄이세요.|Los ajustes son demasiado grandes. Acorta el texto.|As definições são demasiado grandes. Encurte o texto.|Les réglages sont trop volumineux. Raccourcissez le texte.|الإعدادات كبيرة جدًا. اختصر النص.
+Too many settings changes. Wait a minute and try again.|설정 변경이 너무 많습니다. 1분 후 다시 시도하세요.|Demasiados cambios. Espera un minuto y vuelve a intentarlo.|Demasiadas alterações. Aguarde um minuto e tente novamente.|Trop de modifications. Attendez une minute puis réessayez.|تغييرات كثيرة جدًا. انتظر دقيقة ثم حاول مجددًا.
+Save a draft before publishing.|게시 전에 초안을 저장하세요.|Guarda un borrador antes de publicar.|Guarde um rascunho antes de publicar.|Enregistrez un brouillon avant de publier.|احفظ مسودة قبل النشر.
+Content language|본문 언어|Idioma del contenido|Idioma do conteúdo|Langue du contenu|لغة المحتوى
+Add contact|담당자 추가|Añadir contacto|Adicionar contacto|Ajouter un contact|إضافة جهة اتصال
+Save Draft|초안 저장|Guardar borrador|Guardar rascunho|Enregistrer le brouillon|حفظ المسودة
+Preview saved draft|저장된 초안 미리 보기|Ver borrador guardado|Pré-visualizar rascunho guardado|Aperçu du brouillon enregistré|معاينة المسودة المحفوظة
+Unpublish|게시 취소|Retirar publicación|Retirar publicação|Retirer la publication|إلغاء النشر
+Load suggested wording|추천 문구 불러오기|Cargar texto sugerido|Carregar texto sugerido|Charger le texte suggéré|تحميل النص المقترح
+Reload saved draft|저장된 초안 다시 불러오기|Recargar borrador guardado|Recarregar rascunho guardado|Recharger le brouillon enregistré|إعادة تحميل المسودة المحفوظة
+State contacts|왕국 연락 담당자|Contactos del Estado|Contactos do Estado|Contacts de l'État|جهات اتصال الولاية
+Only publish contacts who consent. Mark the in-game Transfer Manager explicitly.|동의한 담당자만 공개하세요. 게임 내 이전 관리자를 명확히 표시하세요.|Publica solo contactos que den su consentimiento. Marca al gestor de traslados del juego.|Publique apenas contactos com consentimento. Identifique o gestor de transferências no jogo.|Ne publiez que les contacts consentants. Identifiez explicitement le responsable des transferts en jeu.|انشر جهات الاتصال بموافقتها فقط. حدد مدير الانتقال داخل اللعبة صراحةً.
+These are website recruitment details, not game transfer settings. Approvals do not reserve or decrement places.|웹사이트 모집 정보입니다. 게임 이전 설정이 아닙니다. 승인은 자리를 예약하거나 줄이지 않습니다.|Son detalles de reclutamiento del sitio, no ajustes del juego. Las aprobaciones no reservan ni descuentan plazas.|São detalhes de recrutamento do site, não definições do jogo. As aprovações não reservam nem descontam vagas.|Il s'agit du recrutement sur le site, pas des réglages du jeu. Les approbations ne réservent ni ne décomptent de places.|هذه تفاصيل تجنيد الموقع وليست إعدادات الانتقال في اللعبة. الموافقات لا تحجز الأماكن ولا تنقص عددها.
+Leave unknown numbers empty. Zero means none. All event times are UTC.|미확인 수치는 비워두세요. 0은 없음을 뜻합니다. 이벤트 시간은 모두 UTC입니다.|Deja vacías las cifras desconocidas. Cero significa ninguna. Todas las horas son UTC.|Deixe vazios os números desconhecidos. Zero significa nenhum. Todos os horários são UTC.|Laissez vides les nombres inconnus. Zéro signifie aucun. Tous les horaires sont en UTC.|اترك الأرقام غير المعروفة فارغة. الصفر يعني لا شيء. جميع أوقات الحدث بتوقيت UTC.
+Review saved draft|저장된 초안 검토|Revisar borrador guardado|Rever rascunho guardado|Vérifier le brouillon enregistré|مراجعة المسودة المحفوظة
+Publish this revision|이 버전 게시|Publicar esta revisión|Publicar esta revisão|Publier cette révision|نشر هذه المراجعة
+Close|닫기|Cerrar|Fechar|Fermer|إغلاق
+Publishing replaces the public recruitment information with this exact saved revision.|게시하면 공개 모집 정보가 이 저장된 버전으로 교체됩니다.|La publicación reemplaza la información pública con esta revisión exacta.|A publicação substitui as informações públicas por esta revisão exata.|La publication remplace les informations publiques par cette révision exacte.|يستبدل النشر معلومات التجنيد العامة بهذه المراجعة المحفوظة بالضبط.
+{count} / 10000 characters|{count} / 10000자|{count} / 10000 caracteres|{count} / 10000 caracteres|{count} / 10000 caractères|{count} / 10000 حرف
+Published content is live. Saving a draft does not change it.|게시된 내용이 공개 중입니다. 초안을 저장해도 변경되지 않습니다.|El contenido publicado está visible. Guardar un borrador no lo cambia.|O conteúdo publicado está visível. Guardar um rascunho não o altera.|Le contenu publié est en ligne. Enregistrer un brouillon ne le modifie pas.|المحتوى المنشور ظاهر للعامة. حفظ مسودة لا يغيّره.
+No recruitment content is published. Applications remain available.|공개된 모집 내용이 없습니다. 신청은 가능합니다.|No hay contenido de reclutamiento publicado. Las solicitudes siguen disponibles.|Não há conteúdo de recrutamento publicado. As candidaturas continuam disponíveis.|Aucun contenu de recrutement n'est publié. Les candidatures restent possibles.|لا يوجد محتوى تجنيد منشور. تقديم الطلبات ما زال متاحًا.
+Contact {number}|담당자 {number}|Contacto {number}|Contacto {number}|Contact {number}|جهة الاتصال {number}
+Public contact|공개 담당자|Contacto público|Contacto público|Contact public|جهة اتصال عامة
+Move up|위로 이동|Subir|Mover para cima|Monter|نقل لأعلى
+Move down|아래로 이동|Bajar|Mover para baixo|Descendre|نقل لأسفل
+Remove contact|담당자 삭제|Eliminar contacto|Remover contacto|Supprimer le contact|إزالة جهة الاتصال
+Remove this contact from the draft?|초안에서 이 담당자를 삭제할까요?|¿Eliminar este contacto del borrador?|Remover este contacto do rascunho?|Supprimer ce contact du brouillon ?|هل تريد إزالة جهة الاتصال من المسودة؟
+Recruitment settings could not be loaded or saved. Your edits are preserved.|모집 설정을 불러오거나 저장하지 못했습니다. 입력은 유지됩니다.|No se pudieron cargar o guardar los ajustes. Tus cambios se conservan.|Não foi possível carregar ou guardar as definições. As suas edições foram preservadas.|Impossible de charger ou d'enregistrer les réglages. Vos saisies sont conservées.|تعذر تحميل إعدادات التجنيد أو حفظها. تم الاحتفاظ بتعديلاتك.
+Discard unsaved recruitment edits?|저장하지 않은 모집 변경사항을 버릴까요?|¿Descartar los cambios de reclutamiento sin guardar?|Descartar as alterações de recrutamento não guardadas?|Abandonner les modifications de recrutement non enregistrées ?|هل تريد تجاهل تعديلات التجنيد غير المحفوظة؟
+Draft loaded.|초안을 불러왔습니다.|Borrador cargado.|Rascunho carregado.|Brouillon chargé.|تم تحميل المسودة.
+Draft saved. Public content is unchanged.|초안을 저장했습니다. 공개 내용은 변경되지 않았습니다.|Borrador guardado. El contenido público no ha cambiado.|Rascunho guardado. O conteúdo público não mudou.|Brouillon enregistré. Le contenu public reste inchangé.|تم حفظ المسودة. لم يتغير المحتوى العام.
+Recruitment information published.|모집 정보를 게시했습니다.|Información de reclutamiento publicada.|Informações de recrutamento publicadas.|Informations de recrutement publiées.|تم نشر معلومات التجنيد.
+Remove the public recruitment information? Applications and in-game transfers are unchanged.|공개 모집 정보를 내릴까요? 신청과 게임 내 이전은 변경되지 않습니다.|¿Retirar la información pública? Las solicitudes y los traslados del juego no cambian.|Retirar as informações públicas? As candidaturas e transferências no jogo não mudam.|Retirer les informations publiques ? Les candidatures et transferts en jeu restent inchangés.|هل تريد إزالة معلومات التجنيد العامة؟ لن تتغير الطلبات أو الانتقالات داخل اللعبة.
+Recruitment information unpublished.|모집 정보 게시를 취소했습니다.|Información de reclutamiento retirada.|Informações de recrutamento retiradas.|Informations de recrutement retirées.|تم إلغاء نشر معلومات التجنيد.
+Replace these draft inputs with suggested wording? Nothing will be saved or published.|입력한 초안을 추천 문구로 교체할까요? 저장되거나 게시되지는 않습니다.|¿Reemplazar este borrador con texto sugerido? No se guardará ni publicará nada.|Substituir este rascunho pelo texto sugerido? Nada será guardado ou publicado.|Remplacer ces saisies par le texte suggéré ? Rien ne sera enregistré ni publié.|هل تريد استبدال مدخلات المسودة بالنص المقترح؟ لن يتم حفظ أو نشر شيء.
+Suggested values loaded. Review the event details in-game before saving.|추천 내용을 불러왔습니다. 저장 전에 게임 내 이벤트 정보를 확인하세요.|Valores sugeridos cargados. Revisa los detalles en el juego antes de guardar.|Valores sugeridos carregados. Reveja os detalhes no jogo antes de guardar.|Valeurs suggérées chargées. Vérifiez les détails en jeu avant d'enregistrer.|تم تحميل القيم المقترحة. راجع تفاصيل الحدث داخل اللعبة قبل الحفظ.
+Suggested wording could not be loaded.|추천 문구를 불러오지 못했습니다.|No se pudo cargar el texto sugerido.|Não foi possível carregar o texto sugerido.|Impossible de charger le texte suggéré.|تعذر تحميل النص المقترح.
+`;
+for(const row of recruitmentRows.trim().split('\n')){const [key,...values]=row.split('|');if(values.length!==5)throw new Error('Invalid recruitment translation: '+key);['ko','es','pt','fr','ar'].forEach((language,i)=>{if(!Object.hasOwn(result[language],key))result[language][key]=values[i]})}
 window.KSTranslations=result;
 window.dispatchEvent(new Event('ks-translations-ready'));
 })();

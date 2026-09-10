@@ -22,6 +22,23 @@ for(const m of s.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)){const ast=ts.
 const variables=new Map();function collect(n){if(ts.isVariableDeclaration(n)&&ts.isIdentifier(n.name)&&n.initializer)variables.set(n.name.text,n.initializer);ts.forEachChild(n,collect)}collect(ast);
 function literal(n,seen=new Set()){if(!n)return;if(ts.isStringLiteralLike(n))add(n.text,file);else if(ts.isConditionalExpression(n)){literal(n.whenTrue,seen);literal(n.whenFalse,seen)}else if(ts.isIdentifier(n)&&!seen.has(n.text)){seen.add(n.text);literal(variables.get(n.text),seen)}}
 function visit(n){if(ts.isStringLiteralLike(n))markers(n.text,file);if(ts.isCallExpression(n)){if(ts.isPropertyAccessExpression(n.expression)&&n.expression.expression.getText(ast)==='KSPreferences'){const pos=positions[n.expression.name.text];if(pos!==undefined)literal(n.arguments[pos])}else if(ts.isIdentifier(n.expression)){const name=n.expression.text;if(name==='tool'&&file.replaceAll('\\','/')==='admin/index.html')for(const i of [2,3,4])literal(n.arguments[i]);if(name==='badge'||name==='setHud'||(name==='row'&&file.startsWith('compare')))literal(n.arguments[0])}}ts.forEachChild(n,visit)}visit(ast)}}
+// External recruitment modules use the same translator through small DOM helpers.
+const recruitmentContext={window:{}};vm.runInNewContext(fs.readFileSync('shared/transfer-recruitment.js','utf8'),recruitmentContext);
+for(const row of [...recruitmentContext.window.KSRecruitment.fields,...recruitmentContext.window.KSRecruitment.contactFields])add(row[1],'shared/transfer-recruitment.js');
+for(const file of ['shared/transfer-recruitment.js','admin/transfers/settings.js','transfer/recruitment.js']){
+ const ast=ts.createSourceFile(file,fs.readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true);
+ function literal(n){if(!n)return;if(ts.isStringLiteralLike(n))add(n.text,file);else if(ts.isConditionalExpression(n)){literal(n.whenTrue);literal(n.whenFalse)}}
+ function visit(n){
+   if(ts.isCallExpression(n)){
+     const name=n.expression.getText(ast);
+     if(name==='label'||name==='R.label'||name==='external'||name==='select')literal(n.arguments[1]);
+     if(name==='message')literal(n.arguments[0]);
+     if(ts.isPropertyAccessExpression(n.expression)&&n.expression.expression.getText(ast)==='KSPreferences'){const pos=positions[n.expression.name.text];if(pos!==undefined)literal(n.arguments[pos])}
+   }
+   if(ts.isVariableDeclaration(n)&&['errors','classifications'].includes(n.name.getText(ast))&&n.initializer&&ts.isObjectLiteralExpression(n.initializer))for(const property of n.initializer.properties)if(ts.isPropertyAssignment(property))literal(property.initializer);
+   ts.forEachChild(n,visit);
+ }visit(ast);
+}
 // Shared validation/error keys have no page-owned call site.
 const sharedAst=ts.createSourceFile('shared',runtime,ts.ScriptTarget.Latest,true);function sharedVisit(n){if(ts.isBinaryExpression(n)&&n.left.getText(sharedAst)==='key'&&n.operatorToken.kind===ts.SyntaxKind.EqualsToken){const visitKey=k=>{if(ts.isStringLiteralLike(k))add(k.text,'shared/site-preferences.js');else if(ts.isConditionalExpression(k)){visitKey(k.whenTrue);visitKey(k.whenFalse)}};visitKey(n.right)}if(ts.isCallExpression(n)&&ts.isIdentifier(n.expression)&&['setText','error','message'].includes(n.expression.text)){const a=n.arguments[n.expression.text==='setText'?1:0];if(a&&ts.isStringLiteralLike(a))add(a.text,'shared/site-preferences.js')}ts.forEachChild(n,sharedVisit)}sharedVisit(sharedAst);
 const languages=['ko','es','pt','fr','ar'],missing=[],invariantKeys=['{name}','{time}','{status}','{date} · KINGSHOT UTC','+{delay} {name}','{troop} {gear}','VS','—'];

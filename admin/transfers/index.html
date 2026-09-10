@@ -7,6 +7,7 @@
 <title>Transfer Admin · 169 KS Tools</title>
 <link rel="stylesheet" href="../../shared/foundation.css">
 <link rel="stylesheet" href="../../shared/site-preferences.css">
+<link rel="stylesheet" href="../../shared/transfer-recruitment.css">
 <script src="../../shared/translations.js" defer></script>
 <script src="../../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,6 +26,11 @@
   </div>
 </div>
 
+<nav class="tr-manager-switch" aria-label="Transfer views" data-ks-aria-label="Transfer views">
+  <button id="applicationsViewButton" type="button" aria-controls="transfer-applications-view" aria-pressed="true" data-ks-text="Applications">Applications</button>
+  <button id="recruitmentViewButton" type="button" aria-controls="recruitment-manager" aria-pressed="false" data-ks-text="Event & Recruitment">Event &amp; Recruitment</button>
+</nav>
+<section id="transfer-applications-view">
 <div class="statusline">
 <label><span data-ks-text="Status filter">Status filter</span><select id="filter">
 <option value="" data-ks-text="All">All</option>
@@ -40,6 +46,8 @@
 
 <div id="msg" class="msg"></div>
 <div id="list"></div>
+</section>
+<section id="recruitment-manager" class="tr-manager" hidden></section>
 </main>
 
 <script>
@@ -326,6 +334,8 @@ $("signOut").onclick=async()=>{
 load();
 </script>
 
+<script src="../../shared/transfer-recruitment.js"></script>
+<script src="./settings.js"></script>
 <script>window.KSPreferences?.mount();</script>
 </body>
 </html>

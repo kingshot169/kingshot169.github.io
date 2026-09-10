@@ -8,6 +8,7 @@
 <title>Transfer to State 169</title>
 <link rel="stylesheet" href="../shared/foundation.css">
 <link rel="stylesheet" href="../shared/site-preferences.css">
+<link rel="stylesheet" href="../shared/transfer-recruitment.css">
 <script src="../shared/translations.js" defer></script>
 <script src="../shared/site-preferences.js"></script>
 <link rel="stylesheet" href="./transfer.css">
@@ -17,7 +18,12 @@
 <div class="top"><a href="../" data-ks-text="← 169 KS Tools" data-site-nav>← 169 KS Tools</a><strong data-ks-text="STATE 169">STATE 169</strong></div>
 <header><div class="transfer-icon" >🔄</div><h1 data-ks-text="Transfer Application">Transfer Application</h1><p data-ks-text="Verify your Kingshot profile, then complete the short application.">Verify your Kingshot profile, then complete the short application.</p></header>
 
-<section class="card">
+<nav class="tr-anchors" aria-label="Transfer sections" data-ks-aria-label="Transfer sections">
+<a href="#transfer-contacts" data-ks-text="Talk to the team">Talk to the team</a>
+<a href="#transfer-application" data-ks-text="Apply">Apply</a>
+</nav>
+<div id="transfer-recruitment"></div>
+<section class="card" id="transfer-application">
 <h2 data-ks-text="1. Find your Kingshot profile">1. Find your Kingshot profile</h2>
 <div class="lookup">
 <label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="fid" inputmode="numeric" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596"></label>
@@ -55,6 +61,7 @@
 <div class="success">
 <h2 data-ks-text="Application received">Application received</h2>
 <p id="successMessage"></p>
+<p data-ks-text="Contact the team and quote your application reference.">Contact the team and quote your application reference.</p>
 <p data-ks-text="Reference:">Reference:</p>
 <div id="successRef" translate="no" class="ref"></div>
 <div class="actions"><a class="return-home" href="../" ><button type="button" class="secondary" data-ks-text="Back to 169 KS Tools">Back to 169 KS Tools</button></a></div>
@@ -240,6 +247,8 @@ $("form").onsubmit=async e=>{
   }
 };
 </script>
+<script src="../shared/transfer-recruitment.js"></script>
+<script src="./recruitment.js"></script>
 <footer class="site-credit">
   <div data-ks-text="169 Kingshot Tools">169 Kingshot Tools</div>
   <div class="site-credit-byline" data-ks-text="Built by {author}" data-ks-params="{&quot;author&quot;:&quot;[KRZ] Uub's&quot;}">Built by [KRZ] Uub's</div>
