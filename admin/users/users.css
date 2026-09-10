@@ -1,0 +1,41 @@
+/* Page-specific styles. Shared foundation and preferences load first. */
+:root{--panel2:#020617;--line:#334155;--blue:#2563eb;--green:#16a34a;--red:#dc2626}
+
+body{margin:0;padding:10px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1050px;margin:auto}
+a{color:var(--muted);text-decoration:none}
+h1{color:var(--gold);margin:8px 0 4px;font-size:clamp(1.7rem,6vw,2.4rem)}
+h2{margin:0 0 10px;font-size:1rem}
+.sub,.muted{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+button{border:0;border-radius:999px;padding:9px 12px;background:#334155;color:white;font:inherit;font-weight:850;cursor:pointer}
+button.primary{background:var(--blue)}button.success{background:var(--green)}button.danger{background:var(--red)}button:disabled{opacity:.5}
+input{width:100%;padding:10px;border-radius:9px;border:1px solid #475569;background:var(--panel2);color:var(--text);font:inherit}
+label{display:grid;gap:5px;font-size:.76rem;color:#cbd5e1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.preset{font-size:.7rem}
+.perms{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.perm{display:flex;align-items:center;gap:7px;padding:9px;border:1px solid rgba(148,163,184,.18);border-radius:10px;background:#020617;font-size:.72rem}
+.perm input{width:auto}
+.msg{min-height:18px;margin-top:7px;font-size:.78rem}.error{color:#fca5a5}.ok{color:#86efac}
+.admin{border:1px solid rgba(148,163,184,.18);border-radius:12px;background:#020617;padding:10px;margin:8px 0}
+.admin-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.admin-name{font-weight:900}.meta{font-size:.7rem;color:var(--muted);line-height:1.4;margin-top:2px}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.badge{font-size:.62rem;padding:.2rem .42rem;border-radius:999px;background:#1e293b;color:#cbd5e1}
+.badge.on{background:rgba(37,99,235,.18);color:#bfdbfe}
+.badge.off{opacity:.42}
+.actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.temp{padding:10px;border-radius:10px;border:1px solid rgba(250,204,21,.45);background:rgba(250,204,21,.08);margin-top:9px}
+.temp code{display:block;margin-top:6px;font-size:.86rem;word-break:break-all}
+@media(max-width:700px){.grid,.perms{grid-template-columns:1fr}.card{padding:10px}}
+
+/* Static presentation, including generated markup. */
+.player-id-note{align-self:end;font-size:.75rem;padding-bottom:10px}
+.create-admin-actions{margin-top:10px}
+.temporary-password-note{font-size:.7rem;margin-top:3px}
+.copy-temp-password{margin-top:7px}
+.current-admins-heading{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.current-admins-title{margin:0}
+.link-player-input{max-width:180px}

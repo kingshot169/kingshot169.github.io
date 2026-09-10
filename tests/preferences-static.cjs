@@ -5,6 +5,18 @@ function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
 walk('.');
 for(const file of pages){
   const html=fs.readFileSync(file,'utf8');
+  assert(!/<style\b/i.test(html),file+': application CSS must be external');
+  const sheets=[...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)].map(m=>m[1]);
+  for(const href of sheets){
+    const stylesheet=path.resolve(path.dirname(file),href.split('?')[0]);
+    assert(fs.existsSync(stylesheet),file+': missing '+href);
+    const css=fs.readFileSync(stylesheet,'utf8');
+    for(const url of css.matchAll(/url\(\s*['"]?([^)'"\s]+)['"]?\s*\)/g))if(!/^(?:data:|https?:|#)/.test(url[1]))assert(fs.existsSync(path.resolve(path.dirname(stylesheet),url[1].split(/[?#]/)[0])),stylesheet+': missing asset '+url[1]);
+  }
+  if(file.replaceAll(path.sep,'/')!=='transfer/admin/index.html'){
+    assert.equal(sheets.length,3,file+': foundation, preferences, page CSS');
+    assert(sheets[0].endsWith('/foundation.css')&&sheets[1].endsWith('/site-preferences.css')&&sheets[2].startsWith('./'),file+': stylesheet override order');
+  }
   let scripts=0;
   for(const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(match[1],{filename:file+':script-'+(++scripts)});
   for(const match of html.matchAll(/(?:src|href)="([^"#]*shared\/[^"#]+)"/g))assert(fs.existsSync(path.resolve(path.dirname(file),match[1])),file+': missing '+match[1]);

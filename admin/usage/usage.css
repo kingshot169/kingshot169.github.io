@@ -1,0 +1,5 @@
+/* Page-specific styles. Shared foundation and preferences load first. */
+:root{--line:#334155;}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding:14px}main{max-width:980px;margin:auto}a{color:#cbd5e1;text-decoration:none}h1{color:var(--gold);margin:10px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}.k{font-size:.72rem;color:var(--muted);text-transform:uppercase}.v{font-size:1.7rem;font-weight:900;margin-top:4px}table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:8px;border-bottom:1px solid #253047;text-align:left}th{color:#cbd5e1}.muted{color:var(--muted)}.bar{height:9px;background:#1e293b;border-radius:999px;overflow:hidden}.fill{height:100%;background:#64748b}.msg{min-height:20px;color:#fca5a5}@media(max-width:700px){.grid{grid-template-columns:1fr}.card{overflow:auto}}
+
+/* Static presentation, including generated markup. */
+.daily-usage-row{display:grid;grid-template-columns:90px 1fr 55px;gap:8px;align-items:center;margin:6px 0}

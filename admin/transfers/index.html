@@ -5,149 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <title>Transfer Admin · 169 KS Tools</title>
+<link rel="stylesheet" href="../../shared/foundation.css">
 <link rel="stylesheet" href="../../shared/site-preferences.css">
 <script src="../../shared/translations.js" defer></script>
 <script src="../../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{
-  --bg:#0b1220;
-  --panel:#0f172a;
-  --panel2:#020617;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --line:#334155;
-  --gold:#facc15;
-  --red:#dc2626;
-  --redHover:#b91c1c;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  padding:16px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,sans-serif
-}
-main{max-width:1180px;margin:auto}
-.top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap
-}
-h1{color:var(--gold);margin:14px 0}
-.muted{color:var(--muted)}
-button{
-  border:0;
-  border-radius:999px;
-  padding:9px 13px;
-  background:#334155;
-  color:white;
-  font:inherit;
-  font-weight:700;
-  cursor:pointer
-}
-button:hover{filter:brightness(1.08)}
-button:disabled{opacity:.55;cursor:not-allowed}
-button.danger{
-  background:var(--red);
-}
-button.danger:hover{
-  background:var(--redHover);
-}
-select{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid #475569;
-  background:var(--panel2);
-  color:var(--text)
-}
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  margin:12px 0
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px
-}
-.kv{
-  background:#020617;
-  border-radius:9px;
-  padding:10px
-}
-.k{
-  font-size:.72rem;
-  color:var(--muted);
-  text-transform:uppercase
-}
-.v{margin-top:4px}
-.reason{
-  white-space:pre-wrap;
-  line-height:1.45
-}
-.statusline{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:12px
-}
-.statusline .spacer{
-  flex:1 1 auto;
-}
-.msg{
-  min-height:20px;
-  margin-top:10px
-}
-.error{color:#fca5a5}
-.ok{color:#86efac}
-
-.player-box{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.player-avatar{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--gold);
-  background:#020617;
-  flex:0 0 auto;
-}
-
-@media(max-width:800px){
-  .grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:520px){
-  .grid{grid-template-columns:1fr}
-  .statusline{
-    align-items:stretch;
-  }
-  .statusline label,
-  .statusline select,
-  .statusline button{
-    width:100%;
-  }
-  .statusline .spacer{
-    display:none;
-  }
-}
-</style>
+<link rel="stylesheet" href="./transfers.css">
 </head>
 <body>
 <main>
 <div class="top">
   <div>
-    <a href="../" style="color:#94a3b8;text-decoration:none" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
+    <a href="../" data-ks-text="← Admin Dashboard" data-site-nav>← Admin Dashboard</a>
     <h1 data-ks-text="Transfer Admin">Transfer Admin</h1>
   </div>
   <div>
@@ -319,12 +188,12 @@ function render(){
 
         </div>
 
-        <div class="kv" style="margin-top:10px">
+        <div class="kv application-detail" >
           <div class="k" data-ks-text="Reason">Reason</div>
           <div class="v reason">${esc(a.reason)}</div>
         </div>
 
-        <div class="kv" style="margin-top:10px">
+        <div class="kv application-detail" >
           <div class="k" data-ks-text="Notes">Notes</div>
           <div class="v reason">${esc(a.notes||"—")}</div>
         </div>

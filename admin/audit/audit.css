@@ -1,0 +1,20 @@
+/* Page-specific styles. Shared foundation and preferences load first. */
+:root{--panel2:#020617;--line:#334155;}
+
+body{margin:0;padding:10px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:auto}a{color:var(--muted);text-decoration:none}
+h1{color:var(--gold);margin:8px 0 2px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;margin:10px 0}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+input,select{padding:8px;border:1px solid #475569;border-radius:8px;background:var(--panel2);color:var(--text);font:inherit}
+button{padding:8px 11px;border:0;border-radius:999px;background:#334155;color:white;font:inherit;font-weight:800}
+.event{border:1px solid rgba(148,163,184,.16);border-radius:10px;background:#020617;padding:9px;margin:7px 0}
+.head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.action{font-weight:900}.time,.meta{color:var(--muted);font-size:.68rem}
+.details{margin-top:6px;color:#cbd5e1;font-size:.72rem;white-space:pre-wrap;word-break:break-word}
+.msg{font-size:.78rem;color:var(--muted);min-height:18px}
+@media(max-width:600px){.toolbar>*{flex:1 1 100%}}
+
+/* Static presentation, including generated markup. */
+.audit-description{color:var(--muted);font-size:.78rem}
+.event-target{margin-top:5px}

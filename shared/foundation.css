@@ -1,0 +1,4 @@
+/* Identical base tokens and box sizing for styled application pages.
+   Route-specific tokens/layouts remain in each page stylesheet. */
+:root{--bg:#0b1220;--panel:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--gold:#facc15}
+*{box-sizing:border-box}
