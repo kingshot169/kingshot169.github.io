@@ -167,9 +167,9 @@
     for(const [code,language]of Object.entries(languages)){const option=document.createElement('option');option.value=code;option.textContent=language.name;select.append(option)}
     select.addEventListener('change',()=>setLanguage(select.value));
     controls.querySelector('button').addEventListener('click',()=>setTheme(state.theme==='light'?'dark':'light'));
-    header.append(controls);
     const navigation=document.querySelector('[data-site-nav]');
     if(navigation){navigation.classList.add('site-header-nav-link');navigation.style.removeProperty('color');header.append(navigation)}
+    header.append(controls);
     document.body.prepend(header);
     translate();
     // Compatibility for template renderers: only explicitly marked application text.

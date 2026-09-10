@@ -10,13 +10,16 @@
   width:min(980px,100%);
   margin:0 auto;
   padding:12px 0;
-  display:grid;
-  justify-items:end;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:7px;
   position:relative;
   direction:ltr;
   flex:none;
 }
+.site-preferences-header .site-controls{margin-left:auto}
 .site-header-nav-link{
   display:inline-block;
   max-width:100%;
@@ -83,7 +86,6 @@ html[data-theme="light"] a{color:#334155}
 
 @media(max-width:520px){
   .site-preferences-header{padding-top:8px}
-  .site-controls{width:100%;flex-wrap:wrap}
   .site-language-select{max-width:88px}
   .site-header-nav-link{max-width:100%;font-size:.72rem}
 }
