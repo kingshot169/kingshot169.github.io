@@ -36,3 +36,21 @@ td{text-align:center;font-weight:750}
  table{font-size:.71rem}
  th,td{padding:8px 4px}
 }
+
+/* Compare access step, using the existing preference theme. */
+[hidden]{display:none!important}
+.access-card h2{font-size:1.2rem;color:var(--gold);margin:0 0 10px}
+.access-card p{line-height:1.6;overflow-wrap:anywhere}
+.access-card input{width:100%;min-width:0;color:var(--text);background:var(--panel2);font-weight:500}
+.access-card .field{font-size:.9rem}
+.access-card form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+.access-card button{min-height:46px;border-radius:10px;margin-top:0;white-space:normal}
+.access-note{color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);padding-top:12px}
+#visitor-name{font-size:1.2rem;overflow-wrap:anywhere}#visitor-meta,#visitor-state{margin:6px 0;color:var(--muted)}
+.access-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.access-actions button{width:auto}
+.access-actions .secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+:is(input,button):focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+html[data-theme="light"] .access-card .error{color:#a32424}
+@media(max-width:520px){.access-card form{grid-template-columns:1fr}.access-card input{font-size:1rem}.access-actions button{flex:1 1 140px}}
+html[data-theme="light"] .access-card h2{color:#805a19}
+html[data-theme="light"] .access-card :is(input,button):focus-visible{outline-color:#805a19}

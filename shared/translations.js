@@ -646,6 +646,20 @@ Step {number} of 3: {step}|3단계 중 {number}단계: {step}|Paso {number} de 3
 Application progress|신청 진행 상태|Progreso de la solicitud|Progresso da candidatura|Progression de la candidature|تقدّم الطلب
 `;
 for(const row of recruitmentRows.trim().split('\n')){const [key,...values]=row.split('|');if(values.length!==5)throw new Error('Invalid recruitment translation: '+key);['ko','es','pt','fr','ar'].forEach((language,i)=>{if(!Object.hasOwn(result[language],key))result[language][key]=values[i]})}
+const compareAccessRows=`
+State 169 players|169주 플레이어|Jugadores del Estado 169|Jogadores do Estado 169|Joueurs de l’État 169|لاعبو الولاية 169
+Enter your Kingshot Player ID to access Kingdom Compare.|왕국 비교를 사용하려면 Kingshot 플레이어 ID를 입력하세요.|Introduce tu ID de jugador de Kingshot para acceder a la comparación de reinos.|Introduza o seu ID de jogador Kingshot para aceder à comparação de reinos.|Saisissez votre identifiant de joueur Kingshot pour accéder à la comparaison des royaumes.|أدخل معرّف لاعب Kingshot للوصول إلى مقارنة الممالك.
+Check player|플레이어 확인|Comprobar jugador|Verificar jogador|Vérifier le joueur|تحقق من اللاعب
+Continue to Compare|비교 계속하기|Continuar a comparar|Continuar para comparar|Continuer vers la comparaison|المتابعة إلى المقارنة
+This check does not verify account ownership or provide authentication.|이 확인은 계정 소유권을 검증하거나 인증을 제공하지 않습니다.|Esta comprobación no verifica la titularidad de la cuenta ni proporciona autenticación.|Esta verificação não comprova a titularidade da conta nem fornece autenticação.|Cette vérification ne prouve pas la propriété du compte et ne fournit pas d’authentification.|هذا الفحص لا يثبت ملكية الحساب ولا يوفر مصادقة.
+Access expired. Check your player again.|이용 시간이 만료되었습니다. 플레이어를 다시 확인하세요.|El acceso ha caducado. Comprueba tu jugador de nuevo.|O acesso expirou. Verifique novamente o seu jogador.|L’accès a expiré. Vérifiez à nouveau votre joueur.|انتهت صلاحية الوصول. تحقق من لاعبك مجددًا.
+Too many lookups. Please wait before trying again.|조회 요청이 너무 많습니다. 잠시 후 다시 시도하세요.|Demasiadas consultas. Espera antes de volver a intentarlo.|Demasiadas consultas. Aguarde antes de tentar novamente.|Trop de recherches. Veuillez patienter avant de réessayer.|طلبات بحث كثيرة. انتظر قبل المحاولة مجددًا.
+Player lookup failed. Please try again.|플레이어 조회에 실패했습니다. 다시 시도하세요.|La consulta del jugador ha fallado. Inténtalo de nuevo.|A consulta do jogador falhou. Tente novamente.|La recherche du joueur a échoué. Veuillez réessayer.|فشل البحث عن اللاعب. حاول مجددًا.
+Player information could not be confirmed.|플레이어 정보를 확인할 수 없습니다.|No se ha podido confirmar la información del jugador.|Não foi possível confirmar as informações do jogador.|Les informations du joueur n’ont pas pu être confirmées.|تعذر تأكيد معلومات اللاعب.
+Kingdom Compare is currently available to State 169 players.|왕국 비교는 현재 169주 플레이어만 이용할 수 있습니다.|La comparación de reinos está disponible actualmente para jugadores del Estado 169.|A comparação de reinos está atualmente disponível para jogadores do Estado 169.|La comparaison des royaumes est actuellement réservée aux joueurs de l’État 169.|مقارنة الممالك متاحة حاليًا للاعبي الولاية 169.
+Player lookup timed out. Please try again.|플레이어 조회 시간이 초과되었습니다. 다시 시도하세요.|La consulta del jugador ha agotado el tiempo de espera. Inténtalo de nuevo.|A consulta do jogador excedeu o tempo limite. Tente novamente.|La recherche du joueur a expiré. Veuillez réessayer.|انتهت مهلة البحث عن اللاعب. حاول مجددًا.
+`;
+for(const row of compareAccessRows.trim().split('\n')){const [key,...values]=row.split('|');if(values.length!==5)throw Error('Invalid Compare translation');['ko','es','pt','fr','ar'].forEach((language,i)=>{result[language][key]=values[i]})}
 window.KSTranslations=result;
 window.dispatchEvent(new Event('ks-translations-ready'));
 })();

@@ -18,7 +18,18 @@
 <h1 data-ks-text="🏰 Kingdom Compare">🏰 Kingdom Compare</h1>
 <div class="sub" data-ks-text="Compare State 169 with another kingdom using current MightPulse kingdom statistics.">Compare State 169 with another kingdom using current MightPulse kingdom statistics.</div>
 
-<section class="card">
+<section class="card access-card" aria-labelledby="access-title">
+<h2 id="access-title" data-ks-text="State 169 players">State 169 players</h2>
+<p data-ks-text="Enter your Kingshot Player ID to access Kingdom Compare.">Enter your Kingshot Player ID to access Kingdom Compare.</p>
+<form id="access-form" novalidate>
+<label class="field" for="visitor-id"><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="visitor-id" inputmode="numeric" autocomplete="off" maxlength="24" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596" aria-describedby="access-message"></label>
+<button id="check-player" type="submit" data-ks-text="Check player">Check player</button>
+</form>
+<div id="access-profile" hidden><strong id="visitor-name" translate="no"></strong><p id="visitor-meta"></p><p id="visitor-state"></p><div class="access-actions"><button id="access-continue" type="button" data-ks-text="Continue to Compare">Continue to Compare</button><button id="access-change" type="button" class="secondary" data-ks-text="Different Player">Different Player</button></div></div>
+<p id="access-message" class="msg" role="status" aria-live="polite"></p>
+<p class="access-note" data-ks-text="This check does not verify account ownership or provide authentication.">This check does not verify account ownership or provide authentication.</p>
+</section>
+<section class="card" id="comparison-controls" hidden>
   <div class="form">
     <div class="fixed">
       <div class="label" data-ks-text="Our Kingdom">Our Kingdom</div>
@@ -30,7 +41,7 @@
       <input id="opponent" inputmode="numeric" pattern="[0-9]*" placeholder="82" maxlength="6">
     </label>
   </div>
-  <button id="compare" data-ks-text="Compare Kingdoms">Compare Kingdoms</button>
+  <button disabled id="compare" data-ks-text="Compare Kingdoms">Compare Kingdoms</button>
   <div id="msg" class="msg"></div>
 </section>
 
@@ -99,7 +110,10 @@ function row(label,a,b,formatter=compact,mode="high"){
 }
 function table(id, rows){ $(id).innerHTML=rows.join(""); }
 
+let comparing=false;
 async function run(){
+  const approval=window.CompareAccess?.ticket();
+  if(!approval||comparing)return;
   const opponent=$("opponent").value.trim();
   if(!/^\d{1,6}$/.test(opponent)||Number(opponent)===169){
     KSPreferences.setText($("msg"), "Enter a valid opponent kingdom other than 169.");
@@ -107,6 +121,7 @@ async function run(){
     return;
   }
 
+  comparing=true;
   $("compare").disabled=true;
   KSPreferences.setText($("compare"), "Comparing…");
   KSPreferences.setText($("msg"), "Loading kingdom statistics…");
@@ -116,9 +131,10 @@ async function run(){
     const r=await fetch(API,{
       method:"POST",
       headers:{"Content-Type":"application/json","apikey":KEY},
-      body:JSON.stringify({opponent:Number(opponent)})
+      body:JSON.stringify({opponent:Number(opponent)}),signal:approval.signal
     });
     let j={}; try{j=await r.json()}catch{}
+    if(!CompareAccess.valid(approval))return;
     if(!r.ok||!j.ok)throw KSPreferences.apiError(j.error,"Comparison failed ({status}).",{status:r.status});
 
     const a=j.left, b=j.right;
@@ -161,11 +177,13 @@ async function run(){
     KSPreferences.setText($("msg"), "");
     history.replaceState(null,"",`?state=${encodeURIComponent(opponent)}`);
   }catch(e){
+    if(!CompareAccess.valid(approval))return;
     $("results").classList.add("hidden");
     KSPreferences.setError($("msg"),e,"Could not compare kingdoms.");
     $("msg").className="msg error";
   }finally{
-    $("compare").disabled=false;
+    comparing=false;
+    $("compare").disabled=!CompareAccess.ticket();
     KSPreferences.setText($("compare"), "Compare Kingdoms");
   }
 }
@@ -175,10 +193,10 @@ $("opponent").addEventListener("keydown",e=>{if(e.key==="Enter")run()});
 const preset=new URLSearchParams(location.search).get("state");
 if(preset&&/^\d{1,6}$/.test(preset)){
   $("opponent").value=preset;
-  run();
 }
 </script>
 
+<script src="./access.js"></script>
 <script>window.KSPreferences?.mount();</script>
 </body>
 </html>
