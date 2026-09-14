@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "settings": {
+    "headline": "State 169 — Organised chaos. Community first.",
+    "strapline": "Your game. Your budget. Your kind of chaos.",
+    "recruitment_message": "Some people play to compete. Some play to build, collect heroes or spend time with friends. Some are here for the banter. Everyone has their own reason for logging in, and we think there should be room for that.\n\nSpend when you want—or don't. Free-to-play players, occasional spenders and whales all have something to contribute. Your place in the community should not depend on keeping up with someone else's wallet.\n\nWe like a little organised chaos. Bring your personality, your questionable jokes and your ridiculous game persona. Good-natured trolling is one thing; harassment, scams and making the game miserable for other people are another.\n\nFreedom comes with a few shared boundaries. We have a NAP policy and state rules around King rotation, forts and sanctuaries. Respect those agreements and the people around you, and there is plenty of room to enjoy the game your way.\n\nWhen it matters, we come together and fight. We encourage preparation and saving for KVK, while recognising that people have different schedules, budgets and goals. Contribute where you can; a good teammate brings more than a power number.\n\nHere is the honest part: 169 is rebuilding and we need more people. With Red moving out, we expect KRZ to be the core of a smaller active community. We are not promising a packed state or effortless victories. We are inviting like-minded players to help build a place worth logging into—and worth staying in.\n\nLooking for a finished powerhouse? That is not what we are selling. Looking for friends, a voice and a chance to help shape what comes next? Come and talk to us.\n\nAfter all, it is a mobile game. Let's make it a good place to spend our time.\n",
+    "contact_message": "Don't make a transfer decision from a recruitment page alone. Message one of our transfer contacts or key state members, ask the awkward questions, and get a feel for the people you would be playing alongside.\n\nTell us what you enjoy about Kingshot, your usual activity times, whether friends are coming with you, and what you want from your next state. We can discuss alliance placement, event expectations, current state rules and the places actually available.\n\nUse the contact cards below to copy a Player ID, or join State Discord when an invite is listed. Please mention your Player ID and that you are enquiring about transferring to 169.\n\nAn enquiry or application is not an in-game invitation or a reserved alliance place. Speak with the team before committing to a move.\n\nNever share your account password or any sign-in verification code with a transfer contact.\n",
+    "state_note": "",
+    "rules": "",
+    "pass_guidance": "Check your own Transfer Pass requirement in the in-game Transfer event. The required number varies with your Transfer Score; it is not one fixed amount for every applicant. Confirm the cost and destination requirements before planning your move.",
+    "preparedness_note": "",
+    "event_name": "September 2026 Kingdom Transfer",
+    "event_notice": "Suggested September dates and group range require in-game review. Phase boundaries were derived from announcement durations; they have not been independently confirmed here.",
+    "cap_note": "",
+    "source_language": "en",
+    "group_number": 2,
+    "kingdom_from": 116,
+    "kingdom_to": 235,
+    "entry_power_cap": null,
+    "ordinary_capacity": null,
+    "ordinary_places_remaining": null,
+    "special_invites_remaining": null,
+    "alliance_places_remaining": null,
+    "starts_at": "2026-09-13T00:00:00Z",
+    "ends_at": "2026-09-19T23:59:59Z",
+    "pre_transfer_starts_at": "2026-09-13T00:00:00Z",
+    "invitational_starts_at": "2026-09-16T00:00:00Z",
+    "open_transfer_starts_at": "2026-09-18T00:00:00Z",
+    "details_confirmed_at": null,
+    "classification": "ordinary",
+    "source_url": "https://kingshotwiki.com/sneak-peek/090956859en/",
+    "discord_url": null,
+    "contacts": [
+      {
+        "name": "Yis",
+        "player_id": "37217132",
+        "alliance": "KRZ",
+        "role": "Transfer Manager",
+        "languages": "",
+        "availability": "",
+        "is_transfer_manager": true
+      },
+      {
+        "name": "St Uub’s",
+        "player_id": "24649596",
+        "alliance": "KRZ",
+        "role": "R5 and state lead",
+        "languages": "",
+        "availability": "",
+        "is_transfer_manager": false
+      }
+    ]
+  }
+}

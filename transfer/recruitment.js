@@ -3,6 +3,6 @@
   const host=document.getElementById('transfer-recruitment');
   fetch('https://iqjvzhgodwufvepegwyj.supabase.co/functions/v1/transfer-settings',{
     headers:authHeaders(),signal:AbortSignal.timeout(10000),
-  }).then(async response=>{if(!response.ok)throw Error();const body=await response.json();if(!body.ok)throw Error();KSRecruitment.render(host,body.settings||null)})
-    .catch(()=>KSRecruitment.render(host,null));
+  }).then(async response=>{if(!response.ok)throw Error();const body=await response.json();if(!body.ok)throw Error();KSTransferOverview.render(host,body.settings||null)})
+    .catch(()=>KSTransferOverview.render(host,null));
 })();

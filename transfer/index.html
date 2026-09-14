@@ -13,35 +13,61 @@
 <script src="../shared/site-preferences.js"></script>
 <link rel="stylesheet" href="./transfer.css">
 </head>
-<body>
+<body class="transfer-page">
 <main>
 <div class="top"><a href="../" data-ks-text="← 169 KS Tools" data-site-nav>← 169 KS Tools</a><strong data-ks-text="STATE 169">STATE 169</strong></div>
-<header><div class="transfer-icon" >🔄</div><h1 data-ks-text="Transfer Application">Transfer Application</h1><p data-ks-text="Verify your Kingshot profile, then complete the short application.">Verify your Kingshot profile, then complete the short application.</p></header>
-
-<nav class="tr-anchors" aria-label="Transfer sections" data-ks-aria-label="Transfer sections">
-<a href="#transfer-contacts" data-ks-text="Talk to the team">Talk to the team</a>
-<a href="#transfer-application" data-ks-text="Apply">Apply</a>
+<header class="ti-hero" aria-labelledby="transfer-headline">
+<picture>
+<source media="(max-width:600px)" srcset="./assets/community-adventure-mobile.webp" width="840" height="630">
+<img class="ti-hero-art" src="./assets/community-adventure.webp" width="1600" height="800" alt="" fetchpriority="high" decoding="async">
+</picture>
+<div class="ti-hero-copy">
+<div class="ti-destination"><span class="ti-crest" aria-hidden="true">169</span><span data-ks-text="STATE 169">STATE 169</span></div>
+<h1 id="transfer-headline" data-ks-text="Transfer to State 169">Transfer to State 169</h1>
+<p id="transfer-introduction" data-ks-text="Verify your Kingshot profile, then complete the short application.">Verify your Kingshot profile, then complete the short application.</p>
+<nav class="ti-hero-actions" aria-label="Transfer sections" data-ks-aria-label="Transfer sections">
+<a class="ti-button ti-primary" href="#transfer-application" data-ks-text="Start my application">Start my application</a>
+<a class="ti-button ti-secondary" href="#transfer-contacts" data-ks-text="Meet the team">Meet the team</a>
+</nav>
+</div>
+</header>
+<nav class="ti-page-nav" aria-label="Transfer sections" data-ks-aria-label="Transfer sections">
+<a href="#transfer-event" data-ks-text="Event information">Event information</a>
+<a href="#transfer-community" data-ks-text="Recruitment message">Recruitment message</a>
+<a href="#transfer-contacts" data-ks-text="Meet the team">Meet the team</a>
+<span aria-hidden="true">169</span>
 </nav>
 <div id="transfer-recruitment"></div>
 <section class="card" id="transfer-application">
-<h2 data-ks-text="1. Find your Kingshot profile">1. Find your Kingshot profile</h2>
+<ol class="ti-progress" aria-label="Application progress" data-ks-aria-label="Application progress">
+<li data-state="current" aria-current="step"><span class="ti-progress-number" aria-hidden="true"><span>1</span></span><span data-ks-text="Find your profile">Find your profile</span></li>
+<li data-state="pending"><span class="ti-progress-number" aria-hidden="true"><span>2</span></span><span data-ks-text="Complete your application">Complete your application</span></li>
+<li data-state="pending"><span class="ti-progress-number" aria-hidden="true"><span>3</span></span><span data-ks-text="Application received">Application received</span></li>
+</ol>
+<p id="application-progress-status" class="ti-sr-only" role="status" aria-live="polite"></p>
+<div class="ti-application-heading"><div><h2 data-ks-text="Find your profile">Find your profile</h2><p data-ks-text="Enter your Kingshot Player ID to get started.">Enter your Kingshot Player ID to get started.</p></div></div>
 <div class="lookup">
 <label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="fid" inputmode="numeric" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596"></label>
-<button id="find" data-ks-text="Find Player">Find Player</button>
+<button id="find" data-ks-text="Find my profile">Find my profile</button>
 </div>
-<div id="lookupMsg" class="msg"></div>
+<div id="lookupMsg" class="msg" role="status" aria-live="polite"></div>
 
 <div id="playerCard">
 <div class="player">
-<div class="avatar">👤</div>
+<div class="avatar" id="governor-avatar" aria-hidden="true"></div>
 <div><div id="pName" translate="no" class="name"></div><div id="pMeta" class="meta"></div></div>
 </div>
-<div class="actions"><button id="continue" data-ks-text="Continue Application">Continue Application</button><button id="change" class="secondary" data-ks-text="Different Player">Different Player</button></div>
+<p class="ti-profile-explanation" data-ks-text="Check this is the profile you want to apply with. A lookup does not prove ownership, eligibility or acceptance.">Check this is the profile you want to apply with. A lookup does not prove ownership, eligibility or acceptance.</p>
+<div class="actions"><button id="continue" data-ks-text="Complete my application">Complete my application</button><button id="change" class="secondary" data-ks-text="Different Player">Different Player</button></div>
+</div>
+<div class="ti-application-notices">
+<p data-ks-text="Contacting the team is encouraged, but is not required to submit an application.">Contacting the team is encouraged, but is not required to submit an application.</p>
+<p data-ks-text="An enquiry or application is not an in-game invitation or a reserved alliance place.">An enquiry or application is not an in-game invitation or a reserved alliance place.</p>
 </div>
 </section>
 
 <section id="application" class="card">
-<h2 data-ks-text="2. Transfer details">2. Transfer details</h2>
+<h2 data-ks-text="Complete your application">Complete your application</h2>
 <form id="form">
 <div class="grid">
 <label><span data-ks-text="Transfer Passes">Transfer Passes</span><input name="passes" required placeholder="How many do you currently have?" data-ks-placeholder="How many do you currently have?"></label>
@@ -53,17 +79,18 @@
 <div class="full consent"><input id="consent" type="checkbox" required><label for="consent" data-ks-text="I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.">I understand this application and my verified Kingshot profile information will be shared with authorised State 169 leadership for transfer review.</label></div>
 </div>
 <div class="actions"><button id="submitBtn" class="submit" type="submit" data-ks-text="Submit Application">Submit Application</button></div>
-<div id="submitMsg" class="msg"></div>
+<div id="submitMsg" class="msg" role="status" aria-live="polite"></div>
 </form>
 </section>
 
 <section id="successCard" class="card">
 <div class="success">
-<h2 data-ks-text="Application received">Application received</h2>
+<h2 id="application-received" tabindex="-1" data-ks-text="Application received">Application received</h2>
 <p id="successMessage"></p>
 <p data-ks-text="Contact the team and quote your application reference.">Contact the team and quote your application reference.</p>
 <p data-ks-text="Reference:">Reference:</p>
 <div id="successRef" translate="no" class="ref"></div>
+<a class="ti-button ti-primary" href="#transfer-contacts" data-ks-text="Meet the team">Meet the team</a>
 <div class="actions"><a class="return-home" href="../" ><button type="button" class="secondary" data-ks-text="Back to 169 KS Tools">Back to 169 KS Tools</button></a></div>
 </div>
 </section>
@@ -87,6 +114,7 @@ const authHeaders=()=>({
 });
 
 const power=n=>{
+  if(n===null||n===undefined||n==="")return KSPreferences.message("Unknown");
   n=Number(n);
   if(!Number.isFinite(n))return KSPreferences.message("Unknown");
   if(n>=1e9)return(n/1e9).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"B";
@@ -128,6 +156,7 @@ async function findPlayer(){
   }
 
   verified=j.player;
+  KSApplication.profile(verified);
   KSPreferences.setResponse($("pName"), verified.name,"Player {id}",{id:verified.player_id});
 
   const alliance=[verified.alliance_abbr,verified.alliance_name].filter(Boolean).join(" · ");
@@ -158,15 +187,16 @@ async function findPlayer(){
   }
 
   $("continue").style.display="";
-  KSPreferences.setText($("lookupMsg"), "✓ Player verified and eligible to apply.");
+  KSPreferences.setText($("lookupMsg"), "Profile found");
   $("lookupMsg").className="msg ok";
  }catch(e){
+  verified=null;$("fid").disabled=false;$("application").style.display="none";KSApplication.progress(1);
   KSPreferences.setError($("lookupMsg"), e);
   $("lookupMsg").className="msg error";
   $("playerCard").style.display="none";
  }finally{
   $("find").disabled=false;
-  KSPreferences.setText($("find"), "Find Player");
+  KSPreferences.setText($("find"), "Find my profile");
  }
 }
 
@@ -174,12 +204,14 @@ $("find").onclick=findPlayer;
 $("fid").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();findPlayer()}};
 
 $("continue").onclick=()=>{
+  if(!verified||Number(verified.kingdom)===169)return;
+  KSApplication.progress(2);
   $("application").style.display="block";
-  $("application").scrollIntoView({behavior:"smooth"});
+  $("application").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 };
 
 $("change").onclick=()=>{
-  verified=null;
+  verified=null;KSApplication.progress(1);
   $("playerCard").style.display="none";
   $("application").style.display="none";
   $("successCard").style.display="none";
@@ -236,7 +268,9 @@ $("form").onsubmit=async e=>{
     KSPreferences.setText($("successMessage"),"Thanks {name}. Your transfer application has been submitted to State 169 leadership.",{name:verified.name||""});
     KSPreferences.setRawText($("successRef"), j.reference||"");
     $("successCard").style.display="block";
-    $("successCard").scrollIntoView({behavior:"smooth"});
+    KSApplication.progress(3);$("continue").style.display="none";
+    $("successCard").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+    $("application-received").focus({preventScroll:true});
 
   }catch(err){
     KSPreferences.setError($("submitMsg"),err,"Application submission failed.");
@@ -248,6 +282,8 @@ $("form").onsubmit=async e=>{
 };
 </script>
 <script src="../shared/transfer-recruitment.js"></script>
+<script src="./overview.js"></script>
+<script src="./application.js"></script>
 <script src="./recruitment.js"></script>
 <footer class="site-credit">
   <div data-ks-text="169 Kingshot Tools">169 Kingshot Tools</div>

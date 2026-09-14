@@ -606,6 +606,44 @@ Recruitment information unpublished.|모집 정보 게시를 취소했습니다.
 Replace these draft inputs with suggested wording? Nothing will be saved or published.|입력한 초안을 추천 문구로 교체할까요? 저장되거나 게시되지는 않습니다.|¿Reemplazar este borrador con texto sugerido? No se guardará ni publicará nada.|Substituir este rascunho pelo texto sugerido? Nada será guardado ou publicado.|Remplacer ces saisies par le texte suggéré ? Rien ne sera enregistré ni publié.|هل تريد استبدال مدخلات المسودة بالنص المقترح؟ لن يتم حفظ أو نشر شيء.
 Suggested values loaded. Review the event details in-game before saving.|추천 내용을 불러왔습니다. 저장 전에 게임 내 이벤트 정보를 확인하세요.|Valores sugeridos cargados. Revisa los detalles en el juego antes de guardar.|Valores sugeridos carregados. Reveja os detalhes no jogo antes de guardar.|Valeurs suggérées chargées. Vérifiez les détails en jeu avant d'enregistrer.|تم تحميل القيم المقترحة. راجع تفاصيل الحدث داخل اللعبة قبل الحفظ.
 Suggested wording could not be loaded.|추천 문구를 불러오지 못했습니다.|No se pudo cargar el texto sugerido.|Não foi possível carregar o texto sugerido.|Impossible de charger le texte suggéré.|تعذر تحميل النص المقترح.
+Apply to State 169|State 169로 이전 신청|Solicitar traslado al Estado 169|Candidatar-se ao Estado 169|Postuler pour l’État 169|تقدّم إلى الولاية 169
+Pre-transfer|이전 준비|Pretraslado|Pré-transferência|Pré-transfert|ما قبل الانتقال
+Invitational|초청 이전|Por invitación|Por convite|Sur invitation|الانتقال بالدعوة
+Open Transfer|일반 이전|Traslado abierto|Transferência aberta|Transfert ouvert|الانتقال المفتوح
+Upcoming|예정|Próximamente|Em breve|À venir|قادم
+Ended|종료|Finalizado|Terminado|Terminé|انتهى
+Event ended|이벤트 종료|Evento finalizado|Evento terminado|Événement terminé|انتهى الحدث
+Schedule unconfirmed|일정 미확인|Calendario sin confirmar|Calendário por confirmar|Calendrier non confirmé|الجدول غير مؤكد
+Event active · phase unconfirmed|이벤트 진행 중 · 단계 미확인|Evento activo · fase sin confirmar|Evento ativo · fase por confirmar|Événement en cours · phase non confirmée|الحدث جارٍ · المرحلة غير مؤكدة
+Current phase|현재 단계|Fase actual|Fase atual|Phase en cours|المرحلة الحالية
+Published schedule · all times UTC|게시된 일정 · 모든 시간 UTC|Calendario publicado · horas en UTC|Calendário publicado · horas em UTC|Calendrier publié · horaires en UTC|الجدول المنشور · جميع الأوقات UTC
+Transfer range|이전 가능 왕국 범위|Intervalo de reinos|Intervalo de reinos|Plage de royaumes|نطاق الممالك
+Group {number}|그룹 {number}|Grupo {number}|Grupo {number}|Groupe {number}|المجموعة {number}
+Confirmed capacity: {count}|확인된 정원: {count}|Capacidad confirmada: {count}|Capacidade confirmada: {count}|Capacité confirmée : {count}|السعة المؤكدة: {count}
+Requirements & exceptions|요구 조건 및 예외|Requisitos y excepciones|Requisitos e exceções|Conditions et exceptions|المتطلبات والاستثناءات
+Read the full recruitment message|전체 모집 메시지 읽기|Leer el mensaje completo|Ler a mensagem completa|Lire le message de recrutement complet|اقرأ رسالة التجنيد كاملة
+Before you contact the team|팀에 문의하기 전에|Antes de contactar con el equipo|Antes de contactar a equipa|Avant de contacter l’équipe|قبل التواصل مع الفريق
+{date}|{date}|{date}|{date}|{date}|{date}
+Start my application|이전 신청 시작|Empezar mi solicitud|Iniciar a minha candidatura|Commencer ma candidature|ابدأ طلبي
+Meet the team|팀 만나기|Conoce al equipo|Conheça a equipa|Rencontrer l’équipe|تعرّف على الفريق
+Meet the people of 169|169의 사람들 만나기|Conoce a la gente de 169|Conheça as pessoas de 169|Rencontrez les joueurs de 169|تعرّف على أهل الولاية 169
+Play your way|나만의 방식으로 즐기기|Juega a tu manera|Jogue à sua maneira|Jouez à votre façon|العب بطريقتك
+Find your people|함께할 사람들 찾기|Encuentra a tu gente|Encontre a sua comunidade|Trouvez votre communauté|اعثر على رفاقك
+In their own words|직접 전하는 이야기|En sus propias palabras|Nas suas próprias palavras|Avec leurs propres mots|بكلماتهم
+Read the published recruitment message.|게시된 모집 메시지를 읽어 보세요.|Lee el mensaje de reclutamiento publicado.|Leia a mensagem de recrutamento publicada.|Lisez le message de recrutement publié.|اقرأ رسالة التجنيد المنشورة.
+Get to know the published state contacts before your move.|이전하기 전에 공개된 주 담당자들을 알아보세요.|Conoce a los contactos publicados del estado antes de trasladarte.|Conheça os contactos publicados do estado antes da sua mudança.|Faites connaissance avec les contacts publiés de l’État avant votre transfert.|تعرّف على جهات اتصال الولاية المنشورة قبل انتقالك.
+Published contacts are unavailable.|공개된 연락처를 확인할 수 없습니다.|Los contactos publicados no están disponibles.|Os contactos publicados não estão disponíveis.|Les contacts publiés sont indisponibles.|جهات الاتصال المنشورة غير متاحة.
+Tools for your next chapter|새 출발을 위한 도구|Herramientas para tu nueva etapa|Ferramentas para a próxima etapa|Des outils pour la suite|أدوات لمرحلتك القادمة
+Explore rally timing and King's Buffs booking tools.|집결 시간 계산 및 왕의 버프 예약 도구를 살펴보세요.|Explora las herramientas de coordinación de rallies y reserva de King's Buffs.|Explore as ferramentas de sincronização de rallies e reserva de King's Buffs.|Découvrez les outils de synchronisation des rallies et de réservation des King's Buffs.|استكشف أدوات توقيت التجمعات وحجز تعزيزات الملك.
+Find your profile|프로필 찾기|Encuentra tu perfil|Encontre o seu perfil|Trouvez votre profil|اعثر على ملفك
+Complete your application|신청서 작성|Completa tu solicitud|Complete a sua candidatura|Complétez votre candidature|أكمل طلبك
+Find my profile|내 프로필 찾기|Buscar mi perfil|Encontrar o meu perfil|Trouver mon profil|ابحث عن ملفي
+Complete my application|내 신청서 작성|Completar mi solicitud|Completar a minha candidatura|Compléter ma candidature|أكمل طلبي
+Profile found|프로필을 찾았습니다|Perfil encontrado|Perfil encontrado|Profil trouvé|تم العثور على الملف
+Enter your Kingshot Player ID to get started.|Kingshot 플레이어 ID를 입력하여 시작하세요.|Introduce tu ID de jugador de Kingshot para empezar.|Introduza o seu ID de jogador Kingshot para começar.|Saisissez votre identifiant de joueur Kingshot pour commencer.|أدخل معرّف لاعب Kingshot للبدء.
+Check this is the profile you want to apply with. A lookup does not prove ownership, eligibility or acceptance.|신청에 사용할 프로필인지 확인하세요. 조회는 소유권, 이전 자격 또는 승인을 증명하지 않습니다.|Comprueba que este es el perfil con el que quieres solicitar. La consulta no demuestra propiedad, elegibilidad ni aceptación.|Confirme que este é o perfil com que pretende candidatar-se. A consulta não comprova titularidade, elegibilidade ou aceitação.|Vérifiez qu’il s’agit du profil avec lequel vous souhaitez postuler. La recherche ne prouve ni la propriété, ni l’éligibilité, ni l’acceptation.|تأكد أن هذا هو الملف الذي تريد التقديم به. البحث لا يثبت الملكية أو الأهلية أو القبول.
+Step {number} of 3: {step}|3단계 중 {number}단계: {step}|Paso {number} de 3: {step}|Passo {number} de 3: {step}|Étape {number} sur 3 : {step}|الخطوة {number} من 3: {step}
+Application progress|신청 진행 상태|Progreso de la solicitud|Progresso da candidatura|Progression de la candidature|تقدّم الطلب
 `;
 for(const row of recruitmentRows.trim().split('\n')){const [key,...values]=row.split('|');if(values.length!==5)throw new Error('Invalid recruitment translation: '+key);['ko','es','pt','fr','ar'].forEach((language,i)=>{if(!Object.hasOwn(result[language],key))result[language][key]=values[i]})}
 window.KSTranslations=result;
