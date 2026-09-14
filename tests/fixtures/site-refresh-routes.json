@@ -1,0 +1,80 @@
+{
+  "commit": "5d621de9dec9af635ae3bba8c26b1162ccb04f3f",
+  "routes": [
+    {
+      "file": "admin/account/index.html",
+      "route": "/admin/account/",
+      "redirect": false
+    },
+    {
+      "file": "admin/audit/index.html",
+      "route": "/admin/audit/",
+      "redirect": false
+    },
+    {
+      "file": "admin/index.html",
+      "route": "/admin/",
+      "redirect": false
+    },
+    {
+      "file": "admin/kings-buffs/index.html",
+      "route": "/admin/kings-buffs/",
+      "redirect": false
+    },
+    {
+      "file": "admin/player-search/index.html",
+      "route": "/admin/player-search/",
+      "redirect": false
+    },
+    {
+      "file": "admin/transfers/index.html",
+      "route": "/admin/transfers/",
+      "redirect": false
+    },
+    {
+      "file": "admin/usage/index.html",
+      "route": "/admin/usage/",
+      "redirect": false
+    },
+    {
+      "file": "admin/users/index.html",
+      "route": "/admin/users/",
+      "redirect": false
+    },
+    {
+      "file": "compare/index.html",
+      "route": "/compare/",
+      "redirect": false
+    },
+    {
+      "file": "gift-codes/index.html",
+      "route": "/gift-codes/",
+      "redirect": false
+    },
+    {
+      "file": "index.html",
+      "route": "/",
+      "redirect": false
+    },
+    {
+      "file": "kings-buffs/index.html",
+      "route": "/kings-buffs/",
+      "redirect": false
+    },
+    {
+      "file": "rally/index.html",
+      "route": "/rally/",
+      "redirect": false
+    },
+    {
+      "file": "transfer/admin/index.html",
+      "route": "/transfer/admin/",
+      "redirect": true
+    },
+    {
+      "file": "transfer/index.html",
+      "route": "/transfer/",
+      "redirect": false
+    }
+  ]
+}

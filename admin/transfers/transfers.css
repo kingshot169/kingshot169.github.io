@@ -1,149 +1,54 @@
-/* Page-specific styles. Shared foundation and preferences load first. */
-:root{
-  --panel2:#020617;
-  --line:#334155;
-  --red:#dc2626;
-  --redHover:#b91c1c;
+/* Scoped page layouts and states; common visual rules are in shared/modern.css. */
+:root { --panel2: #020617; --line: #334155; --red: #dc2626; --redHover: #b91c1c; }
+:where(body.ks-transfers) main { max-width: 1180px; margin: auto; }
+:where(body.ks-transfers) .top { display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
+:where(body.ks-transfers) .muted { color: var(--muted); }
+:where(body.ks-transfers) button { cursor: pointer; }
+:where(body.ks-transfers) button:hover { filter: brightness(1.08); }
+:where(body.ks-transfers) button:disabled { opacity: 0.55; cursor: not-allowed; }
+:where(body.ks-transfers) button.danger { background: var(--red); }
+:where(body.ks-transfers) button.danger:hover { background: var(--redHover); }
+:where(body.ks-transfers) .grid { display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); gap: 10px; }
+:where(body.ks-transfers) .kv { background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel2); border-radius: 9px; padding: 10px; }
+:where(body.ks-transfers) .k { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+:where(body.ks-transfers) .v { margin-top: 4px; }
+:where(body.ks-transfers) .reason { white-space: pre-wrap; line-height: 1.45; }
+:where(body.ks-transfers) .statusline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+:where(body.ks-transfers) .statusline .spacer { flex: 1 1 auto; }
+:where(body.ks-transfers) .msg { min-height: 20px; margin-top: 10px; }
+:where(body.ks-transfers) .error { color: rgb(252, 165, 165); }
+:where(body.ks-transfers) .ok { color: rgb(134, 239, 172); }
+:where(body.ks-transfers) .player-box { display: flex; align-items: center; gap: 12px; }
+:where(body.ks-transfers) .player-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel2); flex: 0 0 auto; }
+@media (max-width: 800px) {
+  :where(body.ks-transfers) .grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  :where(body.ks-transfers) .grid { grid-template-columns: 1fr; }
+  :where(body.ks-transfers) .statusline { align-items: stretch; }
+  :where(body.ks-transfers) .statusline label, :where(body.ks-transfers) .statusline select, :where(body.ks-transfers) .statusline button { width: 100%; }
+  :where(body.ks-transfers) .statusline .spacer { display: none; }
+}
+:where(body.ks-transfers) .application-detail { margin-top: 10px; }
+:where(body.ks-transfers) .tr-manager-switch, :where(body.ks-transfers) .tr-settings-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0px; }
+:where(body.ks-transfers) .tr-manager [hidden], :where(body.ks-transfers) #transfer-applications-view[hidden], :where(body.ks-transfers) .tr-manager[hidden] { display: none; }
+:where(body.ks-transfers) .tr-settings-fields { min-width: 0px; border: 0px; padding: 0px; margin: 0px; }
+:where(body.ks-transfers) .tr-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); gap: 14px; }
+:where(body.ks-transfers) .tr-settings-grid label, :where(body.ks-transfers) .tr-contact-editor label { display: grid; gap: 5px; min-width: 0px; font-size: 0.85rem; }
+:where(body.ks-transfers) .tr-manager input, :where(body.ks-transfers) .tr-manager textarea, :where(body.ks-transfers) .tr-manager select { box-sizing: border-box; width: 100%; min-width: 0px; max-width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); color: var(--text); font: inherit; }
+:where(body.ks-transfers) .tr-manager textarea { resize: vertical; line-height: 1.5; }
+:where(body.ks-transfers) .tr-manager .tr-wide { grid-column: 1 / -1; }
+:where(body.ks-transfers) .tr-manager .tr-contact-editor { min-width: 0px; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 14px 0px; display: grid; gap: 10px; }
+:where(body.ks-transfers) .tr-manager .tr-check { display: flex; align-items: center; }
+:where(body.ks-transfers) .tr-manager .tr-check input { width: auto; }
+:where(body.ks-transfers) .tr-manager button { min-height: 38px; }
+:where(body.ks-transfers) .tr-manager button:focus-visible, :where(body.ks-transfers) .tr-manager input:focus-visible, :where(body.ks-transfers) .tr-manager textarea:focus-visible, :where(body.ks-transfers) .tr-manager select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+:where(body.ks-transfers) .tr-manager-status { min-height: 1.5em; overflow-wrap: anywhere; }
+:where(body.ks-transfers) .tr-preview-dialog { box-sizing: border-box; width: min(900px, 100% - 24px); max-height: 90vh; overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--text); padding: 16px; }
+:where(body.ks-transfers) .tr-preview-dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+html[data-theme="light"] :where(body.ks-transfers) .tr-preview-dialog { background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel); color: rgb(23, 32, 51); }
+@media (max-width: 620px) {
+  :where(body.ks-transfers) .tr-settings-grid { grid-template-columns: minmax(0px, 1fr); }
 }
 
-body{
-  margin:0;
-  padding:16px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,sans-serif
-}
-main{max-width:1180px;margin:auto}
-.top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap
-}
-h1{color:var(--gold);margin:14px 0}
-.muted{color:var(--muted)}
-button{
-  border:0;
-  border-radius:999px;
-  padding:9px 13px;
-  background:#334155;
-  color:white;
-  font:inherit;
-  font-weight:700;
-  cursor:pointer
-}
-button:hover{filter:brightness(1.08)}
-button:disabled{opacity:.55;cursor:not-allowed}
-button.danger{
-  background:var(--red);
-}
-button.danger:hover{
-  background:var(--redHover);
-}
-select{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid #475569;
-  background:var(--panel2);
-  color:var(--text)
-}
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  margin:12px 0
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px
-}
-.kv{
-  background:#020617;
-  border-radius:9px;
-  padding:10px
-}
-.k{
-  font-size:.72rem;
-  color:var(--muted);
-  text-transform:uppercase
-}
-.v{margin-top:4px}
-.reason{
-  white-space:pre-wrap;
-  line-height:1.45
-}
-.statusline{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-top:12px
-}
-.statusline .spacer{
-  flex:1 1 auto;
-}
-.msg{
-  min-height:20px;
-  margin-top:10px
-}
-.error{color:#fca5a5}
-.ok{color:#86efac}
-
-.player-box{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.player-avatar{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--gold);
-  background:#020617;
-  flex:0 0 auto;
-}
-
-@media(max-width:800px){
-  .grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:520px){
-  .grid{grid-template-columns:1fr}
-  .statusline{
-    align-items:stretch;
-  }
-  .statusline label,
-  .statusline select,
-  .statusline button{
-    width:100%;
-  }
-  .statusline .spacer{
-    display:none;
-  }
-}
-
-/* Static presentation, including generated markup. */
-.application-detail{margin-top:10px}
-
-/* Event & Recruitment editor. Application list styles above remain unchanged. */
-.tr-manager-switch,.tr-settings-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-.tr-manager [hidden],#transfer-applications-view[hidden],.tr-manager[hidden]{display:none}
-.tr-settings-fields{min-width:0;border:0;padding:0;margin:0}
-.tr-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.tr-settings-grid label,.tr-contact-editor label{display:grid;gap:5px;min-width:0;font-size:.85rem}
-.tr-manager input,.tr-manager textarea,.tr-manager select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);font:inherit}
-.tr-manager textarea{resize:vertical;line-height:1.5}
-.tr-manager .tr-wide{grid-column:1/-1}
-.tr-manager .tr-contact-editor{min-width:0;border:1px solid var(--line);border-radius:12px;padding:12px;margin:14px 0;display:grid;gap:10px}
-.tr-manager .tr-check{display:flex;align-items:center}.tr-manager .tr-check input{width:auto}
-.tr-manager button{min-height:38px}
-.tr-manager button:focus-visible,.tr-manager input:focus-visible,.tr-manager textarea:focus-visible,.tr-manager select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.tr-manager-status{min-height:1.5em;overflow-wrap:anywhere}
-.tr-preview-dialog{box-sizing:border-box;width:min(900px,calc(100% - 24px));max-height:90vh;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);padding:16px}
-.tr-preview-dialog::backdrop{background:rgba(0,0,0,.65)}
-html[data-theme="light"] .tr-preview-dialog{background:#fff;color:#172033}
-@media(max-width:620px){.tr-settings-grid{grid-template-columns:minmax(0,1fr)}}
+.ks-transfers .player-box{min-width:0}.ks-transfers .player-box>div{min-width:0;overflow-wrap:anywhere}@media(max-width:520px){.ks-transfers #transfer-applications-view .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ks-transfers #transfer-applications-view .kv:first-child,.ks-transfers #transfer-applications-view .kv:last-child{grid-column:1/-1}.ks-transfers #transfer-applications-view .kv{padding:12px}.ks-transfers #transfer-applications-view .v{font-size:.85rem}}.ks-transfers .statusline{padding-top:18px;border-top:1px solid var(--line)}.ks-transfers .reason{font-size:.94rem;line-height:1.7}.ks-transfers .tr-manager-switch button[aria-pressed="true"]{background:var(--info-bg);color:var(--info);border-color:var(--info)}.ks-transfers .tr-settings-actions{gap:10px}.ks-transfers .tr-manager-status{font-size:.88rem;padding-block:12px}.ks-transfers .tr-contact-editor{background:var(--panel2);padding:18px}.ks-transfers .tr-settings-grid{gap:18px}

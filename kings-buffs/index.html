@@ -9,9 +9,10 @@
 <link rel="stylesheet" href="../shared/site-preferences.css">
 <script src="../shared/translations.js" defer></script>
 <script src="../shared/site-preferences.js"></script>
+<link rel="stylesheet" href="../shared/modern.css">
 <link rel="stylesheet" href="./kings-buffs.css">
 </head>
-<body>
+<body class="ks-modern ks-buffs">
 <main>
 <a href="../" data-ks-text="← 169 KS Tools" data-site-nav>← 169 KS Tools</a>
 
@@ -34,7 +35,7 @@
   <div class="lookup">
     <label><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="fid" inputmode="numeric" autocomplete="off" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596">
     </label>
-    <button id="find" data-ks-text="Find Player">Find Player</button>
+    <button class="ks-primary" id="find" data-ks-text="Find Player">Find Player</button>
   </div>
   <div id="lookupMsg" class="msg"></div>
   <div class="verification-note"  data-ks-text="We’ll show the verified profile first. Only State 169 players can continue to buff time selection.">
@@ -64,7 +65,7 @@
   <div class="access-box">
     <label><span data-ks-text="State 169 Prep Booking Code">State 169 Prep Booking Code</span><input id="accessCode" autocomplete="off" autocapitalize="characters" placeholder="Code shared by State 169 leadership" data-ks-placeholder="Code shared by State 169 leadership">
     </label>
-    <button id="saveCode" type="button" class="secondary" data-ks-text="Open My Buffs">Open My Buffs</button>
+    <button id="saveCode" type="button" class="ks-primary secondary" data-ks-text="Open My Buffs">Open My Buffs</button>
     <div class="access-note" data-ks-text="Enter the private Prep code once to register and view your existing King's Buff bookings.">
       Enter the private Prep code once to register and view your existing King's Buff bookings.
     </div>
@@ -428,7 +429,7 @@ function renderPanel(){
         <div class="time-block-label">${group.label}</div>
         <div class="times">
           ${group.slots.map(t=>`
-            <div class="time ${selected[day.id].has(t)?"selected":""}" data-slot="${day.id}|${t}">${t}</div>
+            <button type="button" class="time ${selected[day.id].has(t)?"selected":""}" data-slot="${day.id}|${t}" aria-pressed="${selected[day.id].has(t)}">${t}</button>
           `).join("")}
         </div>
       `).join("")}
@@ -467,6 +468,7 @@ function renderPanel(){
         el.classList.add("selected");
       }
 
+      el.setAttribute("aria-pressed", String(selected[dayId].has(time)));
       const count=$("currentCount");
       if(count){
         const n=selected[dayId].size;

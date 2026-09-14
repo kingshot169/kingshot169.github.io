@@ -9,9 +9,10 @@
 <link rel="stylesheet" href="../shared/site-preferences.css">
 <script src="../shared/translations.js" defer></script>
 <script src="../shared/site-preferences.js"></script>
-  <link rel="stylesheet" href="./rally.css">
+  <link rel="stylesheet" href="../shared/modern.css">
+<link rel="stylesheet" href="./rally.css">
 </head>
-<body>
+<body class="ks-modern ks-rally">
 
 <div class="rally-nav-origin" >
   <a class="rally-return-link" href="../"  data-ks-text="← 169 KS Tools" data-site-nav>
@@ -40,7 +41,7 @@
           </div>
         </div>
 
-        <div class="table-wrap">
+        <p class="ks-scroll-hint" data-ks-text="Scroll horizontally to see all columns.">Scroll horizontally to see all columns.</p><div class="table-wrap ks-table-scroll" tabindex="0" role="region" aria-label="Rally Sync" data-ks-aria-label="Rally Sync">
           <table>
             <thead>
               <tr>
@@ -58,7 +59,7 @@
         <div class="help" data-ks-text="March time accepts 45, 1:05, 1m 5s, or 00:01:05. Use a fake rally in-game to measure each lead's march time to the target.">March time accepts 45, 1:05, 1m 5s, or 00:01:05. Use a fake rally in-game to measure each lead's march time to the target.</div>
 
         <div class="rally-results-actions" >
-          <button id="calcBtn" type="button" data-ks-text="⚔️ Calculate Rally Order">⚔️ Calculate Rally Order</button>
+          <button class="ks-primary" id="calcBtn" type="button" data-ks-text="⚔️ Calculate Rally Order">⚔️ Calculate Rally Order</button>
         </div>
 
         <div id="message" class="message"></div>

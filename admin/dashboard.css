@@ -1,27 +1,34 @@
-/* Page-specific styles. Shared foundation and preferences load first. */
-:root{--panel2:#020617;--line:#334155;--blue:#2563eb}
+/* Scoped page layouts and states; common visual rules are in shared/modern.css. */
+:root { --panel2: #020617; --line: #334155; --blue: #2563eb; }
+body.ks-dashboard { min-height: 100vh; }
+:where(body.ks-dashboard) .wrap { width: min(1000px, 100%); margin: auto; min-height: calc(-28px + 100svh); }
+:where(body.ks-dashboard) a { color: var(--muted); text-decoration: none; }
+:where(body.ks-dashboard) .sub { color: var(--muted); font-size: 0.85rem; line-height: 1.45; }
+:where(body.ks-dashboard) .login { width: min(460px, 100%); margin: 7vh auto 0px; }
+:where(body.ks-dashboard) label { display: grid; gap: 6px; margin-top: 11px; }
+:where(body.ks-dashboard) input { width: 100%; }
+:where(body.ks-dashboard) button { cursor: pointer; }
+:where(body.ks-dashboard) .login button { width: 100%; margin-top: 14px; background: var(--blue); }
+:where(body.ks-dashboard) .msg { min-height: 18px; margin-top: 8px; font-size: 0.8rem; }
+:where(body.ks-dashboard) .error { color: rgb(252, 165, 165); }
+:where(body.ks-dashboard) .ok { color: rgb(134, 239, 172); }
+:where(body.ks-dashboard) .hint { margin-top: 8px; padding: 8px 9px; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 9px; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel2); color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+:where(body.ks-dashboard) #loginView, :where(body.ks-dashboard) #dashboard { display: none; }
+:where(body.ks-dashboard) #authLoading { min-height: 185px; }
+:where(body.ks-dashboard) .top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 12px; }
+:where(body.ks-dashboard) .admin-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+:where(body.ks-dashboard) .identity { padding: 9px 10px; border-radius: 10px; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel2); border: 1px solid rgba(148, 163, 184, 0.18); margin-bottom: 12px; font-size: 0.75rem; color: var(--text-soft); }
+:where(body.ks-dashboard) .tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+:where(body.ks-dashboard) .tool { display: flex; flex-direction: column; min-height: 185px; padding: 15px; border: 1px solid var(--line); border-radius: 13px; background-image: linear-gradient(var(--panel), var(--panel2)); background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; color: inherit; }
+:where(body.ks-dashboard) .tool:hover { border-color: rgba(250, 204, 21, 0.6); transform: translateY(-1px); }
+:where(body.ks-dashboard) .icon { font-size: 1.8rem; }
+:where(body.ks-dashboard) .tool h2 { margin: 8px 0px 0px; font-size: 1.05rem; }
+:where(body.ks-dashboard) .tool p { color: var(--muted); font-size: 0.78rem; line-height: 1.4; }
+:where(body.ks-dashboard) .tag { margin-top: auto; padding-top: 10px; font-size: 0.7rem; font-weight: 900; color: rgb(147, 197, 253); }
+:where(body.ks-dashboard) .empty { color: var(--muted); padding: 18px; text-align: center; }
+@media (max-width: 760px) {
+  :where(body.ks-dashboard) .tools { grid-template-columns: 1fr; }
+  :where(body.ks-dashboard) .tool { min-height: 145px; }
+}
 
-body{margin:0;min-height:100vh;padding:14px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-.wrap{width:min(1000px,100%);margin:auto;min-height:calc(100vh - 28px);min-height:calc(100svh - 28px)}
-a{color:var(--muted);text-decoration:none}
-h1{color:var(--gold);margin:6px 0 2px;font-size:clamp(1.9rem,6vw,2.8rem)}
-.sub{color:var(--muted);font-size:.85rem;line-height:1.45}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}
-.login{width:min(460px,100%);margin:7vh auto 0}
-label{display:grid;gap:6px;margin-top:11px;color:#cbd5e1;font-size:.8rem}
-input{width:100%;padding:11px;border-radius:9px;border:1px solid #475569;background:var(--panel2);color:white;font:inherit}
-button{border:0;border-radius:999px;padding:10px 13px;background:#334155;color:white;font:inherit;font-weight:850;cursor:pointer}
-.login button{width:100%;margin-top:14px;background:var(--blue)}
-.msg{min-height:18px;margin-top:8px;font-size:.8rem}.error{color:#fca5a5}.ok{color:#86efac}
-.hint{margin-top:8px;padding:8px 9px;border:1px solid rgba(148,163,184,.18);border-radius:9px;background:#020617;color:var(--muted);font-size:.72rem;line-height:1.4}
-#loginView,#dashboard{display:none}
-#authLoading{min-height:185px}
-.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}
-.admin-actions{display:flex;gap:6px;flex-wrap:wrap}
-.identity{padding:9px 10px;border-radius:10px;background:#020617;border:1px solid rgba(148,163,184,.18);margin-bottom:12px;font-size:.75rem;color:#cbd5e1}
-.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
-.tool{display:flex;flex-direction:column;min-height:185px;padding:15px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#0f172a,#020617);color:inherit}
-.tool:hover{border-color:rgba(250,204,21,.6);transform:translateY(-1px)}
-.icon{font-size:1.8rem}.tool h2{margin:8px 0 0;font-size:1.05rem}.tool p{color:var(--muted);font-size:.78rem;line-height:1.4}.tag{margin-top:auto;padding-top:10px;font-size:.7rem;font-weight:900;color:#93c5fd}
-.empty{color:var(--muted);padding:18px;text-align:center}
-@media(max-width:760px){.tools{grid-template-columns:1fr}.tool{min-height:145px}}
+.ks-dashboard .identity{margin-block:20px}.ks-dashboard .tool .icon{margin-bottom:8px}.ks-dashboard .tool h2{margin:6px 0 0}.ks-dashboard .admin-actions{align-self:center}.ks-dashboard .hint{margin-top:20px}.ks-dashboard #signIn{margin-top:20px}

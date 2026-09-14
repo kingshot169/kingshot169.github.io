@@ -1,72 +1,17 @@
-/* Page-specific styles. Shared foundation and preferences load first. */
-:root{
-  --line:#334155;
-  --blue:#2563eb;
-}
+/* Scoped page layouts and states; common visual rules are in shared/modern.css. */
+:root { --line: #334155; --blue: #2563eb; }
+body.ks-account { min-height: 100vh; }
+:where(body.ks-account) main { max-width: 470px; margin: 5vh auto; }
+:where(body.ks-account) a { color: var(--muted); text-decoration: none; }
+:where(body.ks-account) .note { color: var(--muted); font-size: 0.8rem; line-height: 1.45; }
+:where(body.ks-account) .required { display: none; margin: 10px 0px; padding: 9px; border-radius: 9px; border: 1px solid rgba(250, 204, 21, 0.45); background: rgba(250, 204, 21, 0.08); color: rgb(253, 230, 138); font-size: 0.78rem; }
+:where(body.ks-account) label { display: grid; gap: 6px; margin-top: 11px; }
+:where(body.ks-account) input { width: 100%; }
+:where(body.ks-account) button { width: 100%; margin-top: 14px; cursor: pointer; }
+:where(body.ks-account) button:disabled { opacity: 0.65; cursor: wait; }
+:where(body.ks-account) .msg { min-height: 20px; margin-top: 10px; font-size: 0.8rem; line-height: 1.45; }
+:where(body.ks-account) .ok { color: rgb(134, 239, 172); }
+:where(body.ks-account) .error { color: rgb(252, 165, 165); }
+:where(body.ks-account) .status { color: rgb(147, 197, 253); }
 
-body{
-  margin:0;
-  padding:14px;
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,sans-serif
-}
-main{max-width:470px;margin:5vh auto}
-a{color:var(--muted);text-decoration:none}
-.card{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:16px
-}
-h1{color:var(--gold);margin:12px 0 6px}
-.note{color:var(--muted);font-size:.8rem;line-height:1.45}
-.required{
-  display:none;
-  margin:10px 0;
-  padding:9px;
-  border-radius:9px;
-  border:1px solid rgba(250,204,21,.45);
-  background:rgba(250,204,21,.08);
-  color:#fde68a;
-  font-size:.78rem
-}
-label{
-  display:grid;
-  gap:6px;
-  margin-top:11px;
-  color:#cbd5e1;
-  font-size:.8rem
-}
-input{
-  width:100%;
-  padding:11px;
-  border-radius:9px;
-  border:1px solid #475569;
-  background:#020617;
-  color:white;
-  font:inherit
-}
-button{
-  width:100%;
-  margin-top:14px;
-  padding:11px;
-  border:0;
-  border-radius:999px;
-  background:var(--blue);
-  color:white;
-  font:inherit;
-  font-weight:850;
-  cursor:pointer
-}
-button:disabled{opacity:.65;cursor:wait}
-.msg{
-  min-height:20px;
-  margin-top:10px;
-  font-size:.8rem;
-  line-height:1.45
-}
-.ok{color:#86efac}
-.error{color:#fca5a5}
-.status{color:#93c5fd}
+.ks-account label{margin-top:18px}.ks-account .note{font-size:.88rem}.ks-account .required{padding:14px;border-radius:12px}.ks-account .status{color:var(--info)}

@@ -9,53 +9,54 @@
 <link rel="stylesheet" href="./shared/site-preferences.css">
 <script src="./shared/translations.js" defer></script>
 <script src="./shared/site-preferences.js"></script>
-  <link rel="stylesheet" href="./home.css">
+  <link rel="stylesheet" href="./shared/modern.css">
+<link rel="stylesheet" href="./home.css">
 </head>
-<body>
+<body class="ks-modern ks-home">
 
   <a id="adminLink" class="admin-login" href="./admin/" aria-label="Open admin area" data-ks-aria-label="Open admin area" aria-busy="true" data-site-nav>…</a>
 
   <main class="wrap">
-    <header>
+    <header class="home-hero"><div class="home-copy">
       <div class="eyebrow" data-ks-text="State 169">State 169</div>
       <h1 data-ks-text="Kingshot Tools">Kingshot Tools</h1>
       <p class="subtitle" data-ks-text="Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.">
         Community tools for rallies, transfers, King's Buffs, kingdom scouting and gift codes.
       </p>
-      <p class="community-note" data-i18n="statement">One kingdom, many cultures. We keep geopolitics and religion out of the game so everyone can escape, connect and have fun.</p>
-    </header>
+      </div><p class="community-note" data-i18n="statement">One kingdom, many cultures. We keep geopolitics and religion out of the game so everyone can escape, connect and have fun.</p>
+    <picture><source media="(max-width:600px)" srcset="./transfer/assets/community-adventure-mobile.webp" width="840" height="630"><img src="./transfer/assets/community-adventure.webp" width="1600" height="800" alt="" fetchpriority="high" decoding="async"></picture></header>
 
     <section class="tools" aria-label="Kingshot tools" data-ks-aria-label="Kingshot tools">
       <a class="tool rally" href="./rally/">
-        <div class="icon">⚔️</div>
+        <div class="icon" aria-hidden="true"><svg class="ks-icon" viewBox="0 0 24 24"><path d="m4 3 14 14M3 4l2-1 1 3L3 7 1 6l2-2m11 10 5 5m-2-2 3-3M20 3 6 17m12-14 3 3M7 14l3 3m-5 0-2 3"/></svg></div>
         <h2 data-ks-text="Rally Sync">Rally Sync</h2>
         <p data-ks-text="Calculate launch delays and run a silent visual timer so multiple rallies land together.">Calculate launch delays and run a silent visual timer so multiple rallies land together.</p>
         <div class="tag" data-i18n="open">OPEN TOOL →</div>
       </a>
 
       <a class="tool transfer" href="./transfer/">
-        <div class="icon">🔄</div>
+        <div class="icon" aria-hidden="true"><svg class="ks-icon" viewBox="0 0 24 24"><path d="M4 4h12v16H4zM8 12h13m-4-4 4 4-4 4"/></svg></div>
         <h2 data-ks-text="Transfer Application">Transfer Application</h2>
         <p data-ks-text="Apply to transfer into State 169 with one clean, consistent application form.">Apply to transfer into State 169 with one clean, consistent application form.</p>
         <div class="tag" data-i18n="application">OPEN APPLICATION →</div>
       </a>
 
       <a class="tool buffs" href="./kings-buffs/">
-        <div class="icon">👑</div>
+        <div class="icon" aria-hidden="true"><svg class="ks-icon" viewBox="0 0 24 24"><path d="m3 6 5 5 4-7 4 7 5-5-2 13H5zM5 21h14"/></svg></div>
         <h2 data-ks-text="King's Buffs">King's Buffs</h2>
         <p data-ks-text="Register for KVK King's Buff appointments and keep requests organised in one place.">Register for KVK King's Buff appointments and keep requests organised in one place.</p>
         <div class="tag" data-i18n="enrolment">OPEN ENROLMENT →</div>
       </a>
 
       <a class="tool compare" href="./compare/">
-        <div class="icon">🏰</div>
+        <div class="icon" aria-hidden="true"><svg class="ks-icon" viewBox="0 0 24 24"><path d="M3 21V8h4V4h3v4h4V4h3v4h4v13M3 12h18M10 21v-6h4v6"/></svg></div>
         <h2 data-ks-text="Kingdom Compare">Kingdom Compare</h2>
         <p data-ks-text="Compare State 169 with another kingdom using current kingdom strength and activity data.">Compare State 169 with another kingdom using current kingdom strength and activity data.</p>
         <div class="tag" data-i18n="compare">COMPARE KINGDOMS →</div>
       </a>
 
       <a class="tool gifts" href="./gift-codes/">
-        <div class="icon">🎁</div>
+        <div class="icon" aria-hidden="true"><svg class="ks-icon" viewBox="0 0 24 24"><path d="M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9C2 9 5 0 10 5l2 4zm0 0c10 0 7-9 2-4l-2 4z"/></svg></div>
         <h2 data-ks-text="Gift Codes">Gift Codes</h2>
         <p data-ks-text="Verify your State 169 Player ID and redeem current Kingshot gift codes.">Verify your State 169 Player ID and redeem current Kingshot gift codes.</p>
         <div class="tag" data-i18n="codes">VIEW GIFT CODES →</div>

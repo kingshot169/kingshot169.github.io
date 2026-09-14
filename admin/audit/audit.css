@@ -1,20 +1,18 @@
-/* Page-specific styles. Shared foundation and preferences load first. */
-:root{--panel2:#020617;--line:#334155;}
+/* Scoped page layouts and states; common visual rules are in shared/modern.css. */
+:root { --panel2: #020617; --line: #334155; }
+:where(body.ks-audit) main { max-width: 1100px; margin: auto; }
+:where(body.ks-audit) a { color: var(--muted); text-decoration: none; }
+:where(body.ks-audit) .toolbar { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+:where(body.ks-audit) .event { border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 10px; background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: var(--panel2); padding: 9px; margin: 7px 0px; }
+:where(body.ks-audit) .head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+:where(body.ks-audit) .action { font-weight: 900; }
+:where(body.ks-audit) .time, :where(body.ks-audit) .meta { color: var(--muted); font-size: 0.68rem; }
+:where(body.ks-audit) .details { margin-top: 6px; color: var(--text-soft); font-size: 0.72rem; white-space: pre-wrap; word-break: break-word; }
+:where(body.ks-audit) .msg { font-size: 0.78rem; color: var(--muted); min-height: 18px; }
+@media (max-width: 600px) {
+  :where(body.ks-audit) .toolbar > * { flex: 1 1 100%; }
+}
+:where(body.ks-audit) .audit-description { color: var(--muted); font-size: 0.78rem; }
+:where(body.ks-audit) .event-target { margin-top: 5px; }
 
-body{margin:0;padding:10px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
-main{max-width:1100px;margin:auto}a{color:var(--muted);text-decoration:none}
-h1{color:var(--gold);margin:8px 0 2px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;margin:10px 0}
-.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-input,select{padding:8px;border:1px solid #475569;border-radius:8px;background:var(--panel2);color:var(--text);font:inherit}
-button{padding:8px 11px;border:0;border-radius:999px;background:#334155;color:white;font:inherit;font-weight:800}
-.event{border:1px solid rgba(148,163,184,.16);border-radius:10px;background:#020617;padding:9px;margin:7px 0}
-.head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.action{font-weight:900}.time,.meta{color:var(--muted);font-size:.68rem}
-.details{margin-top:6px;color:#cbd5e1;font-size:.72rem;white-space:pre-wrap;word-break:break-word}
-.msg{font-size:.78rem;color:var(--muted);min-height:18px}
-@media(max-width:600px){.toolbar>*{flex:1 1 100%}}
-
-/* Static presentation, including generated markup. */
-.audit-description{color:var(--muted);font-size:.78rem}
-.event-target{margin-top:5px}
+.ks-audit .event{padding:18px;margin-top:12px}.ks-audit .head{align-items:center;gap:12px}.ks-audit .action{color:var(--text);font-size:.92rem}.ks-audit .time{font-size:.77rem;color:var(--muted)}.ks-audit .details{font-size:.83rem;line-height:1.7;padding-top:12px;border-top:1px solid var(--line)}.ks-audit .audit-description{font-size:.88rem}.ks-audit .toolbar{gap:10px}

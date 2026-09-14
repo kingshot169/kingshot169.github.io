@@ -1,0 +1,93 @@
+﻿/* Shared visual components. Explicit opt-in keeps approved Transfer presentation intact. */
+body.ks-modern{--bg:#0b1422;--panel:#122033;--panel2:#0d1a2b;--panel3:#1a2b40;--text:#eef1f4;--text-soft:#cbd6e1;--muted:#a0b1c4;--gold:#e8c57f;--line:#2b4057;--field-line:#486079;--green:#a0dbb7;--orange:#f1c58c;--red:#ffb2b7;--positive:#a0dbb7;--negative:#ffb2b7;--warning:#f1c58c;--info:#a7c9fa;--positive-bg:#17392d;--negative-bg:#46232d;--warning-bg:#3c3020;--info-bg:#203650;--page-width:1080px;margin:0;padding:0 24px 28px;min-height:100vh;background:radial-gradient(ellipse at 85% 0,#344e692c,transparent 52%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}
+html[data-theme="light"] body.ks-modern{--bg:#f1f4f8;--panel:#fff;--panel2:#f6f8fb;--panel3:#eaf0f6;--text:#17283b;--text-soft:#344b61;--muted:#526b81;--gold:#80601f;--line:#cedae5;--field-line:#8298ad;--green:#236647;--orange:#885213;--red:#a22f3f;--positive:#236647;--negative:#a22f3f;--warning:#885213;--info:#295e98;--positive-bg:#e6f3eb;--negative-bg:#fbecef;--warning-bg:#fff4dd;--info-bg:#e8f0fb;background:radial-gradient(ellipse at 90% 0,#e8c57f28,transparent 46%),var(--bg)}
+body.ks-admin{--page-width:1200px}
+.ks-modern :is(main,.wrap,.app){width:100%;max-width:var(--page-width);margin-inline:auto;min-width:0}
+.ks-modern.ks-account main{max-width:560px;margin-block:42px}
+.ks-modern a{color:var(--text-soft);text-underline-offset:4px}
+.ks-modern a:hover{color:var(--gold)}
+.ks-modern h1{font-size:clamp(2rem,4vw,3rem);font-family:Georgia,'Times New Roman',serif;font-weight:500;line-height:1.15;letter-spacing:-.035em;margin:26px 0 12px;color:var(--text);overflow-wrap:anywhere}
+.ks-modern h2{font-size:1.24rem;line-height:1.3;letter-spacing:-.025em;color:var(--text);margin:0 0 12px}
+.ks-modern h3{font-size:1rem;line-height:1.4;color:var(--text);overflow-wrap:anywhere}
+.ks-admin h1{font-family:inherit;font-size:clamp(1.55rem,3vw,2rem);font-weight:730;letter-spacing:-.035em;margin:18px 0 7px}
+.ks-modern :is(.sub,.subtitle,header>p){font-size:.94rem;line-height:1.65;color:var(--muted);max-width:74ch;margin-block:8px 24px}
+.ks-modern:not(.ks-home) header:not(.site-preferences-header){text-align:start;padding:0;margin:0 0 24px}
+.ks-modern:not(.ks-home) header:not(.site-preferences-header)>p{margin-inline:0}
+.ks-modern .top{gap:16px;margin-bottom:20px}
+.ks-modern :is(.top-actions,.toplinks,.admin-actions,.actions,.toolbar-group,.result-actions,.player-actions){gap:10px}
+.ks-modern :is(.card,.ks-surface){background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin-block:18px;box-shadow:0 12px 30px #00000008;min-width:0}
+.ks-admin .card{padding:22px;border-radius:15px}
+.ks-modern :is(.section-title,.current-admins-heading){margin-bottom:14px;gap:12px;font-size:.9rem;line-height:1.5}
+.ks-modern :is(.muted,.meta,.help,.note,.hint,.instruction,.count,.lock-note,.day-note,.access-note){color:var(--muted);font-size:.84rem;line-height:1.6}
+.ks-modern :is(.name,.admin-name,.subline,.v,.details,.reason,.player-name,.appt-name,.identity){overflow-wrap:anywhere}
+.ks-modern :is(.name,.admin-name){color:var(--text)}
+.ks-modern :is(.profile,.player)>div{min-width:0}
+.ks-modern .site-preferences-header{width:100%;max-width:var(--page-width);padding:20px 0 16px;align-items:flex-start;border-bottom:1px solid var(--line);margin-bottom:16px;gap:10px}
+.ks-modern .site-header-nav-link{background:var(--panel);border-color:var(--line);color:var(--text-soft);border-radius:10px;box-shadow:none;min-height:44px;padding:10px 13px;font-weight:650;font-size:.8rem;text-align:start}
+.ks-modern .site-language-select{background:var(--panel);border-color:var(--line);color:var(--text);border-radius:10px;min-height:44px;padding:8px 11px;box-shadow:none;font-size:.8rem;font-weight:650}
+.ks-modern .site-controls .site-control-button{flex:0 0 44px;width:44px;height:44px;background:var(--panel);border-color:var(--line);color:var(--text);border-radius:10px;box-shadow:none}
+.ks-modern :is(button,input,select,textarea,summary,a):focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.ks-modern :is(input,select,textarea):not([type="checkbox"]):not([type="radio"]):not(.site-language-select){min-height:44px;max-width:100%;min-width:0;padding:10px 12px;border:1px solid var(--field-line);border-radius:10px;background:var(--panel2);color:var(--text);font:inherit;box-shadow:none}
+.ks-modern textarea{resize:vertical;line-height:1.6}
+.ks-modern label{font-size:.85rem;color:var(--text-soft);line-height:1.45;gap:7px;min-width:0}
+.ks-modern input:is([type="checkbox"],[type="radio"]){width:18px;height:18px;min-height:0;accent-color:var(--gold);flex:none;vertical-align:middle}
+.ks-modern button{font:inherit;font-size:.85rem;font-weight:700;line-height:1.35;min-height:44px;border-radius:10px;padding:10px 15px;cursor:pointer;touch-action:manipulation}
+.ks-modern button:where(:not(.site-control-button):not(.time):not(.slot):not(.day-head):not(.buff-tab):not(.tab)){background:var(--panel3);color:var(--text-soft);border:1px solid var(--field-line)}
+.ks-modern button:is(.ks-primary,.primary),.ks-modern #signIn,.ks-modern.ks-account #save{background:#e8c57f;color:#142131;border-color:#e8c57f}
+.ks-modern button:is(.secondary,.ghost,.blue):not(.ks-primary){background:var(--panel3);color:var(--text-soft);border-color:var(--field-line)}
+.ks-modern button:is(.success,.success-btn){background:#27694c;border-color:#3b916c;color:#fff}
+.ks-modern button.danger{background:var(--negative-bg);border-color:var(--negative);color:var(--negative)}
+.ks-modern button.danger:hover{background:var(--negative);color:var(--bg)}
+.ks-modern button:disabled{opacity:.5;cursor:not-allowed;filter:none}
+.ks-modern :is(.msg,.message){font-size:.87rem;line-height:1.6;min-height:24px;margin-top:12px;color:var(--muted);overflow-wrap:anywhere}
+.ks-modern :is(.error,.message.error){color:var(--negative)}.ks-modern :is(.ok,.message.ok,.better,.base,.low){color:var(--positive)}.ks-modern :is(.warn,.message.warn,.mid){color:var(--warning)}.ks-modern .high{color:var(--negative)}
+.ks-modern :is(.empty,.hidden-note){border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted);font-size:.9rem;background:var(--panel2);line-height:1.65}
+.ks-modern :is(.identity,.kv,.summary,.rank-card,.mini,.booking-status,.selected-summary,.perm,.admin,.event,.code){background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.ks-modern :is(.identity){padding:14px 16px}
+.ks-modern :is(.kv,.summary){padding:16px}.ks-modern .k{font-size:.72rem;letter-spacing:.04em;line-height:1.5;color:var(--muted)}
+.ks-modern .v{line-height:1.4}
+.ks-modern :is(.grid,.statgrid,.summary-grid){gap:14px;min-width:0}
+.ks-modern .badge{font-size:.73rem;padding:5px 9px;background:var(--panel3);color:var(--text-soft);line-height:1.5}
+.ks-modern .badge.off{opacity:1;color:var(--muted)}.ks-modern .badge.on{background:var(--info-bg);color:var(--info)}
+.ks-modern .status.requested{background:var(--warning-bg);color:var(--warning)}.ks-modern :is(.status.scheduled,.status.booked){background:var(--info-bg);color:var(--info)}.ks-modern .status.completed{background:var(--positive-bg);color:var(--positive)}.ks-modern .status.cancelled{background:var(--negative-bg);color:var(--negative)}
+.ks-modern table{width:100%;border-collapse:collapse;font-size:.85rem;line-height:1.5;font-variant-numeric:tabular-nums}
+.ks-modern th,.ks-modern td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ks-modern th{color:var(--muted);font-size:.75rem;letter-spacing:.02em;font-weight:650;background:var(--panel2)}
+.ks-modern tbody tr:hover{background:var(--panel2)}
+.ks-modern .ks-table-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;border:1px solid var(--line);border-radius:12px;scrollbar-width:thin;scrollbar-color:var(--field-line) var(--panel2)}
+.ks-modern .ks-table-scroll:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.ks-modern .ks-table-scroll table{min-width:520px}.ks-modern.ks-rally .ks-table-scroll table{min-width:680px;table-layout:auto}
+.ks-modern .ks-table-scroll td{overflow-wrap:anywhere}
+.ks-modern :is(.tabs,.tr-manager-switch){gap:8px;padding-block:6px}
+.ks-modern .tabs-wrap{background:var(--bg)}
+.ks-modern :is(.tab,.buff-tab){background:var(--panel2);color:var(--text-soft);border:1px solid var(--line)}
+.ks-modern :is(.tab.active,.buff-tab.active,.step.active){background:var(--info-bg);border-color:var(--info);color:var(--info)}
+.ks-modern :is(.buff-tab.registered,.step.done){background:var(--positive-bg);border-color:var(--positive);color:var(--positive)}
+.ks-modern :is(.tab-name,.buff-tab .tab-label){white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.ks-modern :is(.tab-state,.buff-tab .tab-state){font-size:.73rem;line-height:1.5;color:var(--muted)}
+.ks-modern :is(.required,.utc-banner,.access-box,.prep-security,.temp){background:var(--warning-bg);border-color:var(--gold);color:var(--warning)}
+.ks-modern :is(.success-copy,.success h2){color:var(--positive)}
+.ks-modern :is(footer,.foot,.site-credit){font-size:.76rem;color:var(--muted);line-height:1.6;margin-block:28px 10px;text-align:center}.ks-modern .site-credit-byline{color:var(--muted);font-size:.7rem}
+.ks-modern .ks-icon{width:25px;height:25px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ks-modern .tool{background:var(--panel);border:1px solid var(--line);color:var(--text);box-shadow:none;border-radius:16px;padding:24px;min-width:0}
+.ks-modern .tool:hover{border-color:var(--gold);transform:none;background:var(--panel3)}
+.ks-modern .tool p{font-size:.9rem;line-height:1.65;color:var(--muted)}
+.ks-modern .tool .icon{display:grid;place-items:center;width:48px;height:48px;background:var(--panel3);border:1px solid var(--line);border-radius:13px;color:var(--gold);font-size:1.5rem;margin-bottom:16px}
+.ks-modern .tool .tag{color:var(--gold);font-size:.73rem;font-weight:700;letter-spacing:.05em;padding-top:20px}
+.ks-admin .tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.ks-admin .tool{min-height:210px}
+.ks-admin .login{max-width:480px;margin-block:42px;padding:30px}
+.ks-admin .login>h1{margin-top:0}
+.ks-admin :is(#adminLoading,#authLoading){max-width:var(--page-width);margin-inline:auto}
+.ks-admin .tr-preview-dialog{border-radius:18px;padding:24px;box-shadow:0 24px 80px #0005}
+.ks-admin .tr-manager input,.ks-admin .tr-manager textarea,.ks-admin .tr-manager select{font:inherit;background:var(--panel2);color:var(--text);border-color:var(--field-line);border-radius:10px;padding:11px}
+.ks-admin .tr-manager legend{font-weight:700;padding-inline:8px}
+@media(max-width:800px){.ks-admin .tools{grid-template-columns:repeat(2,minmax(0,1fr))}.ks-modern .top{align-items:flex-start}.ks-modern .toolbar{gap:10px}}
+@media(max-width:600px){body.ks-modern{padding-inline:14px}.ks-modern .site-preferences-header{padding-block:14px;margin-bottom:12px}.ks-modern :is(.card,.ks-surface),.ks-admin .card{padding:18px;border-radius:15px;margin-block:14px}.ks-modern h1{font-size:2rem;margin-top:20px}.ks-admin h1{font-size:1.65rem}.ks-modern .sub,.ks-modern .subtitle{font-size:.88rem;margin-bottom:18px}.ks-modern .lookup,.ks-modern .searchbar{grid-template-columns:minmax(0,1fr)}.ks-admin .tools{grid-template-columns:1fr}.ks-admin .tool{min-height:0}.ks-modern .tool{padding:20px}.ks-modern .ks-table-scroll{overflow-x:auto}.ks-modern .ks-table-scroll table{table-layout:auto}.ks-modern input,.ks-modern textarea{font-size:16px!important}.ks-modern .toolbar>*{min-width:0;max-width:100%}.ks-admin .login{padding:22px}.ks-modern.ks-account main{margin-block:20px}.ks-modern th,.ks-modern td{padding:11px 10px}}
+@media(max-width:360px){body.ks-modern{padding-inline:10px}.ks-modern .site-preferences-header{gap:8px}.ks-modern .site-header-nav-link{padding:9px;font-size:.74rem}.ks-modern .site-controls{gap:6px}.ks-modern .site-language-select{padding-inline:8px}}
+@media(prefers-reduced-motion:reduce){.ks-modern *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.ks-modern .ks-table-scroll::-webkit-scrollbar{height:10px}.ks-modern .ks-table-scroll::-webkit-scrollbar-track{background:var(--panel2)}.ks-modern .ks-table-scroll::-webkit-scrollbar-thumb{background:var(--field-line);border:2px solid var(--panel2);border-radius:8px}
+.ks-modern .ks-scroll-hint{display:none}@media(max-width:700px){.ks-modern .ks-scroll-hint{display:block;color:var(--muted);font-size:.76rem;line-height:1.5;margin:12px 0 8px}}
+
+.ks-admin .tr-manager button{min-height:44px}

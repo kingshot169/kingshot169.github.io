@@ -2,6 +2,7 @@
 // Columns: English | Korean | Spanish | Portuguese | French | Arabic.
 (()=>{
 const rows=`
+Scroll horizontally to see all columns.|모든 열을 보려면 가로로 스크롤하세요.|Desplázate horizontalmente para ver todas las columnas.|Deslize na horizontal para ver todas as colunas.|Faites défiler horizontalement pour voir toutes les colonnes.|مرّر أفقيًا لرؤية جميع الأعمدة.
 Admin Dashboard|관리자 대시보드|Panel de administración|Painel de administração|Tableau de bord administrateur|لوحة الإدارة
 Admin Sign In|관리자 로그인|Acceso de administrador|Entrar como administrador|Connexion administrateur|تسجيل دخول الإدارة
 Admin Users|관리자 계정|Administradores|Administradores|Administrateurs|المشرفون

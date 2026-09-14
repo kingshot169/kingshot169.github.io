@@ -15,9 +15,11 @@ for(const file of pages){
   }
   if(file.replaceAll(path.sep,'/')!=='transfer/admin/index.html'){
     const recruitment=['transfer/index.html','admin/transfers/index.html'].includes(file.replaceAll(path.sep,'/'));
-    assert.equal(sheets.length,recruitment?4:3,file+': foundation, preferences, optional recruitment, page CSS');
+    const modern=/class="ks-modern\b/.test(html);
+    assert.equal(sheets.length,(recruitment?4:3)+(modern?1:0),file+': foundation, preferences, optional recruitment, page CSS');
     assert(sheets[0].endsWith('/foundation.css')&&sheets[1].endsWith('/site-preferences.css')&&sheets.at(-1).startsWith('./'),file+': stylesheet override order');
     if(recruitment)assert(sheets[2].endsWith('/transfer-recruitment.css'));
+    if(modern)assert(sheets.at(-2).endsWith('/modern.css'),file+': shared modern components must precede page CSS');
   }
   let scripts=0;
   for(const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(match[1],{filename:file+':script-'+(++scripts)});

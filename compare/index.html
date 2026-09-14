@@ -10,9 +10,10 @@
 <link rel="stylesheet" href="../shared/site-preferences.css">
 <script src="../shared/translations.js" defer></script>
 <script src="../shared/site-preferences.js"></script>
+<link rel="stylesheet" href="../shared/modern.css">
 <link rel="stylesheet" href="./compare.css">
 </head>
-<body>
+<body class="ks-modern ks-compare">
 <main>
 <a href="../" data-ks-text="← 169 Kingshot Tools" data-site-nav>← 169 Kingshot Tools</a>
 <h1 data-ks-text="🏰 Kingdom Compare">🏰 Kingdom Compare</h1>
@@ -24,7 +25,7 @@
 <p data-ks-text="Enter your Kingshot Player ID to access Kingdom Compare.">Enter your Kingshot Player ID to access Kingdom Compare.</p>
 <form id="access-form" novalidate>
 <label class="field" for="visitor-id"><span data-ks-text="Kingshot Player ID">Kingshot Player ID</span><input id="visitor-id" inputmode="numeric" autocomplete="off" maxlength="24" placeholder="e.g. 24649596" data-ks-placeholder="e.g. 24649596" aria-describedby="access-message"></label>
-<button id="check-player" type="submit" data-ks-text="Check player">Check player</button>
+<button class="ks-primary" id="check-player" type="submit" data-ks-text="Check player">Check player</button>
 </form>
 <div id="access-profile" hidden><strong id="visitor-name" translate="no"></strong><p id="visitor-meta"></p><p id="visitor-state"></p><div class="access-actions"><button id="access-continue" type="button" data-ks-text="Continue to Compare">Continue to Compare</button><button id="access-change" type="button" class="secondary" data-ks-text="Different Player">Different Player</button></div></div>
 <p id="access-message" class="msg" role="status" aria-live="polite"></p>
@@ -42,7 +43,7 @@
       <input id="opponent" inputmode="numeric" pattern="[0-9]*" placeholder="82" maxlength="6">
     </label>
   </div>
-  <button disabled id="compare" data-ks-text="Compare Kingdoms">Compare Kingdoms</button>
+  <button class="ks-primary" disabled id="compare" data-ks-text="Compare Kingdoms">Compare Kingdoms</button>
   <div id="msg" class="msg"></div>
 </section>
 
@@ -53,13 +54,13 @@
   </div>
 
   <div class="section-title" data-ks-text="Kingdom Strength">Kingdom Strength</div>
-  <table id="strength"></table>
+  <p class="ks-scroll-hint" data-ks-text="Scroll horizontally to see all columns.">Scroll horizontally to see all columns.</p><div class="ks-table-scroll" tabindex="0" role="region" aria-label="Kingdom Strength" data-ks-aria-label="Kingdom Strength"><table id="strength"></table></div>
 
   <div class="section-title" data-ks-text="Activity &amp; Growth">Activity & Growth</div>
-  <table id="activity"></table>
+  <p class="ks-scroll-hint" data-ks-text="Scroll horizontally to see all columns.">Scroll horizontally to see all columns.</p><div class="ks-table-scroll" tabindex="0" role="region" aria-label="Activity &amp; Growth" data-ks-aria-label="Activity &amp; Growth"><table id="activity"></table></div>
 
   <div class="section-title" data-ks-text="Power Breakdown">Power Breakdown</div>
-  <table id="breakdown"></table>
+  <p class="ks-scroll-hint" data-ks-text="Scroll horizontally to see all columns.">Scroll horizontally to see all columns.</p><div class="ks-table-scroll" tabindex="0" role="region" aria-label="Power Breakdown" data-ks-aria-label="Power Breakdown"><table id="breakdown"></table></div>
 
   <div class="source" data-ks-text="Data supplied by MightPulse. Responses may be cached by MightPulse.">Data supplied by MightPulse. Responses may be cached by MightPulse.</div>
 </section>

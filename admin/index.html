@@ -11,9 +11,10 @@
 <script src="../shared/translations.js" defer></script>
 <script src="../shared/site-preferences.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="../shared/modern.css">
 <link rel="stylesheet" href="./dashboard.css">
 </head>
-<body>
+<body class="ks-modern ks-admin ks-dashboard">
 <div class="wrap">
 <section id="authLoading" class="card" role="status" aria-live="polite">
   <h1 data-ks-text="Admin">Admin</h1>
@@ -31,7 +32,7 @@
   <label><span data-ks-text="Password">Password</span><input id="password" type="password" autocomplete="current-password">
   </label>
 
-  <button id="signIn" data-ks-text="Sign In">Sign In</button>
+  <button class="ks-primary" id="signIn" data-ks-text="Sign In">Sign In</button>
   <div id="loginMsg" class="msg"></div>
 
   <div class="hint" data-ks-text="New admin accounts use Player ID login. Older admin accounts can continue using their original email until they are converted from Admin Users.">
