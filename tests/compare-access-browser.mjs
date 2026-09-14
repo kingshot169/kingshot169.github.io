@@ -15,13 +15,14 @@ async function setup({kingdom=169,status=200,playerPatch={},bodyPatch={},storage
  await page.clock.install({time:new Date('2026-09-14T12:00:00Z')});
  await context.route('**/*',async route=>{
   const url=route.request().url();if(url.startsWith('http://127.0.0.1:8770/'))return route.continue();
+  if(url.includes('supabase-js'))return route.fulfill({contentType:'text/javascript',body:'window.supabase={createClient(){return {auth:{async getSession(){return {data:{session:null}}},onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}}}}}}'});
   const body=JSON.parse(route.request().postData()||'{}');calls.push({url,body,headers:route.request().headers()});
   if(url.endsWith('/player-lookup'))return route.fulfill({status,json:{ok:true,player:{player_id:body.player_id,name:'Visitor <safe>',kingdom,...playerPatch},...bodyPatch}});
   if(url.endsWith('/kingdom-compare'))return route.fulfill({json:{ok:true,left:{kid:169,power:123456,health:'stable'},right:{kid:body.opponent,power:987654,health:'stable'}}});
   throw Error('Unexpected remote request '+url);
  });
  await page.goto('http://127.0.0.1:8770/compare/?state=82');
- return {context,page,calls,errors};
+ await page.waitForSelector('#player-access:visible');return {context,page,calls,errors};
 }
 async function check(page,id='12345678') {await page.locator('#visitor-id').fill(id);await page.locator('#check-player').click();await page.waitForFunction(()=>!document.querySelector('#check-player').disabled)}
 async function unlock(page){await check(page);await page.locator('#access-continue').click()}

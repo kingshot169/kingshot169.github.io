@@ -31,3 +31,17 @@ Browser suites intercept remote API requests. The Compare suite writes screensho
 The existing main-branch/root GitHub Pages publishing process and configured Ubersden identity are retained. Supabase, the Discord bot, unrelated pending files and Transfer production files are outside this change. Native-speaker translation review, physical devices and Safari/Firefox are not claimed by the local Chrome checks.
 
 Release validation passed from the isolated staged snapshot: nine Compare groups, ten Transfer groups, the 15-page static check and 15-route preferences browser suite (zero browser errors/layout failures). Whitespace, explicit seven-file scope and credential-pattern checks passed. Published Transfer files have no diff.
+
+## Administrator correction
+
+Compare now reuses the existing Supabase SDK/session and admin-profile endpoint from admin/index.html. A session alone grants nothing: the profile must be returned successfully, match the current session user_id, be is_active === true and have must_change_password === false. The backend contract authorises active admin_profiles membership; there is no separate role string to test and individual can_* flags do not restrict Compare. Legacy accounts may have null, missing or empty player_id. No player lookup is made for validated administrators. Mandatory password changes redirect to the existing account/?required=1 flow. Disabled/rejected profiles cannot grant administrator access.
+
+The checking panel hides the player form during validation. Valid administrators enter directly. Authentication errors provide Try Again and the ordinary visitor gate, without calling signOut. Administrator approval exists only in memory until the current session expiry, separate from the saved guest approval. Auth events, page restoration, focus and visibility revalidate it. Generation checks, bounded validation, cancellation and request tickets prevent late authentication/comparison responses from reviving obsolete access. The comparison request contract is unchanged.
+
+The new compare/admin-access.js owns administrator validation; compare/access.js retains guest handling and provides the shared request guard. Existing translated session/retry labels are reused. A narrow-grid correction keeps unlocked comparison controls within 320px for long translated labels. tests/compare-admin-browser.mjs adds eleven mocked groups for account variants, checking state, rejected/disabled profiles, mandatory passwords, expiry/sign-out/switching, failed/stale/timed-out authentication, restoration, independent guest approval, stale comparison results and responsive multilingual layouts. tests/compare-access-browser.mjs now mocks the SDK as signed out. Run both alongside Transfer, preferences browser and static checks from the staged snapshot.
+
+Administrator tests are mocked; they do not test the owner’s actual signed-in browser session or alter any backend account, role, setting or database record.
+
+The existing preferences browser test explicitly waits for the asynchronous session check before attempting the guest lookup; programmatically clicking the hidden form during checking is correctly blocked.
+
+Administrator-correction release validation passed against the staged snapshot: all 11 admin groups, 9 guest groups, 10 Transfer groups, the 15-page static check and the 15-route preferences suite. The final eight-file scope includes the existing preferences-test readiness fix. Credential-pattern and whitespace checks passed; Transfer and shared production files are unchanged.

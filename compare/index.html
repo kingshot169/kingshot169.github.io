@@ -18,7 +18,8 @@
 <h1 data-ks-text="🏰 Kingdom Compare">🏰 Kingdom Compare</h1>
 <div class="sub" data-ks-text="Compare State 169 with another kingdom using current MightPulse kingdom statistics.">Compare State 169 with another kingdom using current MightPulse kingdom statistics.</div>
 
-<section class="card access-card" aria-labelledby="access-title">
+<section id="compare-auth" class="card" role="status" aria-live="polite"><p id="compare-auth-status" data-ks-text="Checking your session…">Checking your session…</p><button id="compare-auth-retry" type="button" hidden data-ks-text="Try Again">Try Again</button></section>
+<section id="player-access" class="card access-card" aria-labelledby="access-title" hidden>
 <h2 id="access-title" data-ks-text="State 169 players">State 169 players</h2>
 <p data-ks-text="Enter your Kingshot Player ID to access Kingdom Compare.">Enter your Kingshot Player ID to access Kingdom Compare.</p>
 <form id="access-form" novalidate>
@@ -197,6 +198,8 @@ if(preset&&/^\d{1,6}$/.test(preset)){
 </script>
 
 <script src="./access.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./admin-access.js"></script>
 <script>window.KSPreferences?.mount();</script>
 </body>
 </html>

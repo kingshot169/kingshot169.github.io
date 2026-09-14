@@ -3,6 +3,7 @@
  const TTL=30*60*1000, STORAGE='ks169-compare-access-v1';
  const input=$('visitor-id'),button=$('check-player'),form=$('access-form'),profile=$('access-profile'),next=$('access-continue'),message=$('access-message');
  let record=null,lease=null,candidate=null,sequence=0,pending=false,request=null,expiry=null;
+ let adminMode='checking',adminLease=null,adminExpires=0;
  const text=(key,error=false)=>{KSPreferences.setText(message,key);message.className='msg'+(error?' error':'')};
  const validPlayer=(p,id)=>p&&typeof p==='object'&&!Array.isArray(p)&&typeof p.player_id==='string'&&/^\d{4,20}$/.test(p.player_id)&&(!id||p.player_id===id)&&typeof p.name==='string'&&p.name.trim().length>0&&(p.kingdom===169||p.kingdom==='169');
  const fresh=r=>r&&r.approved===true&&validPlayer(r.player)&&Number.isFinite(r.issued)&&Number.isFinite(r.expires)&&r.issued<=Date.now()&&r.expires>Date.now()&&r.expires-r.issued>0&&r.expires-r.issued<=TTL;
@@ -14,7 +15,7 @@
   for(const id of ['strength','activity','breakdown'])$(id).replaceChildren();KSPreferences.setText($('msg'),'');
   text(note);next.hidden=false;
  }
- function allowed(){if(record&&!fresh(record))clear('Access expired. Check your player again.');return !!record}
+ function allowed(){if(adminMode==='admin'){if(Date.now()<adminExpires)return true;setAdminState('visitor')}if(adminMode!=='visitor')return false;if(record&&!fresh(record))clear('Access expired. Check your player again.');return !!record}
  function show(p){form.hidden=true;profile.hidden=false;KSPreferences.setRawText($('visitor-name'),p.name);KSPreferences.setText($('visitor-meta'),'Player ID {id}',{id:p.player_id});KSPreferences.setText($('visitor-state'),'State {state}',{state:169})}
  function approve(r,focus=false){
   if(!fresh(r)){clear('Access expired. Check your player again.');return}
@@ -23,7 +24,7 @@
   expiry=setTimeout(()=>{if(!allowed())input.focus()},Math.max(0,r.expires-Date.now()));if(focus)$('opponent').focus();
  }
  async function lookup(event){
-  event.preventDefault();if(pending)return;
+  event.preventDefault();if(pending||adminMode!=='visitor')return;
   const id=input.value.trim();input.value=id;clear();
   if(!/^\d{4,20}$/.test(id)){text('Enter a valid numeric Player ID.',true);return}
   pending=true;button.disabled=true;KSPreferences.setText(button,'Finding…');const own=++sequence;request=new AbortController();const controller=request;
@@ -50,7 +51,18 @@
  $('access-change').onclick=()=>{clear();input.value='';input.focus()};
  next.onclick=()=>{if(candidate){clearTimeout(expiry);approve(candidate,true)}};
  window.addEventListener('focus',allowed);window.addEventListener('pageshow',allowed);document.addEventListener('visibilitychange',allowed);
- window.CompareAccess={ticket:()=>allowed()?lease:null,valid:ticket=>allowed()&&ticket===lease};
+ function setAdminState(mode,expires=0){
+  if(candidate&&!record){clearTimeout(expiry);candidate=null;profile.hidden=true;form.hidden=false}
+  sequence++;request?.abort();request=null;pending=false;button.disabled=false;KSPreferences.setText(button,'Check player');
+  adminLease?.abort();lease?.abort();adminLease=null;lease=null;adminMode=mode;adminExpires=expires;
+  $('results').classList.add('hidden');for(const id of ['strength','activity','breakdown'])$(id).replaceChildren();KSPreferences.setText($('msg'),'');
+  $('player-access').hidden=mode!=='visitor';
+  if(mode==='admin')adminLease=new AbortController();
+  else if(mode==='visitor'&&fresh(record))lease=new AbortController();
+  $('comparison-controls').hidden=!allowed();$('compare').disabled=!allowed();
+ }
+ const ticket=()=>allowed()?(adminMode==='admin'?adminLease:lease):null;
+ window.CompareAccess={ticket,valid:value=>!!value&&value===ticket(),setAdminState};
  let stored=null;try{stored=JSON.parse(sessionStorage.getItem(STORAGE))}catch{}
- clear();if(fresh(stored)){input.value=stored.player.player_id;approve(stored)}
+ clear();if(fresh(stored)){input.value=stored.player.player_id;approve(stored)}$('comparison-controls').hidden=true;$('compare').disabled=true;
 })();

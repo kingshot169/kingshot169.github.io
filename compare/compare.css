@@ -54,3 +54,8 @@ html[data-theme="light"] .access-card .error{color:#a32424}
 @media(max-width:520px){.access-card form{grid-template-columns:1fr}.access-card input{font-size:1rem}.access-actions button{flex:1 1 140px}}
 html[data-theme="light"] .access-card h2{color:#805a19}
 html[data-theme="light"] .access-card :is(input,button):focus-visible{outline-color:#805a19}
+
+/* Unlocked controls must also fit narrow screens and translated labels. */
+.form{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.form>.fixed,.form>.field{min-width:0}.form input{width:100%;min-width:0}.statebox{overflow-wrap:anywhere}
+@media(max-width:520px){.form{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr)}}
