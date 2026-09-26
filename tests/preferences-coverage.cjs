@@ -10,6 +10,7 @@ const context={window:{dispatchEvent(){}},Event:function(){}};vm.createContext(c
 const runtime=fs.readFileSync('shared/site-preferences.js','utf8');
 vm.runInContext(runtime.slice(0,runtime.indexOf('if(window.KSPreferences)return;'))+'window.base=phraseTranslations;})();',context);
 vm.runInContext(fs.readFileSync('shared/translations.js','utf8'),context);
+vm.runInContext(fs.readFileSync('shared/alliance-translations.js','utf8'),context);
 vm.runInContext(runtime.match(/const aliases=([^;]+);/)[0]+'window.aliases=aliases;',context);
 const normalize=s=>s.replace(/\s+/g,' ').trim(),decode=s=>s.replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
 const sources=new Map(),pages=[];

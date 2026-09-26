@@ -1,0 +1,176 @@
+.ks-alliance {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.55;
+}
+.ks-alliance main {
+  max-width: 1180px;
+  margin: auto;
+  padding: 24px 18px 64px;
+}
+.ks-alliance a {
+  color: var(--gold);
+}
+.ks-alliance h1 {
+  font-size: clamp(1.8rem, 5vw, 2.7rem);
+  margin-block: 24px 8px;
+}
+.ks-alliance h2 {
+  font-size: 1.25rem;
+}
+.ks-alliance p {
+  overflow-wrap: anywhere;
+}
+.ks-alliance .panel {
+  padding: 22px;
+  margin-block: 18px;
+  background: var(--panel);
+  border: 1px solid var(--muted);
+  border-radius: 16px;
+}
+.ks-alliance .controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+}
+.ks-alliance label {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 150px;
+  min-width: 0;
+}
+.ks-alliance input, .ks-alliance select, .ks-alliance button {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  padding: 10px;
+  max-width: 100%;
+  min-height: 44px;
+}
+.ks-alliance button {
+  cursor: pointer;
+  font-weight: 650;
+}
+.ks-alliance #search {
+  background: var(--gold);
+  color: #0b1220;
+}
+.ks-alliance button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ks-alliance .detail-toggle {
+  display: flex;
+  align-items: center;
+  flex-basis: 200px;
+}
+.ks-alliance .detail-toggle input {
+  min-height: 24px;
+}
+.ks-alliance .identity {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.ks-alliance .identity img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+.ks-alliance .metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 14px;
+}
+.ks-alliance .metric {
+  padding: 12px;
+  border-inline-start: 3px solid var(--gold);
+  min-width: 0;
+}
+.ks-alliance .metric span {
+  display: block;
+  color: var(--muted);
+}
+.ks-alliance .metric strong {
+  font-size: 1.3rem;
+  overflow-wrap: anywhere;
+}
+.ks-alliance .notice {
+  border-inline-start: 3px solid var(--gold);
+  padding-inline-start: 12px;
+}
+.ks-alliance .roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 14px;
+}
+.ks-alliance .member {
+  border: 1px solid var(--muted);
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ks-alliance .member img {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.ks-alliance .avatar-placeholder {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--muted);
+}
+.ks-alliance .member h3 {
+  margin: 4px 0;
+  font-size: 1.1rem;
+}
+.ks-alliance dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+}
+.ks-alliance dd {
+  margin: 0;
+  text-align: end;
+}
+.ks-alliance dt {
+  color: var(--muted);
+}
+.ks-alliance [hidden] {
+  display: none !important;
+}
+.ks-alliance :focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .ks-alliance main {
+    padding-inline: 12px;
+  }
+  .ks-alliance .panel {
+    padding: 15px;
+  }
+  .ks-alliance .controls > * {
+    flex-basis: 100%;
+  }
+  .ks-alliance .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 420px) {
+  .ks-alliance .metrics {
+    grid-template-columns: 1fr;
+  }
+}
