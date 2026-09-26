@@ -35,7 +35,7 @@ const session = {
 };
 const fixture = () => ({
   ok: true,
-  version: 2,
+  version: 3,
   access: "admin",
   alliance: {
     name: "Mock alliance <img onerror=alert(1)>",
@@ -49,16 +49,16 @@ const fixture = () => ({
     roster_coverage_percent: 100,
     roster_complete: true,
     identity_complete: true,
-    active_24h_count: null,
-    active_3d_count: null,
-    active_7d_count: null,
-    older_than_7d_count: null,
-    activity_unknown_count: 98,
+    active_24h_count: 52,
+    active_3d_count: 21,
+    active_7d_count: 13,
+    older_than_7d_count: 8,
+    activity_unknown_count: 4,
     reported_online_count: 21,
     online_known_count: 90,
   },
   freshness: {
-    activity_verified: false,
+    activity_verified: true,
     freshness_known: true,
     estimated_provider_age_seconds: 96,
     our_cache_age_seconds: 0,
@@ -69,9 +69,17 @@ const fixture = () => ({
     player_id: String(10000 + i),
     alliance_rank: 4,
     alliance_rank_label: "R4",
-    last_active_at: null,
+    last_active_at: i < 94 ? "2026-09-20T12:00:00Z" : null,
     online: i < 21 ? true : i < 90 ? false : null,
-    activity_bucket: "unknown",
+    activity_bucket: i < 52
+      ? "active_24h"
+      : i < 73
+      ? "active_3d"
+      : i < 86
+      ? "active_7d"
+      : i < 94
+      ? "older_than_7d"
+      : "unknown",
   })),
 });
 async function setup(
@@ -82,6 +90,7 @@ async function setup(
     signedIn = session,
     defer = false,
     profileStatus = 200,
+    activityVerified = true,
   } = {},
 ) {
   const context = await browser.newContext({
@@ -137,7 +146,24 @@ async function setup(
         route.request().headers().authorization,
         "Bearer synthetic-token",
       );
-      return route.fulfill({ json: fixture() });
+      const data = fixture();
+      if (!activityVerified) {
+        data.freshness.activity_verified = false;
+        for (
+          const key of [
+            "active_24h_count",
+            "active_3d_count",
+            "active_7d_count",
+            "older_than_7d_count",
+          ]
+        ) data.summary[key] = null;
+        data.summary.activity_unknown_count = 98;
+        data.members.forEach((m) => {
+          m.last_active_at = null;
+          m.activity_bucket = "unknown";
+        });
+      }
+      return route.fulfill({ json: data });
     }
     throw Error("Unexpected external request");
   });
@@ -145,6 +171,19 @@ async function setup(
 }
 let passed = 0;
 try {
+  {
+    const { context, page } = await setup({ activityVerified: false });
+    await page.goto("http://127.0.0.1:8773/alliance-search/");
+    await page.waitForSelector("#tool:visible");
+    await page.locator("#tag").fill("KRZ");
+    await page.locator("#search").click();
+    await page.waitForSelector("#results:visible");
+    assert.equal(await page.locator("#unverified").isVisible(), true);
+    assert.equal(await page.locator("#windows-note").isVisible(), false);
+    assert.equal(await page.locator(".member").count(), 0);
+    await context.close();
+    passed++;
+  }
   for (const lang of ["en", "ko", "es", "pt", "fr", "ar"]) {
     for (const theme of ["dark", "light"]) {
       const { context, page, calls, errors } = await setup({ lang, theme });
@@ -163,11 +202,33 @@ try {
         await page.locator("#attention-section").getAttribute("open"),
         null,
       );
-      for (const id of ["coverage", "freshness", "online", "unverified"]) {
+      for (const id of ["coverage", "freshness", "online", "windows-note"]) {
         assert.equal(await page.locator("#" + id).isVisible(), true);
       }
       assert.equal(await page.locator("#identity img").count(), 0);
-      assert.equal(await page.locator("#windows-note").isVisible(), false);
+      assert.equal(
+        await page.locator("#activity strong").allTextContents().then((a) =>
+          a.reduce((sum, v) => sum + Number(v), 0)
+        ),
+        98,
+      );
+      if (lang === "en") {
+        assert.match(
+          await page.locator("#online").textContent(),
+          /Reported online in this snapshot/,
+        );
+      }
+      if (lang === "en") {
+        assert.match(
+          await page.locator("#results").textContent(),
+          /up to 60 minutes old/,
+        );
+        assert.doesNotMatch(
+          await page.locator("#results").textContent(),
+          /Online now/,
+        );
+      }
+      assert.equal(await page.locator("#unverified").isVisible(), false);
       assert.equal(
         await page.evaluate(() =>
           document.documentElement.scrollWidth <= innerWidth + 1
@@ -193,7 +254,7 @@ try {
       );
       assert.equal(
         await page.locator("#roster").textContent().then((t) =>
-          /Kills|Power|Town-center|UTC/.test(t)
+          /Kills|Power|Town-center/.test(t)
         ),
         false,
       );

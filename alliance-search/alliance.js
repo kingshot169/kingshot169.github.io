@@ -182,7 +182,7 @@
       );
     } else card.append(label("p", "Activity unknown"));
     card.append(
-      label("p", "Reported online in snapshot: {value}", {
+      label("p", "Reported online in this snapshot: {value}", {
         value: P.text(
           m.online === true ? "Yes" : m.online === false ? "No" : "Unavailable",
         ),
@@ -227,10 +227,13 @@
     host.replaceChildren();
     if (!result || !$("attention-section").open) return;
     for (
-      const [bucket, title] of [["older_than_7d", "Activity older than 7d"], [
-        "unknown",
-        "Activity unknown",
-      ]]
+      const [bucket, title] of [
+        ["older_than_7d", "Recorded activity: 7+ days"],
+        [
+          "unknown",
+          "Activity unknown",
+        ],
+      ]
     ) {
       const rows = result.members.filter((m) => m.activity_bucket === bucket);
       const section = document.createElement("details");
@@ -278,9 +281,9 @@
     $("windows-note").hidden = !f.activity_verified;
     const rows = [
       ["Recorded active within 24h", s.active_24h_count],
-      ["Recorded active within 3d", s.active_3d_count],
-      ["Recorded active within 7d", s.active_7d_count],
-      ["Activity older than 7d", s.older_than_7d_count],
+      ["Recorded activity: 1–3 days", s.active_3d_count],
+      ["Recorded activity: 3–7 days", s.active_7d_count],
+      ["Recorded activity: 7+ days", s.older_than_7d_count],
       ["Activity unknown", s.activity_unknown_count],
     ];
     $("activity").replaceChildren(...rows.map(([key, value]) => {
@@ -289,7 +292,7 @@
       e.append(label("span", key), raw("strong", fmt(value)));
       return e;
     }));
-    P.setText($("online"), "Reported online in snapshot: {value}", {
+    P.setText($("online"), "Reported online in this snapshot: {value}", {
       value: fmt(s.reported_online_count),
     });
     P.setText(
@@ -350,7 +353,7 @@
       }
       if (!r.ok || data.ok !== true) throw Error(data.code || "unavailable");
       if (
-        data.version !== 2 || data.access !== "admin" ||
+        data.version !== 3 || data.access !== "admin" ||
         !Array.isArray(data.members) || !data.alliance || !data.summary ||
         !data.freshness
       ) throw Error("malformed");

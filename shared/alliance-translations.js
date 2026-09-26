@@ -1,6 +1,11 @@
 (() => {
   const rows =
-    `Open tool|도구 열기|Abrir herramienta|Abrir ferramenta|Ouvrir l’outil|فتح الأداة
+    `Recorded activity: 1–3 days|활동 기록: 1–3일|Actividad registrada: 1–3 días|Atividade registada: 1–3 dias|Activité enregistrée : 1–3 jours|نشاط مسجل: 1–3 أيام
+Recorded activity: 3–7 days|활동 기록: 3–7일|Actividad registrada: 3–7 días|Atividade registada: 3–7 dias|Activité enregistrée : 3–7 jours|نشاط مسجل: 3–7 أيام
+Recorded activity: 7+ days|활동 기록: 7일 이상|Actividad registrada: 7 días o más|Atividade registada: 7 dias ou mais|Activité enregistrée : 7 jours ou plus|نشاط مسجل: 7 أيام أو أكثر
+Each returned member appears in one activity group. Boundaries: <24h, 1–3 days, 3–7 days, 7+ days.|반환된 각 연맹원은 하나의 활동 그룹에 속합니다. 경계: 24시간 미만, 1–3일, 3–7일, 7일 이상.|Cada miembro devuelto aparece en un solo grupo. Límites: <24 h, 1–3 días, 3–7 días, 7 días o más.|Cada membro devolvido aparece num único grupo. Limites: <24 h, 1–3 dias, 3–7 dias, 7 dias ou mais.|Chaque membre renvoyé figure dans un seul groupe. Limites : <24 h, 1–3 jours, 3–7 jours, 7 jours ou plus.|يظهر كل عضو معاد في مجموعة واحدة. الحدود: أقل من 24 ساعة، 1–3 أيام، 3–7 أيام، 7 أيام أو أكثر.
+Reported online in this snapshot: {value}|이 스냅샷에 보고된 접속: {value}|Conexión informada en esta instantánea: {value}|Ligação informada neste registo: {value}|Connexion rapportée dans cet instantané : {value}|الاتصال المبلغ عنه في هذه اللقطة: {value}
+Open tool|도구 열기|Abrir herramienta|Abrir ferramenta|Ouvrir l’outil|فتح الأداة
 Alliance Activity|연맹 활동|Actividad de alianza|Atividade da aliança|Activité d’alliance|نشاط التحالف
 Review alliance activity snapshots and members needing attention.|연맹 활동 스냅샷과 확인이 필요한 연맹원을 검토하세요.|Revisa instantáneas de actividad y miembros que requieren atención.|Reveja registos de atividade e membros que precisam de atenção.|Consultez les instantanés d’activité et les membres à examiner.|راجع لقطات نشاط التحالف والأعضاء الذين يحتاجون إلى مراجعة.
 Needs attention|확인 필요|Requiere atención|Precisa de atenção|À examiner|يحتاج إلى مراجعة
