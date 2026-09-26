@@ -8,7 +8,7 @@
     >
     <meta name="theme-color" content="#0b1220">
     <meta name="referrer" content="no-referrer">
-    <title>Alliance Search</title>
+    <title>Alliance Activity</title>
     <link rel="stylesheet" href="../shared/foundation.css">
     <link rel="stylesheet" href="../shared/site-preferences.css">
     <script src="../shared/translations.js" defer></script>
@@ -19,157 +19,110 @@
   </head>
   <body class="ks-modern ks-alliance">
     <main>
-      <a href="../" data-site-nav data-ks-text="169 Kingshot Tools"
-      >169 Kingshot Tools</a>
-      <h1 data-ks-text="Alliance Search">Alliance Search</h1>
-      <p data-ks-text="Explore alliance members, power and recorded activity.">
-        Explore alliance members, power and recorded activity.
-      </p>
-      <form id="search-form" class="panel controls">
-        <label><span data-ks-text="Kingdom ID">Kingdom ID</span><input
-            id="kingdom"
-            type="number"
-            min="1"
-            max="999999"
-            step="1"
-            value="169"
-            required
-          ></label>
-        <label><span data-ks-text="Alliance tag (case-sensitive)"
-          >Alliance tag (case-sensitive)</span><input
-            id="tag"
-            maxlength="8"
-            pattern="[A-Za-z0-9_\x2d]{1,8}"
-            required
-            autocomplete="off"
-            autocapitalize="off"
-            spellcheck="false"
-            dir="ltr"
-          ></label>
-        <button id="search" type="submit" data-ks-text="Search Alliance">
-          Search Alliance
+      <a href="../admin/" data-site-nav data-ks-text="Admin">Admin</a>
+      <h1 data-ks-text="Alliance Activity">Alliance Activity</h1>
+      <section id="auth-panel" role="status" aria-live="polite">
+        <p id="auth-message" data-ks-text="Checking your session…">
+          Checking your session…
+        </p>
+        <button id="auth-retry" type="button" hidden data-ks-text="Try Again">
+          Try Again
         </button>
-        <label class="detail-toggle" hidden><input
-            id="details"
-            type="checkbox"
-            disabled
-          ><span
-            data-ks-text="Admin activity details"
-          >Admin activity details</span></label>
-        <a href="../admin/" data-ks-text="Admin Login">Admin Login</a>
-      </form>
-      <p id="message" role="status" aria-live="polite"></p>
-      <section id="results" hidden aria-busy="false">
-        <section class="panel">
-          <div class="identity">
-            <img id="flag" alt="" hidden><div>
-              <h2 id="identity" translate="no"></h2>
-              <p id="leader" translate="no"></p>
-            </div>
-          </div>
-          <div id="overview" class="metrics"></div>
-          <p id="freshness"></p>
-          <p id="coverage"></p>
-          <p
-            id="stale"
-            class="notice"
-            hidden
-            data-ks-text="Stored data may be stale. These figures are not live."
-          >
-            Stored data may be stale. These figures are not live.
-          </p>
-        </section>
-        <section id="activity-panel" class="panel" hidden>
-          <h2 data-ks-text="Recorded activity">Recorded activity</h2>
-          <p
-            data-ks-text="Activity reported by MightPulse. Data may be up to 60 minutes old and is not a live online-status feed."
-          >
-            Activity reported by MightPulse. Data may be up to 60 minutes old
-            and is not a live online-status feed.
-          </p>
-          <p
-            id="unverified"
-            class="notice"
-            hidden
-            data-ks-text="Activity timing is unverified; time-based statistics are unavailable."
-          >
-            Activity timing is unverified; time-based statistics are
-            unavailable.
-          </p>
-          <div id="activity" class="metrics"></div>
-          <p
-            data-ks-text="24h is included in 7d. Power share uses known returned member power, including members with unknown activity; it excludes missing power."
-          >
-            24h is included in 7d. Power share uses known returned member power,
-            including members with unknown activity; it excludes missing power.
-          </p>
-        </section>
-        <section class="panel">
-          <h2 data-ks-text="Member roster">Member roster</h2>
-          <div class="controls">
-            <label><span data-ks-text="Name or Player ID"
+      </section>
+      <div id="tool" hidden>
+        <form id="search-form" class="panel controls">
+          <label><span data-ks-text="Kingdom ID">Kingdom ID</span><input
+              id="kingdom"
+              type="number"
+              min="1"
+              max="999999"
+              step="1"
+              value="169"
+              required
+            ></label>
+          <label><span data-ks-text="Alliance tag (case-sensitive)"
+            >Alliance tag (case-sensitive)</span><input
+              id="tag"
+              maxlength="8"
+              pattern="[A-Za-z0-9_\x2d]{1,8}"
+              required
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              dir="ltr"
+            ></label>
+          <button id="search" type="submit" data-ks-text="Search Alliance">
+            Search Alliance
+          </button>
+        </form>
+        <p id="message" role="status" aria-live="polite"></p>
+        <section id="results" hidden>
+          <section class="panel">
+            <h2 id="identity" translate="no"></h2>
+            <p id="leader"></p>
+            <p id="coverage"></p>
+            <p id="freshness"></p>
+            <p
+              id="stale"
+              class="notice"
+              hidden
+              data-ks-text="Stored data may be stale. These figures are not live."
+            >
+              Stored data may be stale. These figures are not live.
+            </p>
+            <h3 data-ks-text="Recorded activity">Recorded activity</h3>
+            <p
+              id="unverified"
+              class="notice"
+              hidden
+              data-ks-text="Activity timing is unverified; time-based statistics are unavailable."
+            >
+              Activity timing is unverified; time-based statistics are
+              unavailable.
+            </p>
+            <div id="activity" class="activity-grid"></div>
+            <p id="online"></p>
+            <p id="online-coverage"></p>
+            <p
+              class="note"
+              data-ks-text="Snapshot data, not live presence. Missing activity does not mean inactive."
+            >
+              Snapshot data, not live presence. Missing activity does not mean
+              inactive.
+            </p>
+            <p
+              id="windows-note"
+              class="note"
+              hidden
+              data-ks-text="24h is included in 3 days and 7 days. Counts describe returned members only."
+            >
+              24h is included in 3 days and 7 days. Counts describe returned
+              members only.
+            </p>
+          </section>
+          <details id="attention-section" class="panel">
+            <summary data-ks-text="Needs attention">Needs attention</summary>
+            <p
+              class="note"
+              data-ks-text="Review older or unknown records; they do not establish inactivity."
+            >
+              Review older or unknown records; they do not establish inactivity.
+            </p>
+            <div id="attention"></div>
+          </details>
+          <details id="roster-section" class="panel">
+            <summary data-ks-text="View full roster">View full roster</summary>
+            <label class="roster-search"><span data-ks-text="Name or Player ID"
               >Name or Player ID</span><input
                 id="query"
                 type="search"
                 maxlength="120"
               ></label>
-            <label><span data-ks-text="Alliance rank"
-              >Alliance rank</span><select id="rank">
-                <option value="" data-ks-text="All ranks">All ranks</option>
-              </select></label>
-            <label id="bucket-filter"><span data-ks-text="Recorded activity"
-              >Recorded activity</span><select id="bucket">
-                <option value="" data-ks-text="All activity">
-                  All activity
-                </option>
-                <option
-                  value="active_24h"
-                  data-ks-text="Recorded active within 24h"
-                >
-                  Recorded active within 24h
-                </option>
-                <option
-                  value="active_7d"
-                  data-ks-text="Recorded active within 7d"
-                >
-                  Recorded active within 7d
-                </option>
-                <option
-                  value="older_than_7d"
-                  data-ks-text="Activity older than 7d"
-                >
-                  Activity older than 7d
-                </option>
-                <option value="unknown" data-ks-text="Activity unknown">
-                  Activity unknown
-                </option>
-              </select></label>
-            <label><span data-ks-text="Sort descending"
-              >Sort descending</span><select id="sort">
-                <option value="power" data-ks-text="Power">Power</option>
-                <option
-                  value="town_center_level"
-                  data-ks-text="Town-center level"
-                >
-                  Town-center level
-                </option>
-                <option value="kills" data-ks-text="Kills">Kills</option>
-                <option value="alliance_rank" data-ks-text="Alliance rank">
-                  Alliance rank
-                </option>
-                <option
-                  id="activity-sort"
-                  value="last_active_at"
-                  data-ks-text="Recorded activity"
-                >
-                  Recorded activity
-                </option>
-              </select></label>
-          </div>
-          <p id="shown" role="status"></p>
-          <div id="roster" class="roster"></div>
+            <p id="shown"></p>
+            <div id="roster" class="roster"></div>
+          </details>
         </section>
-      </section>
+      </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./alliance.js" defer></script>

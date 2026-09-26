@@ -1,16 +1,15 @@
 (() => {
-  const P = window.KSPreferences,
-    $ = (id) => document.getElementById(id),
-    KEY = "sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j",
-    URL = "https://iqjvzhgodwufvepegwyj.supabase.co";
+  const P = window.KSPreferences, $ = (id) => document.getElementById(id);
+  const URL = "https://iqjvzhgodwufvepegwyj.supabase.co",
+    KEY = "sb_publishable_yLRLyVxBPBEoJob1kOznZg_bJoqlg-j";
   const client = window.supabase?.createClient(URL, KEY);
-  let result = null, controller = null, generation = 0, expiry = null;
-  const labels = {
-    active_24h: "Recorded active within 24h",
-    active_7d: "Recorded active within 7d",
-    older_than_7d: "Activity older than 7d",
-    unknown: "Activity unknown",
-  };
+  let session = null,
+    result = null,
+    revision = 0,
+    request = null,
+    authRequest = null,
+    expiry = null,
+    checking = false;
   const errors = {
     invalid_request: "Check the kingdom and case-sensitive tag.",
     too_large: "Check the kingdom and case-sensitive tag.",
@@ -19,95 +18,251 @@
     timeout: "Search timed out. Please try again later.",
     unavailable: "Alliance data is unavailable.",
     malformed: "Alliance data is unavailable.",
-    sign_in: "Sign in to an active admin account for details.",
-    forbidden: "Admin activity access denied.",
+  };
+  const text = (node, value) => P.setRawText(node, String(value ?? ""));
+  const label = (tag, key, params) => {
+    const node = document.createElement(tag);
+    P.setText(node, key, params);
+    return node;
   };
   const raw = (tag, value) => {
-    const e = document.createElement(tag);
-    e.textContent = String(value ?? "");
-    e.translate = false;
-    return e;
-  };
-  const label = (tag, key, params) => {
-    const e = document.createElement(tag);
-    P.setText(e, key, params);
-    return e;
+    const node = document.createElement(tag);
+    text(node, value);
+    return node;
   };
   const fmt = (v) =>
-    v === null || v === undefined
+    v == null
       ? P.text("Unavailable")
       : new Intl.NumberFormat(P.getLanguage(), { maximumFractionDigits: 1 })
         .format(v);
-  const msg = (key) => P.setText($("message"), key);
-  function safeImage(url) {
-    try {
-      const u = new window.URL(url);
-      return u.protocol === "https:" &&
-          ["mightpulse.com", "api.mightpulse.com"].includes(u.hostname) &&
-          !u.username && !u.password
-        ? u.href
-        : null;
-    } catch {
-      return null;
-    }
-  }
-  function picture(url) {
-    const img = document.createElement("img");
-    img.alt = "";
-    img.loading = "lazy";
-    img.referrerPolicy = "no-referrer";
-    img.src = url;
-    img.onerror = () => img.replaceWith(placeholder());
-    return img;
-  }
-  function placeholder() {
-    const e = document.createElement("span");
-    e.className = "avatar-placeholder";
-    e.setAttribute("aria-hidden", "true");
-    e.textContent = "◇";
-    return e;
-  }
-  function metrics(host, rows) {
-    host.replaceChildren(...rows.map(([key, value]) => {
-      const e = document.createElement("div");
-      e.className = "metric";
-      e.append(label("span", key), raw("strong", fmt(value)));
-      return e;
-    }));
-  }
   function clear() {
-    ++generation;
-    controller?.abort();
-    controller = null;
-    clearTimeout(expiry);
+    revision++;
+    request?.abort();
+    request = null;
     result = null;
     $("results").hidden = true;
     $("roster").replaceChildren();
+    $("attention").replaceChildren();
+    $("activity").replaceChildren();
+    text($("identity"), "");
+    text($("leader"), "");
+    $("roster-section").open = false;
+    $("attention-section").open = false;
     $("search").disabled = false;
   }
+  function redirect(password = false) {
+    clear();
+    session = null;
+    $("tool").hidden = true;
+    location.replace(password ? "../admin/account/?required=1" : "../admin/");
+  }
+  async function check() {
+    const previous = result, previousUser = session?.user.id;
+    clear();
+    const own = revision;
+    session = null;
+    checking = true;
+    clearTimeout(expiry);
+    authRequest?.abort();
+    authRequest = new AbortController();
+    const auth = authRequest;
+    $("tool").hidden = true;
+    $("auth-panel").hidden = false;
+    $("auth-retry").hidden = true;
+    P.setText($("auth-message"), "Checking your session…");
+    let timer;
+    try {
+      await Promise.race([
+        (async () => {
+          const found = await client?.auth.getSession();
+          if (own !== revision || auth.signal.aborted) return;
+          if (found?.error) throw Error("session");
+          const candidate = found?.data?.session;
+          if (
+            !candidate || !candidate.user?.id ||
+            typeof candidate.access_token !== "string" ||
+            !Number.isFinite(candidate.expires_at) ||
+            candidate.expires_at * 1000 <= Date.now()
+          ) {
+            redirect();
+            return;
+          }
+          const r = await fetch(URL + "/functions/v1/admin-profile", {
+            headers: {
+              apikey: KEY,
+              Authorization: "Bearer " + candidate.access_token,
+            },
+            signal: auth.signal,
+            cache: "no-store",
+          });
+          if (own !== revision || auth.signal.aborted) return;
+          if (r.status === 401 || r.status === 403) {
+            redirect();
+            return;
+          }
+          if (!r.ok) throw Error("profile");
+          const data = await r.json(), p = data.profile;
+          if (own !== revision || auth.signal.aborted) return;
+          if (
+            data.ok !== true || p?.user_id !== candidate.user.id ||
+            p?.is_active !== true
+          ) {
+            redirect();
+            return;
+          }
+          if (p.must_change_password === true) {
+            redirect(true);
+            return;
+          }
+          if (
+            p.must_change_password !== false || p.can_search_players !== true
+          ) {
+            redirect();
+            return;
+          }
+          if (candidate.expires_at * 1000 <= Date.now()) {
+            redirect();
+            return;
+          }
+          session = candidate;
+          checking = false;
+          $("auth-panel").hidden = true;
+          $("tool").hidden = false;
+          if (previousUser === candidate.user.id && previous) {
+            result = previous;
+            $("results").hidden = false;
+            render();
+          }
+          expiry = setTimeout(
+            () => redirect(),
+            Math.max(0, candidate.expires_at * 1000 - Date.now()),
+          );
+        })(),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            auth.abort();
+            reject(Error("timeout"));
+          }, 10000);
+        }),
+      ]);
+    } catch {
+      if (own === revision) {
+        session = null;
+        checking = false;
+        $("tool").hidden = true;
+        P.setText(
+          $("auth-message"),
+          "Unable to check your session. Please try again.",
+        );
+        $("auth-retry").hidden = false;
+      }
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  function member(m) {
+    const card = document.createElement("article");
+    card.className = "member";
+    card.append(
+      raw("h3", m.name),
+      label("p", "Player ID {id}", {
+        id: m.player_id ?? P.text("Unavailable"),
+      }),
+      label("p", "Alliance rank: {rank}", {
+        rank: m.alliance_rank_label || fmt(m.alliance_rank),
+      }),
+    );
+    if (result.freshness.activity_verified) {
+      card.append(
+        label("p", "Last recorded activity: {time}", {
+          time: m.last_active_at
+            ? P.dateTime(m.last_active_at)
+            : P.text("Activity unknown"),
+        }),
+      );
+    } else card.append(label("p", "Activity unknown"));
+    card.append(
+      label("p", "Reported online in snapshot: {value}", {
+        value: P.text(
+          m.online === true ? "Yes" : m.online === false ? "No" : "Unavailable",
+        ),
+      }),
+    );
+    if (m.player_id) {
+      const copy = label("button", "Copy Player ID");
+      copy.type = "button";
+      copy.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(m.player_id);
+          P.setText($("message"), "Player ID copied.");
+        } catch {
+          P.setText(
+            $("message"),
+            "Copy unavailable. Select the Player ID manually.",
+          );
+        }
+      };
+      card.append(copy);
+    }
+    return card;
+  }
+  function roster() {
+    if (!result || !$("roster-section").open) {
+      $("roster").replaceChildren();
+      return;
+    }
+    const query = $("query").value.toLocaleLowerCase();
+    const members = result.members.filter((m) =>
+      !query || m.name.toLocaleLowerCase().includes(query) ||
+      (m.player_id || "").includes(query)
+    );
+    P.setText($("shown"), "Showing {shown} of {total} members.", {
+      shown: members.length,
+      total: result.members.length,
+    });
+    $("roster").replaceChildren(...members.map(member));
+  }
+  function attention() {
+    const host = $("attention");
+    host.replaceChildren();
+    if (!result || !$("attention-section").open) return;
+    for (
+      const [bucket, title] of [["older_than_7d", "Activity older than 7d"], [
+        "unknown",
+        "Activity unknown",
+      ]]
+    ) {
+      const rows = result.members.filter((m) => m.activity_bucket === bucket);
+      const section = document.createElement("details");
+      section.className = "attention-group";
+      const summary = label("summary", title);
+      summary.append(" (" + fmt(rows.length) + ")");
+      section.append(summary);
+      const list = document.createElement("div");
+      section.append(list);
+      section.addEventListener("toggle", () => {
+        list.replaceChildren(...(section.open ? rows.map(member) : []));
+      });
+      host.append(section);
+    }
+  }
   function render() {
-    if (!result) return;
-    const { alliance: a, summary: s, freshness: f } = result;
-    $("identity").textContent = `[${a.tag}] ${a.name}`;
-    P.setText($("leader"), "Leader: {name}", {
+    if (!result || !session) return;
+    const a = result.alliance, s = result.summary, f = result.freshness;
+    text($("identity"), "[" + a.tag + "] " + a.name);
+    P.setText($("leader"), "State {state} · Leader: {name}", {
+      state: a.kingdom,
       name: a.leader_name || P.text("Unavailable"),
     });
-    const flag = safeImage(a.flag_url);
-    $("flag").hidden = !flag;
-    if (flag) {
-      $("flag").src = flag;
-      $("flag").onerror = () => {
-        $("flag").hidden = true;
-      };
-    } else $("flag").removeAttribute("src");
-    metrics($("overview"), [
-      ["Kingdom ID", a.kingdom],
-      ["Reported members", a.member_count_reported],
-      ["Reported alliance power", a.power],
-      ["Power rank", a.power_rank],
-      ["Average member power", s.average_power],
-      ["Median member power", s.median_power],
-    ]);
+    P.setText(
+      $("coverage"),
+      "Members: {reported}; returned: {returned}; coverage: {coverage}%.",
+      {
+        reported: fmt(a.member_count_reported),
+        returned: fmt(s.roster_returned),
+        coverage: fmt(s.roster_coverage_percent),
+      },
+    );
     P.setText(
       $("freshness"),
       f.freshness_known
@@ -118,258 +273,152 @@
         cache: fmt(f.our_cache_age_seconds),
       },
     );
-    P.setText(
-      $("coverage"),
-      "Roster: {returned}/{reported}; coverage: {coverage}%. Power known: {known}.",
-      {
-        returned: fmt(s.roster_returned),
-        reported: fmt(a.member_count_reported),
-        coverage: fmt(s.roster_coverage_percent),
-        known: fmt(s.power_known_count),
-      },
-    );
-    if (!s.roster_complete) {
-      $("coverage").append(
-        " ",
-        P.text(
-          "Roster completeness is uncertain; statistics describe returned members only.",
-        ),
-      );
-    }
     $("stale").hidden = !f.stale;
     $("unverified").hidden = f.activity_verified;
-    const leadership = false; // Publication: activity semantics remain unverified.
-    $("activity-panel").hidden = !leadership;
-    $("bucket-filter").hidden = !leadership;
-    $("activity-sort").hidden = !leadership || !f.activity_verified;
-    $("activity-sort").disabled = !leadership || !f.activity_verified;
-    if (leadership) {
-      metrics($("activity"), [
-        ["Recorded active within 24h", s.active_24h_count],
-        ["Recorded active within 7d", s.active_7d_count],
-        ["Activity older than 7d", s.older_than_7d_count],
-        ["Activity unknown", s.activity_unknown_count],
-        ["Reported online", s.reported_online_count],
-        ["24h-active power share (%)", s.active_24h_power_percent],
-      ]);
-    } else $("activity").replaceChildren();
-    roster();
-  }
-  function roster() {
-    if (!result) return;
-    const query = $("query").value.toLocaleLowerCase(),
-      rank = $("rank").value,
-      b = $("bucket").value,
-      sort = $("sort").value;
-    const members = result.members.filter((m) =>
-      (!query || m.name.toLocaleLowerCase().includes(query) ||
-        (m.player_id || "").includes(query)) &&
-      (!rank || String(m.alliance_rank) === rank) &&
-      (result.access !== "leadership" || !b || m.activity_bucket === b ||
-        (b === "active_7d" && m.activity_bucket === "active_24h"))
-    );
-    const value = (m) =>
-      sort === "last_active_at"
-        ? (result.access === "leadership"
-          ? (m.last_active_at ? Date.parse(m.last_active_at) : null)
-          : ({
-            active_24h: 3,
-            active_7d: 2,
-            older_than_7d: 1,
-          }[m.activity_bucket] ?? null))
-        : m[sort];
-    members.sort((a, b) => {
-      const x = value(a), y = value(b);
-      return x == null ? (y == null ? 0 : 1) : y == null ? -1 : y - x;
-    });
-    P.setText($("shown"), "Showing {shown} of {total} members.", {
-      shown: members.length,
-      total: result.members.length,
-    });
-    $("roster").replaceChildren(...members.map((m) => {
-      const card = document.createElement("article");
-      card.className = "member";
-      const avatar = safeImage(m.avatar_url);
-      card.append(avatar ? picture(avatar) : placeholder());
-      card.append(
-        raw("h3", m.name),
-        raw("p", m.player_id ?? P.text("Unavailable")),
-      );
-      const dl = document.createElement("dl");
-      for (
-        const [key, v] of [
-          ["Power", m.power],
-          ["Town-center level", m.town_center_level],
-          ["Kills", m.kills],
-          ["Alliance rank", m.alliance_rank],
-        ]
-      ) dl.append(label("dt", key), raw("dd", fmt(v)));
-      if (m.alliance_rank_label) card.append(raw("p", m.alliance_rank_label));
-      card.append(dl);
-      if (result.access === "leadership") {
-        card.append(label("p", labels[m.activity_bucket] || labels.unknown));
-      }
-      if (result.access === "leadership") {
-        card.append(
-          label("p", "Last recorded activity: {time}", {
-            time: m.last_active_at
-              ? P.dateTime(m.last_active_at)
-              : P.text("Unavailable"),
-          }),
-          label("p", "Reported online: {value}", {
-            value: P.text(
-              m.online === true
-                ? "Yes"
-                : m.online === false
-                ? "No"
-                : "Unavailable",
-            ),
-          }),
-        );
-      }
-      if (m.player_id) {
-        const copy = label("button", "Copy Player ID");
-        copy.type = "button";
-        copy.onclick = async () => {
-          try {
-            await navigator.clipboard.writeText(m.player_id);
-            msg("Player ID copied.");
-          } catch {
-            msg("Copy unavailable. Select the Player ID manually.");
-          }
-        };
-        card.append(copy);
-      }
-      return card;
+    $("windows-note").hidden = !f.activity_verified;
+    const rows = [
+      ["Recorded active within 24h", s.active_24h_count],
+      ["Recorded active within 3d", s.active_3d_count],
+      ["Recorded active within 7d", s.active_7d_count],
+      ["Activity older than 7d", s.older_than_7d_count],
+      ["Activity unknown", s.activity_unknown_count],
+    ];
+    $("activity").replaceChildren(...rows.map(([key, value]) => {
+      const e = document.createElement("div");
+      e.className = "metric";
+      e.append(label("span", key), raw("strong", fmt(value)));
+      return e;
     }));
+    P.setText($("online"), "Reported online in snapshot: {value}", {
+      value: fmt(s.reported_online_count),
+    });
+    P.setText(
+      $("online-coverage"),
+      "Online status known for {known} of {total} returned members.",
+      { known: fmt(s.online_known_count), total: fmt(s.roster_returned) },
+    );
+    roster();
+    attention();
   }
   $("search-form").addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (checking || !session || session.expires_at * 1000 <= Date.now()) {
+      await check();
+      return;
+    }
     clear();
-    const own = generation, details = false; // Public-only until activity semantics are established.
+    const own = revision, token = session.access_token;
     const kingdom = Number($("kingdom").value), tag = $("tag").value;
     if (
       !Number.isInteger(kingdom) || kingdom < 1 || kingdom > 999999 ||
       !/^[A-Za-z0-9_-]{1,8}$/.test(tag)
     ) {
-      msg(errors.invalid_request);
+      P.setText($("message"), errors.invalid_request);
       return;
     }
-    const requestController = new AbortController();
-    controller = requestController;
-    const signal = requestController.signal;
+    request = new AbortController();
+    const active = request;
     let slow, timeout;
     $("search").disabled = true;
-    msg("Searching alliance…");
+    P.setText($("message"), "Searching alliance…");
     try {
-      let token = KEY, expires = null;
-      if (details) {
-        const session = (await client?.auth.getSession())?.data?.session;
-        if (own !== generation) return;
-        if (
-          !session || !Number.isFinite(session.expires_at) ||
-          session.expires_at * 1000 <= Date.now()
-        ) throw Error("sign_in");
-        token = session.access_token;
-        expires = session.expires_at * 1000;
-      }
       slow = setTimeout(() => {
-        if (own === generation) {
-          msg("MightPulse is refreshing data. This may take up to 90 seconds.");
+        if (own === revision) {
+          P.setText(
+            $("message"),
+            "MightPulse is refreshing data. This may take up to 90 seconds.",
+          );
         }
       }, 8000);
-      timeout = setTimeout(() => requestController.abort(), 115000);
-      const response = await fetch(URL + "/functions/v1/alliance-search", {
+      timeout = setTimeout(() => active.abort(), 115000);
+      const r = await fetch(URL + "/functions/v1/alliance-search", {
         method: "POST",
         headers: {
           apikey: KEY,
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          kingdom,
-          tag,
-          ...(details ? { details: true } : {}),
-        }),
-        signal,
+        body: JSON.stringify({ kingdom, tag }),
+        signal: active.signal,
         cache: "no-store",
       });
-      const body = await response.json();
-      if (own !== generation) return;
-      if (!response.ok || body.ok !== true) {
-        throw Error(body.code || "unavailable");
+      const data = await r.json();
+      if (own !== revision) return;
+      if (r.status === 401 || r.status === 403) {
+        redirect(data.code === "password_change_required");
+        return;
       }
+      if (!r.ok || data.ok !== true) throw Error(data.code || "unavailable");
       if (
-        !Array.isArray(body.members) || !body.alliance || !body.summary ||
-        !body.freshness || body.access !== "public" ||
-        body.members.some((m) =>
-          ["uid", "fid", "last_active_at", "online", "activity_bucket"].some(
-            (k) => Object.hasOwn(m, k),
-          )
-        )
-      ) throw Error("unavailable");
-      if (expires && expires <= Date.now()) throw Error("sign_in");
-      result = body;
-      $("results").hidden = false;
-      const rank = $("rank");
-      rank.replaceChildren(label("option", "All ranks"));
-      rank.firstChild.value = "";
-      for (
-        const r of [
-          ...new Set(
-            body.members.map((m) => m.alliance_rank).filter((v) => v !== null),
-          ),
-        ].sort((a, b) => b - a)
+        data.version !== 2 || data.access !== "admin" ||
+        !Array.isArray(data.members) || !data.alliance || !data.summary ||
+        !data.freshness
+      ) throw Error("malformed");
+      if (
+        !session || session.access_token !== token ||
+        session.expires_at * 1000 <= Date.now()
       ) {
-        const o = raw("option", r);
-        o.value = r;
-        rank.append(o);
+        redirect();
+        return;
       }
-      msg("Alliance loaded.");
+      result = data;
+      $("results").hidden = false;
+      P.setText($("message"), "Alliance loaded.");
       render();
-      if (expires) {
-        expiry = setTimeout(() => {
-          clear();
-          msg(errors.sign_in);
-        }, Math.max(0, expires - Date.now()));
-      }
     } catch (e) {
-      if (own === generation) {
-        msg(
-          signal.aborted
+      if (own === revision) {
+        P.setText(
+          $("message"),
+          active.signal.aborted
             ? errors.timeout
-            : (errors[e.message] || errors.unavailable),
+            : errors[e.message] || errors.unavailable,
         );
       }
     } finally {
       clearTimeout(slow);
       clearTimeout(timeout);
-      if (own === generation) $("search").disabled = false;
+      if (own === revision) $("search").disabled = false;
     }
   });
-  for (const id of ["query", "rank", "bucket", "sort"]) {
-    $(id).addEventListener("input", roster);
-  }
-  for (const id of ["kingdom", "tag", "details"]) {
+  for (const id of ["kingdom", "tag"]) {
     $(id).addEventListener("input", () => {
       clear();
-      msg("");
+      P.setText($("message"), "");
     });
   }
+  $("query").addEventListener("input", roster);
+  $("roster-section").addEventListener("toggle", roster);
+  $("attention-section").addEventListener("toggle", attention);
+  $("auth-retry").onclick = check;
   client?.auth.onAuthStateChange((event) => {
     if (event !== "INITIAL_SESSION") {
       clear();
-      msg("");
+      session = null;
+      $("tool").hidden = true;
+      setTimeout(check, 0);
     }
   });
-  window.addEventListener("pagehide", clear);
-  // Clear protected data when leaving the page; require a fresh server check on return.
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) check();
+  });
+  window.addEventListener("focus", () => {
+    if (!checking) check();
+  });
   document.addEventListener("visibilitychange", () => {
-    if (
-      document.hidden &&
-      ($("details").checked || result?.access === "leadership")
-    ) clear();
+    if (document.hidden) {
+      clear();
+      session = null;
+      $("tool").hidden = true;
+    } else check();
+  });
+  window.addEventListener("pagehide", () => {
+    clear();
+    session = null;
+    authRequest?.abort();
+    clearTimeout(expiry);
+    $("tool").hidden = true;
   });
   window.addEventListener("ks-language-rendered", render);
   P.mount();
+  check();
 })();

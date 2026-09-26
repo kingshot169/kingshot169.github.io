@@ -1,10 +1,8 @@
 import { chromium } from "npm:playwright@1.55.1";
 import { strict as assert } from "node:assert";
 import { fileURLToPath } from "node:url";
-const root = fileURLToPath(new URL("../", import.meta.url));
-const artifacts = await Deno.makeTempDir({
-  prefix: "alliance-search-browser-",
-});
+const root = fileURLToPath(new URL("../", import.meta.url)),
+  artifacts = await Deno.makeTempDir({ prefix: "alliance-activity-browser-" });
 const server = Deno.serve(
   { hostname: "127.0.0.1", port: 8773, onListen() {} },
   async (req) => {
@@ -30,218 +28,146 @@ const browser = await chromium.launch({
   executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
   headless: true,
 });
-function data(details = false, tag = "kRZ") {
-  return {
-    ok: true,
-    access: details ? "leadership" : "public",
-    alliance: {
-      name: "<img src=x onerror=alert(1)>",
-      tag,
-      kingdom: 169,
-      leader_name: "Mock leader",
-      member_count_reported: 4,
-      power: 100000000000,
-      power_rank: 2,
-      flag_url: null,
-    },
-    summary: {
-      roster_returned: 3,
-      roster_coverage_percent: 75,
-      roster_complete: false,
-      power_known_count: 3,
-      average_power: 2000000000,
-      median_power: 2000000000,
-      ...(details
-        ? {
-          active_24h_count: 1,
-          active_7d_count: 2,
-          older_than_7d_count: 0,
-          activity_unknown_count: 1,
-          reported_online_count: 1,
-          online_known_count: 2,
-          active_24h_power_percent: 50,
-        }
-        : {}),
-    },
-    freshness: {
-      ...(details ? { activity_verified: true } : {}),
-      freshness_known: false,
-      our_cache_age_seconds: 10,
-      stale: true,
-    },
-    members: [
-      {
-        name: "First <script>alert(1)</script>",
-        player_id: "12345",
-        power: 3000000000,
-        town_center_level: 30,
-        kills: null,
-        alliance_rank: 5,
-        avatar_url: null,
-        ...(details
-          ? {
-            activity_bucket: "active_24h",
-            last_active_at: "2026-09-26T11:00:00Z",
-            online: true,
-          }
-          : {}),
-      },
-      {
-        name: "Second",
-        player_id: "12346",
-        power: 2000000000,
-        town_center_level: 25,
-        kills: 200,
-        alliance_rank: 4,
-        avatar_url: "javascript:alert(1)",
-        ...(details
-          ? {
-            activity_bucket: "active_7d",
-            last_active_at: "2026-09-24T11:00:00Z",
-            online: false,
-          }
-          : {}),
-      },
-      {
-        name: "Unknown",
-        player_id: null,
-        power: 1000000000,
-        town_center_level: 20,
-        kills: 300,
-        alliance_rank: null,
-        avatar_url: null,
-        ...(details
-          ? {
-            activity_bucket: "unknown",
-            last_active_at: null,
-            online: null,
-          }
-          : {}),
-      },
-    ],
-  };
+const session = {
+  user: { id: "admin-a" },
+  access_token: "synthetic-token",
+  expires_at: Math.floor(Date.now() / 1000) + 3600,
+};
+const fixture = () => ({
+  ok: true,
+  version: 2,
+  access: "admin",
+  alliance: {
+    name: "Mock alliance <img onerror=alert(1)>",
+    tag: "KRZ",
+    kingdom: 169,
+    leader_name: "Leader",
+    member_count_reported: 98,
+  },
+  summary: {
+    roster_returned: 98,
+    roster_coverage_percent: 100,
+    roster_complete: true,
+    identity_complete: true,
+    active_24h_count: null,
+    active_3d_count: null,
+    active_7d_count: null,
+    older_than_7d_count: null,
+    activity_unknown_count: 98,
+    reported_online_count: 21,
+    online_known_count: 90,
+  },
+  freshness: {
+    activity_verified: false,
+    freshness_known: true,
+    estimated_provider_age_seconds: 96,
+    our_cache_age_seconds: 0,
+    stale: false,
+  },
+  members: Array.from({ length: 98 }, (_, i) => ({
+    name: "Member " + i,
+    player_id: String(10000 + i),
+    alliance_rank: 4,
+    alliance_rank_label: "R4",
+    last_active_at: null,
+    online: i < 21 ? true : i < 90 ? false : null,
+    activity_bucket: "unknown",
+  })),
+});
+async function setup(
+  {
+    lang = "en",
+    theme = "dark",
+    profile = {},
+    signedIn = session,
+    defer = false,
+    profileStatus = 200,
+  } = {},
+) {
+  const context = await browser.newContext({
+      viewport: { width: lang === "en" ? 1280 : 390, height: 900 },
+    }),
+    page = await context.newPage(),
+    calls = [],
+    errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await context.addInitScript(({ lang, theme, signedIn }) => {
+    localStorage.setItem("ks-language", lang);
+    localStorage.setItem("ks-theme", theme);
+    window.mockSession = signedIn;
+  }, { lang, theme, signedIn });
+  let release;
+  const wait = new Promise((resolve) => release = resolve);
+  await context.route("**/*", async (route) => {
+    const u = route.request().url();
+    if (u.includes("/admin/account/")) {
+      return route.fulfill({
+        contentType: "text/html",
+        body: "<p>Account</p>",
+      });
+    }
+    if (u.startsWith("http://127.0.0.1:8773/")) return route.continue();
+    if (u.includes("supabase-js")) {
+      return route.fulfill({
+        contentType: "text/javascript",
+        body:
+          "window.supabase={createClient(){return {auth:{getSession:async()=>({data:{session:window.mockSession}}),onAuthStateChange(fn){window.mockAuthChange=(event,s)=>{window.mockSession=s;fn(event,s)}},signOut:async()=>({})}}}};",
+      });
+    }
+    if (u.endsWith("/admin-profile")) {
+      if (defer) await wait;
+      return route.fulfill({
+        status: profileStatus,
+        json: {
+          ok: profileStatus === 200,
+          profile: {
+            user_id: "admin-a",
+            is_active: true,
+            can_search_players: true,
+            must_change_password: false,
+            username: "mock",
+            ...profile,
+          },
+        },
+      });
+    }
+    if (u.endsWith("/alliance-search")) {
+      calls.push(route.request().postDataJSON());
+      assert.equal(
+        route.request().headers().authorization,
+        "Bearer synthetic-token",
+      );
+      return route.fulfill({ json: fixture() });
+    }
+    throw Error("Unexpected external request");
+  });
+  return { context, page, calls, errors, release };
 }
 let passed = 0;
 try {
   for (const lang of ["en", "ko", "es", "pt", "fr", "ar"]) {
     for (const theme of ["dark", "light"]) {
-      const context = await browser.newContext({
-          viewport: { width: lang === "en" ? 1280 : 390, height: 900 },
-        }),
-        page = await context.newPage(),
-        errors = [],
-        consoleErrors = [],
-        calls = [];
-      page.on("pageerror", (e) => errors.push(e.message));
-      page.on("console", (message) => {
-        if (
-          message.type() === "error" &&
-          !message.text().includes("Failed to load resource")
-        ) consoleErrors.push(message.text());
-      });
-      let code = null, gate = null;
-      await context.addInitScript(({ lang, theme }) => {
-        localStorage.setItem("ks-language", lang);
-        localStorage.setItem("ks-theme", theme);
-      }, { lang, theme });
-      await context.addInitScript(() => {
-        Object.defineProperty(navigator, "clipboard", {
-          configurable: true,
-          value: { writeText: async (value) => window.copiedPlayerId = value },
-        });
-      });
-      await context.route("**/*", async (route) => {
-        const url = route.request().url();
-        if (url.startsWith("http://127.0.0.1:8773/")) return route.continue();
-        if (url.includes("supabase-js")) {
-          return route.fulfill({
-            contentType: "text/javascript",
-            body:
-              `window.supabase={createClient(){return {auth:{getSession:async()=>({data:{session:{access_token:'mock',expires_at:Date.now()/1000+3600}}}),onAuthStateChange(fn){window.mockAuthChange=fn}}}}};`,
-          });
-        }
-        if (url.endsWith("/alliance-search")) {
-          const body = route.request().postDataJSON();
-          calls.push(body);
-          if (gate) await gate;
-          if (code) {
-            const status = code === "not_found"
-              ? 404
-              : code === "busy"
-              ? 429
-              : 503;
-            return route.fulfill({ status, json: { ok: false, code } });
-          }
-          const result = data(body.details, body.tag);
-          if (!body.details) {
-            assert.equal(
-              result.members.some((member) =>
-                Object.hasOwn(member, "activity_bucket") ||
-                Object.hasOwn(member, "last_active_at") ||
-                Object.hasOwn(member, "online")
-              ),
-              false,
-            );
-            for (
-              const key of [
-                "active_24h_count",
-                "active_7d_count",
-                "older_than_7d_count",
-                "activity_unknown_count",
-                "reported_online_count",
-                "active_24h_power_percent",
-              ]
-            ) assert.equal(Object.hasOwn(result.summary, key), false);
-          }
-          return route.fulfill({ json: result });
-        }
-        throw Error("Unexpected external request: " + url);
-      });
+      const { context, page, calls, errors } = await setup({ lang, theme });
       await page.goto("http://127.0.0.1:8773/alliance-search/");
-      await page.locator("#tag").fill("kRZ");
+      await page.waitForSelector("#tool:visible");
+      await page.locator("#tag").fill("KRZ");
       await page.locator("#search").click();
       await page.waitForSelector("#results:visible");
-      assert.equal(calls[0].tag, "kRZ");
-      assert.equal(calls[0].kingdom, 169);
+      assert.deepEqual(calls, [{ kingdom: 169, tag: "KRZ" }]);
+      assert.equal(await page.locator(".member").count(), 0);
       assert.equal(
-        await page.locator(".member").first().locator("dd").nth(2)
-          .textContent(),
-        await page.evaluate(() => KSPreferences.text("Unavailable")),
+        await page.locator("#roster-section").getAttribute("open"),
+        null,
       );
-      assert.equal(await page.locator(".member").count(), 3);
+      assert.equal(
+        await page.locator("#attention-section").getAttribute("open"),
+        null,
+      );
+      for (const id of ["coverage", "freshness", "online", "unverified"]) {
+        assert.equal(await page.locator("#" + id).isVisible(), true);
+      }
       assert.equal(await page.locator("#identity img").count(), 0);
-      assert.equal(await page.locator("#activity-panel").isVisible(), false);
-      assert.equal(await page.locator("#bucket-filter").isVisible(), false);
-      assert.equal(await page.locator(".member script").count(), 0);
-      assert.equal(
-        await page.locator(".member").first().textContent().then((t) =>
-          t.includes("2026-09")
-        ),
-        false,
-      );
-      assert.equal(
-        await page.locator(".member").first().textContent().then((t) =>
-          t.includes("Activity unknown") || t.includes("Recorded active")
-        ),
-        false,
-      );
-      await page.locator("#query").fill("12346");
-      assert.equal(await page.locator(".member").count(), 1);
-      await page.locator("#query").fill("");
-      await page.locator(".member button").first().click();
-      await page.waitForFunction(() =>
-        document.getElementById("message").textContent ===
-          KSPreferences.text("Player ID copied.")
-      );
-      assert.equal(await page.evaluate(() => window.copiedPlayerId), "12345");
-      await page.locator("#rank").selectOption("5");
-      assert.equal(await page.locator(".member").count(), 1);
-      await page.locator("#rank").selectOption("");
-      await page.locator("#sort").selectOption("kills");
-      assert.match(
-        await page.locator(".member").first().textContent(),
-        /Unknown/,
-      );
+      assert.equal(await page.locator("#windows-note").isVisible(), false);
       assert.equal(
         await page.evaluate(() =>
           document.documentElement.scrollWidth <= innerWidth + 1
@@ -249,91 +175,118 @@ try {
         true,
       );
       assert.equal(
-        await page.getAttribute("html", "dir"),
-        lang === "ar" ? "rtl" : "ltr",
+        await page.locator("#results").evaluate((e) =>
+          e.getBoundingClientRect().height < 1200
+        ),
+        true,
       );
-      assert.equal(await page.getAttribute("html", "data-theme"), theme);
-      assert.equal(await page.locator("#details").isDisabled(), true);
-      assert.equal(await page.locator("#details").isVisible(), false);
-      assert.equal(await page.locator("#freshness").isVisible(), true);
-      assert.equal(await page.locator("#coverage").isVisible(), true);
-      assert.equal(await page.locator(".avatar-placeholder").count(), 3);
-      assert.equal(calls.some((c) => c.details), false);
-      await page.evaluate(() => window.mockAuthChange("SIGNED_OUT", null));
-      assert.equal(await page.locator("#results").isVisible(), false);
-      code = "not_found";
-      await page.locator("#search").click();
-      await page.waitForFunction(() =>
-        !document.getElementById("search").disabled
-      );
-      assert.equal(await page.locator("#results").isVisible(), false);
-      code = null;
-      await page.locator("#search").click();
-      await page.waitForSelector("#results:visible");
-      if (lang === "en") {
-        code = "busy";
-        await page.locator("#tag").fill("KRZ");
-        await page.locator("#search").click();
-        await page.waitForFunction(() =>
-          !document.getElementById("search").disabled
-        );
-        assert.match(await page.locator("#message").textContent(), /busy/i);
-        code = "unavailable";
-        await page.locator("#search").click();
-        await page.waitForFunction(() =>
-          !document.getElementById("search").disabled
-        );
-        assert.match(
-          await page.locator("#message").textContent(),
-          /unavailable/i,
-        );
-        code = null;
-        await page.locator("#tag").fill("aLT");
-        await page.locator("#search").click();
-        await page.waitForSelector("#results:visible");
-        assert.equal(calls.at(-1).tag, "aLT");
-        assert.match(await page.locator("#identity").textContent(), /^\[aLT\]/);
-        let release;
-        gate = new Promise((resolve) => release = resolve);
-        await page.locator("#tag").fill("KRZ");
-        await page.locator("#search").click();
-        await page.waitForFunction(() =>
-          document.getElementById("message").textContent.includes("refreshing")
-        );
-        release();
-        gate = null;
-        await page.waitForSelector("#results:visible");
-        await page.setViewportSize({ width: 640, height: 450 });
-        assert.equal(
-          await page.evaluate(() =>
-            document.documentElement.scrollWidth <= innerWidth + 1
-          ),
-          true,
-        );
-      }
       await page.screenshot({
         path: artifacts + "/" + lang + "-" + theme + ".png",
         fullPage: true,
       });
-      if (lang === "en" && theme === "dark") {
-        await page.goto("http://127.0.0.1:8773/");
-        assert.equal(
-          await page.locator('a[href="./alliance-search/"]').count(),
-          1,
-        );
-      }
+      await page.locator("#attention-section > summary").click();
+      assert.equal(await page.locator(".attention-group").count(), 2);
+      assert.equal(await page.locator(".member").count(), 0);
+      await page.locator("#roster-section > summary").click();
+      await page.waitForFunction(() =>
+        document.querySelectorAll("#roster .member").length === 98
+      );
+      assert.equal(
+        await page.locator("#roster").textContent().then((t) =>
+          /Kills|Power|Town-center|UTC/.test(t)
+        ),
+        false,
+      );
+      await page.locator("#query").fill("10005");
+      assert.equal(await page.locator("#roster .member").count(), 1);
+      await page.locator("#query").fill("");
+      assert.equal(await page.locator("#roster .member").count(), 98);
+      await page.locator("#roster-section > summary").click();
+      await page.waitForFunction(() =>
+        document.querySelectorAll("#roster .member").length === 0
+      );
+      assert.equal(
+        await page.getAttribute("html", "dir"),
+        lang === "ar" ? "rtl" : "ltr",
+      );
+      assert.equal(await page.getAttribute("html", "data-theme"), theme);
       assert.deepEqual(
         await page.evaluate(() => KSPreferences.getMissing()),
         [],
       );
+      if (lang === "en" && theme === "dark") {
+        await page.goto("http://127.0.0.1:8773/");
+        assert.equal(
+          await page.locator('a[href="./alliance-search/"]').count(),
+          0,
+        );
+        await page.goto("http://127.0.0.1:8773/admin/");
+        await page.waitForSelector("#dashboard:visible");
+        assert.equal(
+          await page.locator('a[href="../alliance-search/"]').count(),
+          1,
+        );
+      }
       assert.deepEqual(errors, []);
-      assert.deepEqual(consoleErrors, []);
       await context.close();
       passed++;
     }
   }
+  for (
+    const options of [
+      { signedIn: null },
+      { profile: { can_search_players: false } },
+      { profile: { is_active: false } },
+      { profile: { can_search_players: null } },
+      { profileStatus: 403 },
+    ]
+  ) {
+    const { context, page, calls } = await setup(options);
+    await page.goto("http://127.0.0.1:8773/alliance-search/");
+    await page.waitForURL("**/admin/");
+    assert.equal(calls.length, 0);
+    if (options.profile?.can_search_players === false) {
+      await page.waitForSelector("#dashboard:visible");
+      assert.equal(
+        await page.locator('a[href="../alliance-search/"]').count(),
+        0,
+      );
+    }
+    await context.close();
+    passed++;
+  }
+  {
+    const { context, page, calls } = await setup({
+      profile: { must_change_password: true },
+    });
+    await page.goto("http://127.0.0.1:8773/alliance-search/");
+    await page.waitForURL("**/admin/account/?required=1");
+    assert.equal(calls.length, 0);
+    await context.close();
+    passed++;
+  }
+  {
+    const { context, page, calls, release } = await setup({ defer: true });
+    await page.goto("http://127.0.0.1:8773/alliance-search/");
+    assert.equal(await page.locator("#tool").isVisible(), false);
+    assert.equal(await page.locator("#auth-panel").isVisible(), true);
+    assert.equal(page.url().includes("/admin/"), false);
+    release();
+    await page.waitForSelector("#tool:visible");
+    assert.equal(calls.length, 0);
+    await page.locator("#tag").fill("KRZ");
+    await page.locator("#search").click();
+    await page.waitForSelector("#results:visible");
+    await page.evaluate(() => window.mockAuthChange("SIGNED_OUT", null));
+    await page.waitForURL("**/admin/");
+    assert.equal(calls.length, 1);
+    await context.close();
+    passed++;
+  }
   console.log(
-    `PASS ${passed} language/theme browser scenarios: roster, filters, safe rendering, details, session clearing, mobile, 200%-equivalent viewport. Screenshots: ${artifacts}`,
+    "PASS " + passed +
+      " Alliance Activity scenarios: 98-member compact layout, lazy collapsed roster, strict admin/session gate, dashboard/home links, six languages, themes, RTL. Screenshots: " +
+      artifacts,
   );
 } finally {
   await browser.close();

@@ -1,13 +1,31 @@
-# Alliance Search publication
+# Alliance Activity — admin-only tool
 
-This release is public-only. It sends one search to the deployed Supabase `alliance-search` function; the browser never requests the MightPulse alliance API directly. No activity buckets, exact timestamps, per-member online indicators or contribution scores are displayed. Activity-detail controls remain disabled while timestamp semantics are unverified.
+The updated alliance-search Edge Function was deployed before this frontend release. The operator confirmed live access checks: anonymous requests returned 403, an admin without can_search_players returned 403, and an authorised admin returned 200. Timestamp-derived activity remains disabled pending provider format and semantics validation.
 
-The confirmed live compatibility result for 169/KRZ was HTTP 200, 98 reported members, 98 returned members, 100% roster coverage, provider age 96 seconds, and provider fresh=true. Public JSON excluded uid, fid, exact last_active_at and raw online. This was a single snapshot, not a guarantee of future membership or provider freshness.
+## Access and navigation
 
-Null kills display the translated Unavailable label. Null, disallowed and failed avatar images use a decorative placeholder. Coverage and freshness remain visible above the roster. Public responses containing private member activity fields are rejected before entering page result state.
+The homepage Alliance Search card is removed. The Admin Dashboard shows Alliance Activity only when can_search_players is exactly true. Direct navigation to /alliance-search/ initially displays a session check, not a login form or alliance data. It restores the existing Supabase SDK session, verifies admin-profile, and requires matching user ID, active profile, can_search_players=true and must_change_password=false. Missing or denied sessions go through the existing /admin/ route; forced password changes go through /admin/account/?required=1. Failed session checks remain closed and offer retry without global sign-out.
 
-Backend source is preserved in the sibling `kingshot169-backend/supabase/functions/alliance-search/` directory. That backend is deployed but is not Git-backed; this website commit does not deploy or alter it. Backend contract documentation and mocked tests remain there. No SQL, secrets, other Edge Functions or game integrations are changed by this release.
+The Edge Function enforces the same permission on every POST before reading an alliance or cache entry and again after retrieval. Anonymous/invalid sessions, inactive profiles and missing permission receive sanitized 403 responses. The old caller-controlled details switch is removed. Cache hits cannot bypass authorization. Existing permissions and other tools are unchanged.
 
-Validation: Alliance backend tests; mocked browser tests for six languages, both themes, mobile layout, safe null rendering, public-only activity behavior and roster interaction; translation coverage; Git whitespace checks. The browser tests store synthetic screenshots in a fresh temporary directory, preserving retained artifacts.
+## Compact presentation
 
-Any future activity release requires explicit semantic verification and a separate access review. Roster coverage describes returned rows versus reported count; it does not prove historical joins or departures.
+Summary: alliance identity, kingdom, leader, reported/returned membership and coverage, provider age, stale warning, conditional recorded-activity windows and snapshot-reported online count. Online coverage explicitly shows the number of known boolean observations. Needs attention and View full roster are collapsed by default; member DOM is rendered only when a section opens. Unknown records are not labelled inactive. Roster search and Copy Player ID remain.
+
+Only names, public governor IDs, alliance rank and authorized activity observations remain in the member contract. Power, kills, town-centre levels, images, internal provider IDs and unnecessary profile fields are absent from the response and page. No activity/contribution scores or history storage are added.
+
+## Activity evidence and limitation
+
+The earlier live 169/KRZ check established 98/98 public roster compatibility and fresh provider data, but it did not retain raw or authorized last_active_at values. The retained sanitised summary says its actual type/format is unavailable. The existing leadership normalizer converts every timestamp to null in unverified mode, so that projection cannot establish the upstream type.
+
+Official MightPulse documentation rechecked at https://api.mightpulse.com/ lists last_active_at and online, but does not define last_active_at type, epoch units, timezone or event semantics. No actual timestamp format was established in this revision. No live admin/member data request or credential-store inspection was performed.
+
+Time-based calculations remain disabled by default; the UI explains that timing is unverified. No secret/configuration was changed. The existing confirmed-format mechanism is retained, with synthetic boundary tests for inclusive 24h, 3-day and 7-day windows. It must not be enabled merely because timestamps look parseable. When disabled, last_active_at remains null, buckets unknown and time-window counts null; strict boolean online snapshot counts remain useful.
+
+## Backend and validation
+
+Local backend: ../kingshot169-backend/supabase/functions/alliance-search/. It is not Git-backed. This revision changes only this feature's index.ts, model.ts and service.ts, its tests and documentation. No SQL, secrets or other Edge Functions change.
+
+Response contract is version 2 with access=admin. Backend authorization must precede frontend publication; the new page rejects the old public response. No rollback to a public contract should be automatic.
+
+Tests cover the 98-member fixture, null/invalid activity, schema minimisation, auth revocation/cache access, timeout/rate behavior, conditional boundaries, direct navigation, dashboard permissions, six languages, themes, RTL and compact collapsed mobile results. Compare and Transfer regression suites are run separately. Real last_active_at semantics remain a provider-verification follow-up, not something mocked tests can prove.

@@ -1,6 +1,20 @@
 (() => {
   const rows =
-    `Alliance Search|연맹 검색|Buscar alianza|Pesquisar aliança|Recherche d’alliance|البحث عن تحالف
+    `Open tool|도구 열기|Abrir herramienta|Abrir ferramenta|Ouvrir l’outil|فتح الأداة
+Alliance Activity|연맹 활동|Actividad de alianza|Atividade da aliança|Activité d’alliance|نشاط التحالف
+Review alliance activity snapshots and members needing attention.|연맹 활동 스냅샷과 확인이 필요한 연맹원을 검토하세요.|Revisa instantáneas de actividad y miembros que requieren atención.|Reveja registos de atividade e membros que precisam de atenção.|Consultez les instantanés d’activité et les membres à examiner.|راجع لقطات نشاط التحالف والأعضاء الذين يحتاجون إلى مراجعة.
+Needs attention|확인 필요|Requiere atención|Precisa de atenção|À examiner|يحتاج إلى مراجعة
+View full roster|전체 연맹원 보기|Ver lista completa|Ver lista completa|Voir la liste complète|عرض قائمة الأعضاء كاملة
+Review older or unknown records; they do not establish inactivity.|오래되거나 미확인된 기록을 검토하세요. 비활동을 증명하지 않습니다.|Revisa registros antiguos o desconocidos; no demuestran inactividad.|Reveja registos antigos ou desconhecidos; não comprovam inatividade.|Examinez les données anciennes ou inconnues ; elles ne prouvent pas l’inactivité.|راجع السجلات القديمة أو غير المعروفة؛ فهي لا تثبت عدم النشاط.
+Snapshot data, not live presence. Missing activity does not mean inactive.|스냅샷 데이터이며 실시간 접속 정보가 아닙니다. 활동 정보 누락은 비활동을 의미하지 않습니다.|Datos de una instantánea, no presencia en directo. La actividad ausente no implica inactividad.|Dados de um registo, não presença em direto. A falta de atividade registada não implica inatividade.|Données d’un instantané, pas une présence en direct. Une activité manquante ne signifie pas inactif.|بيانات لقطة وليست حضورًا مباشرًا. غياب بيانات النشاط لا يعني عدم النشاط.
+24h is included in 3 days and 7 days. Counts describe returned members only.|24시간은 3일 및 7일에 포함됩니다. 수치는 반환된 연맹원만 나타냅니다.|24 h se incluye en 3 y 7 días. Los recuentos describen solo los miembros devueltos.|24 h está incluído em 3 e 7 dias. As contagens descrevem apenas os membros devolvidos.|24 h est inclus dans 3 et 7 jours. Les nombres concernent uniquement les membres renvoyés.|تشمل 3 أيام و7 أيام فترة 24 ساعة. الأعداد تخص الأعضاء المعادين فقط.
+Recorded active within 3d|3일 이내 활동 기록|Actividad registrada en 3 días|Atividade registada em 3 dias|Activité enregistrée sous 3 jours|نشاط مسجل خلال 3 أيام
+Reported online in snapshot: {value}|스냅샷에 보고된 접속: {value}|Conexión informada en la instantánea: {value}|Ligação informada no registo: {value}|Connexion rapportée dans l’instantané : {value}|الاتصال المبلغ عنه في اللقطة: {value}
+Online status known for {known} of {total} returned members.|반환된 연맹원 {total}명 중 {known}명의 접속 상태 확인.|Estado de conexión conocido para {known} de {total} miembros devueltos.|Estado de ligação conhecido para {known} de {total} membros devolvidos.|État de connexion connu pour {known} membres renvoyés sur {total}.|حالة الاتصال معروفة لـ {known} من {total} عضوًا معادًا.
+Alliance rank: {rank}|연맹 직급: {rank}|Rango de alianza: {rank}|Cargo na aliança: {rank}|Rang dans l’alliance : {rank}|رتبة التحالف: {rank}
+State {state} · Leader: {name}|스테이트 {state} · 연맹장: {name}|Estado {state} · Líder: {name}|Estado {state} · Líder: {name}|État {state} · Chef : {name}|الولاية {state} · القائد: {name}
+Members: {reported}; returned: {returned}; coverage: {coverage}%.|연맹원: {reported}; 반환: {returned}; 포함률: {coverage}%.|Miembros: {reported}; devueltos: {returned}; cobertura: {coverage}%.|Membros: {reported}; devolvidos: {returned}; cobertura: {coverage}%.|Membres : {reported} ; renvoyés : {returned} ; couverture : {coverage}%.|الأعضاء: {reported}؛ المعادون: {returned}؛ التغطية: {coverage}%.
+Alliance Search|연맹 검색|Buscar alianza|Pesquisar aliança|Recherche d’alliance|البحث عن تحالف
 Explore alliance members, power and recorded activity.|연맹원, 전투력 및 기록된 활동을 확인하세요.|Consulta miembros, poder y actividad registrada.|Consulte membros, poder e atividade registada.|Consultez les membres, la puissance et l’activité enregistrée.|استعرض الأعضاء والقوة والنشاط المسجل.
 Kingdom ID|왕국 ID|ID del reino|ID do reino|ID du royaume|معرّف المملكة
 Alliance tag (case-sensitive)|연맹 태그 (대소문자 구분)|Etiqueta de alianza (distingue mayúsculas)|Sigla da aliança (distingue maiúsculas)|Tag d’alliance (sensible à la casse)|وسم التحالف (حساس لحالة الأحرف)
