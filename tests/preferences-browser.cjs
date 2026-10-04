@@ -10,11 +10,11 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  let targets;for(let i=0;i<30;i++){try{targets=await(await fetch('http://127.0.0.1:9228/json',{signal:AbortSignal.timeout(500)})).json();break}catch{await sleep(200)}}
  if(!targets)throw Error('Chrome debugging endpoint unavailable');
  const ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));let id=0;const pending=new Map();
- function call(method,params={}){return new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))})}
+ function call(method,params={}){return new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject,method});ws.send(JSON.stringify({id:n,method,params}))})}
  let signedIn=false,mustChange=false,missingDictionary=false,transferJourney=false,bookingRequests=[],requests=[];const errors=[];
  const recruitmentMock=process.env.TRANSFER_SETTINGS_TEST?require('./transfer-settings-fixture.cjs').database():null;
  let recruitmentFailure=false;
- ws.addEventListener('message',async e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(m.error):p.resolve(m.result)}
+ ws.addEventListener('message',async e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error&&!(p.method.startsWith('Fetch.')&&m.error.code===-32602&&m.error.message==='Invalid InterceptionId.')?p.reject(m.error):p.resolve(m.result)}
  if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails);
  if(m.method==='Fetch.requestPaused'){
  const {requestId,request}=m.params;
@@ -156,7 +156,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  assert.equal(allLayouts.filter(x=>!x.balanced||!x.right).length,0,'Header layout');
  assert.equal(get('booking').selected,1);assert.equal(get('booking').samePanel,true);assert.equal(get('booking').name,'Admin');
  assert.equal(get('comparison').sameCell,true);assert.equal(get('timer').live,true);assert.equal(get('timer').headerHidden,true);
- assert.equal(get('admin').loginFlashes,0);assert.equal(get('admin').cards,6);assert.equal(get('mandatoryPassword'),'/admin/account/?required=1');
+ assert.equal(get('admin').loginFlashes,0);assert.equal(get('admin').cards,7) /* Includes the already-published Alliance Activity tool. */;assert.equal(get('mandatoryPassword'),'/admin/account/?required=1');
  assert.equal(get('redemption').disabled,true);assert.equal(get('redemption').code,'Admin');assert.equal(get('menu').focused,'fid');
  assert.equal(get('back').lang,'ko');assert.equal(get('forward').lang,'ko');assert.equal(get('reload').lang,'pt');
  assert.equal(get('fallback').englishFallback,true);

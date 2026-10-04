@@ -1,0 +1,122 @@
+{
+  "description": "Offline public-gear fixtures. Expected keys are canonical slots; unspecified slots are unavailable. Null gear reflects the authorised public serializer's unknown/hidden output.",
+  "cases": [
+    {
+      "id": "ordinary-four-slots",
+      "hero": {"gear": [
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"gear_level":999,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Gloves","red":false,"enhancement_level":100,"refine_level":12,"gear_level":999,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":"Armour","red":true,"enhancement_level":100,"refine_level":12,"gear_level":999,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Boots","red":false,"enhancement_level":40,"refine_level":12,"gear_level":999,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expected": {
+        "helmet":{"state":"available","tier":"Red","enhancement":"51","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-helm.png"},
+        "gloves":{"state":"available","tier":"Gold","enhancement":"100","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-gloves.png"},
+        "armour":{"state":"available","tier":"Red","enhancement":"—","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-chest.png"},
+        "boots":{"state":"available","tier":"Gold","enhancement":"40","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-boots.png"}
+      }
+    },
+    {
+      "id": "reordered-four-slots",
+      "hero": {"gear": [
+        {"slot":"Boots","red":false,"enhancement_level":40,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":"Armour","red":true,"enhancement_level":100,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Gloves","red":false,"enhancement_level":100,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expectedFrom": "ordinary-four-slots"
+    },
+    {
+      "id": "identical-duplicates-reordered-keys-and-null-optionals",
+      "hero": {"gear": [
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry","quality_label":null},
+        {"troop_label":"infantry","quality_key":"legendary","refine_level":12,"enhancement_level":151,"red":true,"slot":"Helmet"}
+      ]},
+      "expected": {"helmet":{"state":"available","tier":"Red","enhancement":"51","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-helm.png"}}
+    },
+    {
+      "id": "conflicting-fifth-duplicate-cannot-be-truncated-or-restored",
+      "hero": {"gear": [
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Gloves","red":false,"enhancement_level":100,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":"Armour","red":true,"enhancement_level":100,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Boots","red":false,"enhancement_level":40,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":"Helmet","red":true,"enhancement_level":152,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"}
+      ]},
+      "expectedFrom": "ordinary-four-slots",
+      "expected": {"helmet":{"state":"Unavailable","tier":null,"enhancement":"—","mastery":"—","artwork":null}}
+    },
+    {
+      "id": "missing-middle-slots",
+      "hero": {"gear": [
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Boots","red":false,"enhancement_level":40,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expected": {
+        "helmet":{"state":"available","tier":"Red","enhancement":"51","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-helm.png"},
+        "boots":{"state":"available","tier":"Gold","enhancement":"40","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-boots.png"}
+      }
+    },
+    {
+      "id": "unknown-record-never-fills-missing-slots",
+      "hero": {"gear": [
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Ring","name":"Mystery item","red":true,"enhancement_level":190,"refine_level":99,"quality_key":"legendary","troop_label":"infantry"},
+        {"name":"Mystery item","red":false,"enhancement_level":80,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expected": {"helmet":{"state":"available","tier":"Red","enhancement":"51","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-helm.png"}}
+    },
+    {
+      "id": "conflicting-slot-and-name-block-both-named-slots",
+      "hero": {"gear": [
+        {"slot":"Helmet","name":"Infantry Gloves","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Gloves","red":false,"enhancement_level":100,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":"Armour","red":true,"enhancement_level":100,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":"Boots","red":false,"enhancement_level":40,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expected": {
+        "armour":{"state":"available","tier":"Red","enhancement":"—","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-chest.png"},
+        "boots":{"state":"available","tier":"Gold","enhancement":"40","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-boots.png"}
+      }
+    },
+    {
+      "id": "multiple-slot-tokens-are-ambiguous",
+      "hero": {"gear": [{"slot":"Helmet Gloves","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"}]},
+      "expected": {}
+    },
+    {
+      "id": "explicit-unknown-slot-cannot-fall-back-to-name",
+      "hero": {"gear": [{"slot":"Ring","name":"Infantry Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"}]},
+      "expected": {}
+    },
+    {
+      "id": "non-string-explicit-slot-cannot-fall-back-to-name",
+      "hero": {"gear": [{"slot":42,"name":"Infantry Helmet","red":true,"enhancement_level":151,"refine_level":12,"quality_key":"legendary","troop_label":"infantry"}]},
+      "expected": {}
+    },
+    {
+      "id": "armor-alias-preserves-armour-artwork",
+      "hero": {"gear": [{"slot":"Armor","name":"Infantry Armor","red":false,"enhancement_level":70,"refine_level":9,"quality_key":"mythic","troop_label":"infantry"}]},
+      "expected": {"armour":{"state":"available","tier":"Gold","enhancement":"70","mastery":"9","artwork":"./scouting-assets/cutouts/infantry-chest.png"}}
+    },
+    {
+      "id": "absent-null-and-blank-slot-use-unambiguous-name",
+      "hero": {"gear": [
+        {"name":"Infantry Helmet","red":true,"enhancement_level":"151","refine_level":12,"quality_key":"legendary","troop_label":"infantry"},
+        {"slot":null,"name":"Infantry Gloves","red":false,"enhancement_level":100,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"},
+        {"slot":" ","name":"Infantry Boots","red":false,"enhancement_level":40,"refine_level":12,"quality_key":"mythic","troop_label":"infantry"}
+      ]},
+      "expected": {
+        "helmet":{"state":"available","tier":"Red","enhancement":"51","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-helm.png"},
+        "gloves":{"state":"available","tier":"Gold","enhancement":"100","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-gloves.png"},
+        "boots":{"state":"available","tier":"Gold","enhancement":"40","mastery":"12","artwork":"./scouting-assets/cutouts/infantry-boots.png"}
+      }
+    },
+    {"id":"unavailable-public-null-gear","hero":{"gear":null},"expected":{}},
+    {"id":"unavailable-missing-gear","hero":{},"expected":{}},
+    {"id":"legacy-explicit-hidden-gear","hero":{"gear":{"hidden":true}},"defaultState":"Hidden","expected":{}},
+    {"id":"no-equipment-records","hero":{"gear":[]},"defaultState":"No record","expected":{}}
+  ]
+}

@@ -48,6 +48,26 @@
 </section>
 
 <section id="results" class="card hidden">
+  <section id="kvk-hero" class="kvk-comparison-hero" aria-labelledby="kvk-matchup" hidden>
+    <p class="kvk-eyebrow" data-ks-text="KvK opponent scouting">KvK opponent scouting</p>
+    <h2 id="kvk-matchup"></h2>
+    <div class="kvk-kingdoms">
+      <article><h3 id="kvk-left-state"></h3><strong id="kvk-left-power" class="kvk-total-power"></strong><span data-ks-text="Total Power">Total Power</span><dl><div><dt data-ks-text="Players">Players</dt><dd id="kvk-left-players"></dd></div><div><dt data-ks-text="Active Players · 7d">Active Players · 7d</dt><dd id="kvk-left-active"></dd></div></dl></article>
+      <span class="kvk-versus" data-ks-text="VS">VS</span>
+      <article><h3 id="kvk-right-state"></h3><strong id="kvk-right-power" class="kvk-total-power"></strong><span data-ks-text="Total Power">Total Power</span><dl><div><dt data-ks-text="Players">Players</dt><dd id="kvk-right-players"></dd></div><div><dt data-ks-text="Active Players · 7d">Active Players · 7d</dt><dd id="kvk-right-active"></dd></div></dl></article>
+    </div>
+    <p class="kvk-note" data-ks-text="MightPulse · kingdom coverage and source freshness unknown.">MightPulse · kingdom coverage and source freshness unknown.</p>
+    <button id="kvk-scout" class="ks-primary" type="button" disabled data-ks-text="Scout opponent’s top 10">Scout opponent’s top 10</button>
+    <p class="kvk-note" data-ks-text="Requests up to ten detailed profiles; shares the backend allowance with other tools.">Requests up to ten detailed profiles; shares the backend allowance with other tools.</p>
+  </section>
+  <section id="kvk-report" hidden aria-labelledby="kvk-summary-title">
+    <h2 id="kvk-summary-title"></h2><p id="kvk-status" role="status" aria-live="polite"></p>
+    <p class="kvk-note" data-ks-text="Top 10 returned by MightPulse’s kingdom power leaderboard.">Top 10 returned by MightPulse’s kingdom power leaderboard.</p>
+    <p class="kvk-note" data-ks-text="Locations are last known, not live.">Locations are last known, not live.</p>
+    <ol id="kvk-summary" class="kvk-summary"></ol>
+    <div id="kvk-cards" class="kvk-cards"></div>
+  </section>
+
   <div class="compare-head">
     <div class="kingdom-title"><strong id="leftTitle" data-ks-text="State 169">State 169</strong><span id="leftHealth"></span></div>
     <div class="kingdom-title"><strong id="rightTitle"></strong><span id="rightHealth"></span></div>
@@ -123,6 +143,7 @@ async function run(){
     return;
   }
 
+  window.KvkScouting?.clear();
   comparing=true;
   $("compare").disabled=true;
   KSPreferences.setText($("compare"), "Comparing…");
@@ -140,6 +161,7 @@ async function run(){
     if(!r.ok||!j.ok)throw KSPreferences.apiError(j.error,"Comparison failed ({status}).",{status:r.status});
 
     const a=j.left, b=j.right;
+    window.KvkScouting?.comparison(a,b);
     KSPreferences.setText($("leftTitle"),"State {state}",{state:a.kid});
     KSPreferences.setText($("rightTitle"),"State {state}",{state:b.kid});
     KSPreferences.setText($("leftHealth"),a.health?"Health: {health}":"",{health:a.health});
@@ -198,6 +220,7 @@ if(preset&&/^\d{1,6}$/.test(preset)){
 }
 </script>
 
+<script src="./scouting.js"></script>
 <script src="./access.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./admin-access.js"></script>
