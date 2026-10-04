@@ -3,7 +3,7 @@ import {strict as assert} from 'node:assert';
 import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url)),results=[],artifacts=await Deno.makeTempDir({prefix:'compare-admin-tests-'});
 const server=Deno.serve({hostname:'127.0.0.1',port:8771,onListen(){}},async req=>{let p=new URL(req.url).pathname;if(p.includes('..'))return new Response('',{status:403});if(p.endsWith('/'))p+='index.html';try{return new Response(await Deno.readFile(root+p),{headers:{'Content-Type':p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':'text/html'}})}catch{return new Response('',{status:404})}});
-const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser=await chromium.launch({executablePath:Deno.env.get('CHROME_PATH')||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const session=(id='admin-a')=>({user:{id},access_token:'mock-'+id,expires_at:Date.parse('2026-09-14T13:00:00Z')/1000});
 async function setup({signedIn=session(),profile={},status=200,authError=false,defer=false,width=390}={}){
  const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),calls=[],errors=[];

@@ -661,6 +661,50 @@ Kingdom Compare is currently available to State 169 players.|왕국 비교는 �
 Player lookup timed out. Please try again.|플레이어 조회 시간이 초과되었습니다. 다시 시도하세요.|La consulta del jugador ha agotado el tiempo de espera. Inténtalo de nuevo.|A consulta do jogador excedeu o tempo limite. Tente novamente.|La recherche du joueur a expiré. Veuillez réessayer.|انتهت مهلة البحث عن اللاعب. حاول مجددًا.
 `;
 for(const row of compareAccessRows.trim().split('\n')){const [key,...values]=row.split('|');if(values.length!==5)throw Error('Invalid Compare translation');['ko','es','pt','fr','ar'].forEach((language,i)=>{result[language][key]=values[i]})}
+const scoutingRows=`
+KvK opponent scouting|KvK 상대 정찰|Reconocimiento del rival KvK|Reconhecimento do adversário KvK|Reconnaissance de l’adversaire KvK|استطلاع خصم KvK
+State 169 vs State {state}|169주 대 {state}주|Estado 169 contra Estado {state}|Estado 169 contra Estado {state}|État 169 contre État {state}|الولاية 169 ضد الولاية {state}
+MightPulse · kingdom coverage and source freshness unknown.|MightPulse · 왕국 데이터 범위 및 최신 여부 미상.|MightPulse · cobertura y actualidad de datos desconocidas.|MightPulse · cobertura e atualidade dos dados desconhecidas.|MightPulse · couverture et fraîcheur des données inconnues.|MightPulse · تغطية المملكة وحداثة المصدر غير معروفتين.
+Scout opponent’s top 10|상대 상위 10명 정찰|Consultar los 10 mejores rivales|Consultar os 10 melhores adversários|Consulter les 10 meilleurs adversaires|استطلع أفضل 10 لاعبين للخصم
+Requests up to ten detailed profiles; shares the backend allowance with other tools.|상세 프로필 최대 10개를 요청하며 다른 도구와 조회 한도를 공유합니다.|Solicita hasta diez perfiles detallados y comparte el límite con otras herramientas.|Solicita até dez perfis detalhados e partilha o limite com outras ferramentas.|Demande jusqu’à dix profils détaillés et partage la limite avec les autres outils.|يطلب حتى عشرة ملفات مفصلة ويشارك حد الطلبات مع الأدوات الأخرى.
+Top 10 returned by MightPulse’s kingdom power leaderboard.|MightPulse 왕국 전투력 순위에서 반환된 상위 10명.|Los 10 primeros devueltos por la clasificación de poder de MightPulse.|Os 10 primeiros devolvidos pela classificação de poder do MightPulse.|Les 10 premiers renvoyés par le classement de puissance de MightPulse.|أفضل 10 لاعبين حسب ترتيب قوة المملكة في MightPulse.
+Locations are last known, not live.|위치는 마지막으로 확인된 위치이며 실시간이 아닙니다.|Las ubicaciones son las últimas conocidas, no en directo.|As localizações são as últimas conhecidas, não em tempo real.|Les positions sont les dernières connues, pas en direct.|المواقع هي آخر مواقع معروفة وليست مباشرة.
+State {state} · returned top 10|{state}주 · 반환된 상위 10명|Estado {state} · primeros 10 resultados|Estado {state} · primeiros 10 resultados|État {state} · 10 premiers résultats|الولاية {state} · أفضل 10 نتائج
+Scouting…|정찰 중…|Consultando…|A consultar…|Reconnaissance…|جارٍ الاستطلاع…
+Loading opponent rankings…|상대 순위 불러오는 중…|Cargando la clasificación rival…|A carregar a classificação adversária…|Chargement du classement adverse…|جارٍ تحميل ترتيب الخصم…
+Scouting {done}/{total} profiles…|프로필 {done}/{total}개 정찰 중…|Consultando {done}/{total} perfiles…|A consultar {done}/{total} perfis…|Consultation de {done}/{total} profils…|جارٍ استطلاع {done}/{total} ملفات…
+Scouting incomplete · {count}/{total} profiles.|정찰 미완료 · 프로필 {count}/{total}개.|Consulta incompleta · {count}/{total} perfiles.|Consulta incompleta · {count}/{total} perfis.|Reconnaissance incomplète · {count}/{total} profils.|استطلاع غير مكتمل · {count}/{total} ملفات.
+Scouting complete · {count}/{total} profiles.|정찰 완료 · 프로필 {count}/{total}개.|Consulta completa · {count}/{total} perfiles.|Consulta concluída · {count}/{total} perfis.|Reconnaissance terminée · {count}/{total} profils.|اكتمل الاستطلاع · {count}/{total} ملفات.
+Rate limited; remaining lookups stopped.|조회 한도 도달로 남은 조회를 중단했습니다.|Límite alcanzado; se detuvieron las consultas restantes.|Limite atingido; as restantes consultas foram interrompidas.|Limite atteint ; les recherches restantes sont arrêtées.|تم بلوغ حد الطلبات؛ توقفت عمليات البحث المتبقية.
+Lookup timed out; remaining lookups stopped.|조회 시간 초과로 남은 조회를 중단했습니다.|Tiempo agotado; se detuvieron las consultas restantes.|Tempo esgotado; as restantes consultas foram interrompidas.|Délai dépassé ; les recherches restantes sont arrêtées.|انتهت مهلة البحث؛ توقفت عمليات البحث المتبقية.
+Opponent scouting unavailable.|상대 정찰을 사용할 수 없습니다.|Reconocimiento rival no disponible.|Reconhecimento adversário indisponível.|Reconnaissance adverse indisponible.|استطلاع الخصم غير متاح.
+Scouting stopped; available results retained.|정찰 중단. 확인된 결과는 유지됩니다.|Consulta detenida; se conservan los resultados disponibles.|Consulta interrompida; resultados disponíveis mantidos.|Reconnaissance arrêtée ; résultats disponibles conservés.|توقف الاستطلاع؛ تم الاحتفاظ بالنتائج المتاحة.
+· Browser cache ≤5m|· 브라우저 캐시 ≤5분|· Caché del navegador ≤5 min|· Cache do navegador ≤5 min|· Cache navigateur ≤5 min|· ذاكرة المتصفح ≤5 دقائق
+Unavailable|확인 불가|No disponible|Indisponível|Indisponible|غير متاح
+Pending|대기 중|Pendiente|Pendente|En attente|قيد الانتظار
+No record|기록 없음|Sin registro|Sem registo|Aucun enregistrement|لا يوجد سجل
+Unknown slot|슬롯 미상|Ranura desconocida|Espaço desconhecido|Emplacement inconnu|خانة غير معروفة
+Rarity unavailable|희귀도 확인 불가|Rareza no disponible|Raridade indisponível|Rareté indisponible|الندرة غير متاحة
+Red|빨강|Rojo|Vermelho|Rouge|أحمر
+Gold|금색|Dorado|Dourado|Or|ذهبي
+Helmet|투구|Casco|Elmo|Casque|خوذة
+Gloves|장갑|Guantes|Luvas|Gants|قفازات
+Armour|갑옷|Armadura|Armadura|Armure|درع
+Boots|장화|Botas|Botas|Bottes|أحذية
+Level {value}|레벨 {value}|Nivel {value}|Nível {value}|Niveau {value}|المستوى {value}
+Widget {value}|전용 장비 {value}|Equipo exclusivo {value}|Equipamento exclusivo {value}|Équipement exclusif {value}|العتاد الحصري {value}
+Mastery {value}|연마 {value}|Maestría {value}|Maestria {value}|Maîtrise {value}|الإتقان {value}
+Ranking power: {value}|순위 전투력: {value}|Poder en clasificación: {value}|Poder na classificação: {value}|Puissance classée : {value}|قوة الترتيب: {value}
+Alliance: {value}|연맹: {value}|Alianza: {value}|Aliança: {value}|Alliance : {value}|التحالف: {value}
+Mystic Trial: {value}|신비한 시련: {value}|Prueba mística: {value}|Provação mística: {value}|Épreuve mystique : {value}|التجربة الغامضة: {value}
+Last known: {value}|마지막 확인 위치: {value}|Última ubicación: {value}|Última localização: {value}|Dernière position : {value}|آخر موقع معروف: {value}
+View hero gear|영웅 장비 보기|Ver equipo de héroes|Ver equipamento dos heróis|Voir l’équipement des héros|عرض عتاد الأبطال
+Profile unavailable; ranking retained.|프로필 확인 불가. 순위는 유지됩니다.|Perfil no disponible; se conserva la clasificación.|Perfil indisponível; classificação mantida.|Profil indisponible ; classement conservé.|الملف غير متاح؛ تم الاحتفاظ بالترتيب.
+Returned arena heroes, not all heroes owned.|반환된 아레나 영웅이며 보유한 모든 영웅이 아닙니다.|Héroes de arena devueltos, no todos los héroes poseídos.|Heróis de arena devolvidos, não todos os heróis possuídos.|Héros d’arène renvoyés, pas tous les héros possédés.|أبطال الساحة الظاهرون وليس كل الأبطال المملوكين.
+Source age at lookup: {value}|조회 시 데이터 경과 시간: {value}|Antigüedad del dato al consultar: {value}|Idade dos dados na consulta: {value}|Âge des données lors de la recherche : {value}|عمر المصدر عند البحث: {value}
+{count} minutes|{count}분|{count} minutos|{count} minutos|{count} minutes|{count} دقائق
+`;
+for(const row of scoutingRows.trim().split("\n")){const [key,...values]=row.split("|");if(values.length!==5)throw Error("Invalid scouting translation");["ko","es","pt","fr","ar"].forEach((language,i)=>{result[language][key]=values[i]})}
 window.KSTranslations=result;
 window.dispatchEvent(new Event('ks-translations-ready'));
 })();

@@ -9,7 +9,7 @@
  const fresh=r=>r&&r.approved===true&&validPlayer(r.player)&&Number.isFinite(r.issued)&&Number.isFinite(r.expires)&&r.issued<=Date.now()&&r.expires>Date.now()&&r.expires-r.issued>0&&r.expires-r.issued<=TTL;
  function forget(){try{sessionStorage.removeItem(STORAGE)}catch{}}
  function clear(note=''){
-  sequence++;request?.abort();request=null;pending=false;clearTimeout(expiry);lease?.abort();lease=null;record=null;candidate=null;forget();
+  window.KvkScouting?.clear();sequence++;request?.abort();request=null;pending=false;clearTimeout(expiry);lease?.abort();lease=null;record=null;candidate=null;forget();
   form.hidden=false;profile.hidden=true;input.disabled=false;button.disabled=false;KSPreferences.setText(button,'Check player');
   $('comparison-controls').hidden=true;$('compare').disabled=true;$('results').classList.add('hidden');
   for(const id of ['strength','activity','breakdown'])$(id).replaceChildren();KSPreferences.setText($('msg'),'');
@@ -54,7 +54,7 @@
  function setAdminState(mode,expires=0){
   if(candidate&&!record){clearTimeout(expiry);candidate=null;profile.hidden=true;form.hidden=false}
   sequence++;request?.abort();request=null;pending=false;button.disabled=false;KSPreferences.setText(button,'Check player');
-  adminLease?.abort();lease?.abort();adminLease=null;lease=null;adminMode=mode;adminExpires=expires;
+  window.KvkScouting?.clear();adminLease?.abort();lease?.abort();adminLease=null;lease=null;adminMode=mode;adminExpires=expires;
   $('results').classList.add('hidden');for(const id of ['strength','activity','breakdown'])$(id).replaceChildren();KSPreferences.setText($('msg'),'');
   $('player-access').hidden=mode!=='visitor';
   if(mode==='admin')adminLease=new AbortController();

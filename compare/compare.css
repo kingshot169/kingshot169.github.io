@@ -62,3 +62,48 @@ html[data-theme="light"] :where(body.ks-compare) .access-card :is(input, :where(
 }
 
 .ks-compare .compare-head{gap:14px;margin-bottom:24px}.ks-compare .kingdom-title{border:1px solid var(--line);padding:18px;background:var(--panel2)}.ks-compare .kingdom-title strong{color:var(--text);font-size:1.3rem}.ks-compare .kingdom-title span{font-size:.8rem}.ks-compare .section-title{margin-top:24px;color:var(--gold)}.ks-compare .ks-table-scroll table{min-width:440px}.ks-compare .access-card h2{color:var(--gold);font-size:1.3rem}.ks-compare .access-card{border-top:2px solid var(--gold)}.ks-compare .form{gap:16px}.ks-compare .label{font-size:.76rem;line-height:1.5}.ks-compare .statebox{font-size:1rem;background:var(--panel2);color:var(--text);min-height:44px}.ks-compare #compare{margin-top:18px}.ks-compare .access-note{margin-bottom:0}
+
+/* Compare-only KvK report: live text stays selectable and readable on phones. */
+.ks-compare main{max-width:1040px}
+.ks-compare .kvk-comparison-hero{padding:24px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,var(--panel2),var(--panel));margin-bottom:28px}
+.ks-compare .kvk-eyebrow{margin:0 0 8px;color:var(--gold);font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.ks-compare .kvk-comparison-hero h2{margin:0 0 22px;font-size:clamp(1.4rem,4vw,2.2rem);overflow-wrap:anywhere}
+.ks-compare .kvk-kingdoms{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:center}
+.ks-compare .kvk-kingdoms article{min-width:0;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.ks-compare .kvk-kingdoms h3{margin:0 0 10px;color:var(--text);font-size:1rem}
+.ks-compare .kvk-total-power{display:block;color:var(--gold);font-size:clamp(1.5rem,5vw,2.6rem);line-height:1.2}
+.ks-compare .kvk-kingdoms article>span{color:var(--muted);font-size:.8rem}
+.ks-compare .kvk-versus{font-weight:900;color:var(--gold)}
+.ks-compare .kvk-kingdoms dl{margin:16px 0 0;font-size:.85rem}
+.ks-compare .kvk-kingdoms dl>div{display:flex;justify-content:space-between;gap:10px;margin-top:8px}
+.ks-compare .kvk-kingdoms dt{color:var(--muted);overflow-wrap:anywhere}.ks-compare .kvk-kingdoms dd{margin:0;font-weight:700}
+.ks-compare .kvk-note{color:var(--muted);font-size:.8rem;line-height:1.6;overflow-wrap:anywhere}
+.ks-compare #kvk-summary-title{font-size:1.4rem;overflow-wrap:anywhere}
+.ks-compare #kvk-status{color:var(--gold);font-weight:700;line-height:1.6}
+.ks-compare .kvk-summary{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0 28px}
+.ks-compare .kvk-summary-row{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:.85rem;min-width:0;overflow-wrap:anywhere}
+.ks-compare .kvk-summary-row>span{color:var(--muted)}.ks-compare .kvk-ranking-name{font-size:1rem;font-weight:800;color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.ks-compare .kvk-cards{display:grid;gap:14px;margin:0 0 32px}
+.ks-compare .kvk-player-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel2);scroll-margin-top:24px}
+.ks-compare .kvk-player-heading{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;list-style:none}
+.ks-compare .kvk-player-heading::-webkit-details-marker{display:none}.ks-compare .kvk-player-heading>div{flex:1;min-width:0}
+.ks-compare .kvk-player-heading h3{margin:0 0 5px;font-size:1.1rem;overflow-wrap:anywhere}.ks-compare .kvk-player-heading span{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.ks-compare .kvk-card-action{max-width:100px;text-align:end;color:var(--gold)!important}
+.ks-compare .kvk-player-portrait{width:48px;height:48px;object-fit:cover;border-radius:10px;flex-shrink:0;display:grid;place-items:center;background:var(--panel);color:var(--gold)}
+.ks-compare .kvk-player-body{padding:0 16px 16px}
+.ks-compare .kvk-player-stats{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:.85rem;line-height:1.6}
+.ks-compare .kvk-hero-row{display:grid;grid-template-columns:minmax(170px,.8fr) minmax(0,2fr);gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.ks-compare .kvk-hero-identity{display:flex;align-items:center;gap:10px;min-width:0}.ks-compare .kvk-hero-identity>div{display:grid;gap:3px;min-width:0;font-size:.8rem}.ks-compare .kvk-hero-identity strong{font-size:1rem;overflow-wrap:anywhere}.ks-compare .kvk-hero-identity span{color:var(--muted)}
+.ks-compare .kvk-hero-portrait{width:46px;height:46px;flex-shrink:0;object-fit:cover;display:grid;place-items:center;border-radius:9px;background:var(--panel);color:var(--gold)}
+.ks-compare .kvk-gear-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;min-width:0}
+.ks-compare .kvk-gear{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:124px;min-width:0;padding:8px 5px;border:2px solid var(--line);border-radius:9px;background:var(--panel);overflow-wrap:anywhere;font-size:.75rem;text-align:center}
+.ks-compare .kvk-gear .kvk-slot{font-weight:800;font-size:.8rem}.ks-compare .kvk-gear .kvk-tier{font-size:.7rem;font-weight:800}.ks-compare .kvk-gear .kvk-enhancement{font-size:1.15rem}.ks-compare .kvk-gear .kvk-gear-state{color:var(--muted)}
+.ks-compare .kvk-equipment-art{width:46px;height:38px;object-fit:contain}
+.ks-compare .kvk-gear.is-red{border-color:#df7586;background:#301d28;color:#ffc1cb}.ks-compare .kvk-gear.is-gold{border-color:#c8a456;background:#302a1b;color:#f9df95}
+html[data-theme="light"] .ks-compare .kvk-gear.is-red{background:#fff0f3;color:#98283c;border-color:#bf4058}
+html[data-theme="light"] .ks-compare .kvk-gear.is-gold{background:#fff6df;color:#785117;border-color:#a77c24}
+.ks-compare .kvk-player-heading:focus-visible,.ks-compare .kvk-ranking-name:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:640px){
+ .ks-compare .kvk-comparison-hero{padding:16px}.ks-compare .kvk-kingdoms{gap:8px}.ks-compare .kvk-kingdoms article{padding:12px 8px}.ks-compare .kvk-kingdoms dl>div{display:block}.ks-compare .kvk-kingdoms dd{margin-top:3px}.ks-compare .kvk-kingdoms dt{font-size:.75rem}
+ .ks-compare .kvk-summary{grid-template-columns:1fr}.ks-compare .kvk-player-heading{padding:12px}.ks-compare .kvk-player-body{padding:0 10px 12px}.ks-compare .kvk-hero-row{grid-template-columns:1fr;gap:10px}.ks-compare .kvk-gear-line{gap:5px}.ks-compare .kvk-gear{padding:8px 3px}.ks-compare .kvk-gear .kvk-slot{font-size:.72rem}
+}
