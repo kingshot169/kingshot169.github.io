@@ -23,6 +23,19 @@
   }
   return data.players.slice(0,10);
  }
+ function scoutableRanking(data,kid){
+  if(!record(data)||data.ok!==true||data.version!==2||data.projection!=='scoutable-v1'||data.kid!==kid||data.board!=='personal_power'||data.source!=='MightPulse'||data.coverage!=='unknown'||data.complete!==true||data.order!=='power-desc'||data.tie_policy!=='source-order'||typeof data.retrieved_at!=='string'||!validTimestamp(data.retrieved_at)||data.source_timestamp!==null||typeof data.cached!=='boolean'||!Array.isArray(data.players)||data.players.length>10)throw Error('unverified');
+  const selection=record(data.selection),count=value=>Number.isSafeInteger(value)&&value>=0;
+  if(!selection||selection.kind!=='highest-ranked-scoutable'||selection.limit!==10||!count(selection.source_row_count)||selection.source_row_count<1||selection.source_row_count>100||!count(selection.eligible_entry_count)||!count(selection.skipped_entry_count)||selection.source_row_count!==selection.eligible_entry_count+selection.skipped_entry_count||!count(selection.selected_entry_count)||selection.selected_entry_count!==Math.min(10,selection.eligible_entry_count)||selection.selected_entry_count!==data.players.length||!count(selection.skipped_before_selection_count)||selection.skipped_before_selection_count>selection.skipped_entry_count||typeof selection.partial!=='boolean'||selection.partial!==(selection.selected_entry_count<10))throw Error('unverified');
+  const seen=new Set();let previous=Infinity,position=0;
+  for(const row of data.players){
+   if(!record(row)||!Number.isSafeInteger(row.position)||row.position<=position||row.position>selection.source_row_count||typeof row.governor_id!=='string'||!/^[1-9]\d{3,19}$/.test(row.governor_id)||!Number.isSafeInteger(Number(row.governor_id))||String(Number(row.governor_id))!==row.governor_id||seen.has(row.governor_id)||!Number.isSafeInteger(row.power)||row.power<0||row.power>previous||!(row.nick_name===null||typeof row.nick_name==='string'&&row.nick_name.length<=200))throw Error('unverified');
+   position=row.position;previous=row.power;seen.add(row.governor_id);
+  }
+  const gaps=position-data.players.length,expectedSkipped=selection.partial?selection.skipped_entry_count:gaps;
+  if(gaps>selection.skipped_entry_count||selection.skipped_before_selection_count!==expectedSkipped)throw Error('unverified');
+  return {rows:data.players,selection};
+ }
  function slotMetadata(item){
   const named=value=>typeof value==='string'?[...new Set([...value.matchAll(/\b(helmet|gloves|armou?r|boots)\b/gi)].map(match=>match[1].toLowerCase().replace('armor','armour')))]:[];
   const declared=named(item.slot),described=named(item.name),mentioned=[...new Set([...declared,...described])];
@@ -102,7 +115,7 @@
   }
   card.append(body);cards.append(card);
  }
- function clear(){generation++;active?.abort();active=null;opponent=null;root.hidden=true;list.replaceChildren();cards.replaceChildren();button.disabled=true;tr(button,'Scout opponent’s top 10');tr(status,'');$('kvk-hero').hidden=true}
+ function clear(){generation++;active?.abort();active=null;opponent=null;root.hidden=true;list.replaceChildren();cards.replaceChildren();for(const id of ['kvk-selection-counts','kvk-skipped-notice','kvk-partial-notice'])$(id).hidden=true;button.disabled=true;tr(button,'Scout opponent’s available IDs');tr(status,'');$('kvk-hero').hidden=true}
  function comparison(a,b){
   clear();const kid=Number(b?.kid);if(!record(a)||!record(b)||Number(a.kid)!==169||!Number.isSafeInteger(kid)||kid<1||kid>999999||kid===169)return;
   opponent=kid;$('kvk-hero').hidden=false;button.disabled=false;tr($('kvk-matchup'),'State 169 vs State {state}',{state:kid});
@@ -123,13 +136,18 @@
   const abort=()=>controller.abort();approval.signal.addEventListener('abort',abort,{once:true});
   const current=()=>own===generation&&!controller.signal.aborted&&CompareAccess.valid(approval)&&opponent===kid;
   let count=0,incomplete=false,rows=[],cached=false,stop=null;
-  const deadline=setTimeout(()=>controller.abort(),12*60*1000);button.disabled=true;root.hidden=false;tr(button,'Scouting…');tr(status,'Loading opponent rankings…');tr($('kvk-summary-title'),'State {state} · returned top 10',{state:kid});list.replaceChildren();cards.replaceChildren();
+  const reportKey=`scoutable-v1:${kid}`;
+  const deadline=setTimeout(()=>controller.abort(),12*60*1000);button.disabled=true;root.hidden=false;tr(button,'Scouting…');tr(status,'Loading opponent rankings…');tr($('kvk-summary-title'),'State {state} · highest-ranked scoutable entries',{state:kid});list.replaceChildren();cards.replaceChildren();for(const id of ['kvk-selection-counts','kvk-skipped-notice','kvk-partial-notice'])$(id).hidden=true;
   try{
-   const saved=reports.get(kid);cached=!!saved&&Date.now()-saved.time<5*60*1000;
+   const saved=reports.get(reportKey);cached=!!saved&&saved.projection==='scoutable-v1'&&Date.now()-saved.time<5*60*1000;
    if(!cached&&Date.now()<blockedUntil)throw Error('rate_limited');
-   rows=cached?saved.rows:ranking(await post('kingdom-rankings',{opponent:kid},controller.signal,22000),kid);if(!current())return;
+   const report=cached?saved.report:scoutableRanking(await post('kingdom-rankings',{opponent:kid,projection:'scoutable-v1'},controller.signal,22000),kid);if(!current())return;
+   rows=report.rows;const selection=report.selection;
+   tr($('kvk-selection-counts'),'Returned entries: {source} · available IDs: {eligible} · unavailable IDs: {skipped}',{source:selection.source_row_count,eligible:selection.eligible_entry_count,skipped:selection.skipped_entry_count});$('kvk-selection-counts').hidden=false;
+   if(selection.skipped_before_selection_count>0){tr($('kvk-skipped-notice'),'{count} entries skipped because public Player IDs are unavailable.',{count:selection.skipped_before_selection_count});$('kvk-skipped-notice').hidden=false}
+   if(selection.partial){tr($('kvk-partial-notice'),'Partial selection: {count} of up to 10 scoutable entries.',{count:selection.selected_entry_count});$('kvk-partial-notice').hidden=false}
    for(const [i,row]of rows.entries())list.append(summaryRow(row,i));
-   if(rows.length<10)incomplete=true;
+   if(selection.partial)incomplete=true;
    for(const [index,row]of rows.entries()){
     if(!current())return;let profile=null;
     const hit=profiles.get(row.governor_id);
@@ -148,11 +166,11 @@
     renderPlayer(row,index,profile);tr(status,'Scouting {done}/{total} profiles…',{done:index+1,total:rows.length});
    }
    if(!current())return;
-   if(!cached){if(reports.size>=20)reports.delete(reports.keys().next().value);reports.set(kid,{rows,time:Date.now()});}
+   if(!cached){if(reports.size>=20)reports.delete(reports.keys().next().value);reports.set(reportKey,{projection:'scoutable-v1',report,time:Date.now()});}
    tr(status,stop==='rate_limited'?'Rate limited; remaining lookups stopped.':stop==='timeout'?'Lookup timed out; remaining lookups stopped.':incomplete?'Scouting incomplete · {count}/{total} profiles.':'Scouting complete · {count}/{total} profiles.',{count,total:rows.length});
    if(cached)status.append(label('span',' · Browser cache ≤5m'));
   }catch(error){if(current()){if(error.message==='rate_limited'){blockedUntil=Date.now()+10*60*1000;tr(status,'Rate limited; remaining lookups stopped.')}else tr(status,'Opponent scouting unavailable.')}}
-  finally{clearTimeout(deadline);approval.signal.removeEventListener('abort',abort);if(own===generation){active=null;button.disabled=false;tr(button,'Scout opponent’s top 10');if(controller.signal.aborted&&CompareAccess.valid(approval)){for(let i=cards.children.length;i<rows.length;i++)renderPlayer(rows[i],i,null);tr(status,'Scouting stopped; available results retained.')}}}
+  finally{clearTimeout(deadline);approval.signal.removeEventListener('abort',abort);if(own===generation){active=null;button.disabled=false;tr(button,'Scout opponent’s available IDs');if(controller.signal.aborted&&CompareAccess.valid(approval)){for(let i=cards.children.length;i<rows.length;i++)renderPlayer(rows[i],i,null);tr(status,'Scouting stopped; available results retained.')}}}
  }
- window.KvkScouting={clear,comparison,start,ranking,gearTiles};button.addEventListener('click',start);
+ window.KvkScouting={clear,comparison,start,ranking,scoutableRanking,gearTiles};button.addEventListener('click',start);
 })();

@@ -57,12 +57,16 @@
       <article><h3 id="kvk-right-state"></h3><strong id="kvk-right-power" class="kvk-total-power"></strong><span data-ks-text="Total Power">Total Power</span><dl><div><dt data-ks-text="Players">Players</dt><dd id="kvk-right-players"></dd></div><div><dt data-ks-text="Active Players · 7d">Active Players · 7d</dt><dd id="kvk-right-active"></dd></div></dl></article>
     </div>
     <p class="kvk-note" data-ks-text="MightPulse · kingdom coverage and source freshness unknown.">MightPulse · kingdom coverage and source freshness unknown.</p>
-    <button id="kvk-scout" class="ks-primary" type="button" disabled data-ks-text="Scout opponent’s top 10">Scout opponent’s top 10</button>
+    <button id="kvk-scout" class="ks-primary" type="button" disabled data-ks-text="Scout opponent’s available IDs">Scout opponent’s available IDs</button>
     <p class="kvk-note" data-ks-text="Requests up to ten detailed profiles; shares the backend allowance with other tools.">Requests up to ten detailed profiles; shares the backend allowance with other tools.</p>
   </section>
-  <section id="kvk-report" hidden aria-labelledby="kvk-summary-title">
-    <h2 id="kvk-summary-title"></h2><p id="kvk-status" role="status" aria-live="polite"></p>
-    <p class="kvk-note" data-ks-text="Top 10 returned by MightPulse’s kingdom power leaderboard.">Top 10 returned by MightPulse’s kingdom power leaderboard.</p>
+  <section id="kvk-report" hidden aria-labelledby="kvk-report-title">
+    <h2 id="kvk-report-title" data-ks-text="Opponent scouting — up to 10 highest-ranked players with available IDs">Opponent scouting — up to 10 highest-ranked players with available IDs</h2>
+    <p id="kvk-summary-title"></p><p id="kvk-status" role="status" aria-live="polite"></p>
+    <p class="kvk-note" data-ks-text="Selected in original MightPulse power order; source leaderboard positions are preserved.">Selected in original MightPulse power order; source leaderboard positions are preserved.</p>
+    <p id="kvk-selection-counts" class="kvk-note" hidden></p>
+    <p id="kvk-skipped-notice" class="kvk-note" hidden></p>
+    <p id="kvk-partial-notice" class="kvk-note" hidden></p>
     <p class="kvk-note" data-ks-text="Locations are last known, not live.">Locations are last known, not live.</p>
     <ol id="kvk-summary" class="kvk-summary"></ol>
     <div id="kvk-cards" class="kvk-cards"></div>

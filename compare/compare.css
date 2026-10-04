@@ -78,7 +78,7 @@ html[data-theme="light"] :where(body.ks-compare) .access-card :is(input, :where(
 .ks-compare .kvk-kingdoms dl>div{display:flex;justify-content:space-between;gap:10px;margin-top:8px}
 .ks-compare .kvk-kingdoms dt{color:var(--muted);overflow-wrap:anywhere}.ks-compare .kvk-kingdoms dd{margin:0;font-weight:700}
 .ks-compare .kvk-note{color:var(--muted);font-size:.8rem;line-height:1.6;overflow-wrap:anywhere}
-.ks-compare #kvk-summary-title{font-size:1.4rem;overflow-wrap:anywhere}
+.ks-compare #kvk-report-title{font-size:1.4rem;overflow-wrap:anywhere}.ks-compare #kvk-summary-title{font-weight:700;overflow-wrap:anywhere}
 .ks-compare #kvk-status{color:var(--gold);font-weight:700;line-height:1.6}
 .ks-compare .kvk-summary{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0 28px}
 .ks-compare .kvk-summary-row{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);font-size:.85rem;min-width:0;overflow-wrap:anywhere}
